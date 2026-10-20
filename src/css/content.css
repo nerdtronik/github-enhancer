@@ -1,0 +1,773 @@
+.gha-workflow-filter {
+  position: sticky;
+  top: 0;
+  z-index: 12;
+  padding: 8px;
+  background: var(--bgColor-default, #ffffff);
+}
+
+.gha-workflow-filter-field {
+  position: relative;
+}
+
+.gha-workflow-filter input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 6px 38px 6px 10px;
+  font: inherit;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--fgColor-default, #1f2328);
+  background: var(--bgColor-default, #ffffff);
+  border: 1px solid var(--borderColor-default, #d1d9e0);
+  border-radius: 6px;
+}
+
+.gha-workflow-filter input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.gha-workflow-filter-clear {
+  position: absolute;
+  top: 50%;
+  right: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 4px;
+  color: var(--fgColor-muted, #59636e);
+  background: transparent;
+  font: inherit;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.gha-workflow-filter-clear[hidden] {
+  display: none;
+}
+
+.gha-workflow-filter-clear:hover {
+  background: var(--bgColor-muted, #f6f8fa);
+}
+
+.gha-workflow-filter input:focus-visible {
+  outline: 2px solid var(--focus-outlineColor, #0969da);
+  outline-offset: -2px;
+}
+
+.gha-workflow-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 8px;
+  color: var(--fgColor-muted, #59636e);
+  font-size: 12px;
+}
+
+.gha-workflow-loading[hidden] {
+  display: none;
+}
+
+.gha-workflow-loading::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--borderColor-default, #d1d9e0);
+  border-top-color: var(--fgColor-accent, #0969da);
+  border-radius: 50%;
+  animation: gha-workflow-spin 0.75s linear infinite;
+}
+
+@keyframes gha-workflow-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gha-workflow-loading::before {
+    animation: none;
+  }
+}
+
+[data-gha-workflow-hidden] {
+  display: none !important;
+}
+
+[data-gha-workflow-all-hidden] {
+  display: none !important;
+}
+
+.gha-workflow-show-more-hidden {
+  display: none !important;
+}
+
+nav[aria-label="Workflows"] li:has(> .gha-workflow-show-more-hidden) {
+  display: none;
+}
+
+.gha-workflow-categories {
+  margin-bottom: -16px;
+  padding: 4px 8px 0;
+  color: var(--fgColor-default, #1f2328);
+  font-size: 13px;
+}
+
+.gha-workflow-api-list {
+  margin: 0;
+  padding: 0 8px 8px;
+  color: var(--fgColor-default, #1f2328);
+  list-style: none;
+}
+
+nav[aria-label="Workflows"] + .gha-workflow-api-list {
+  padding: 0 16px 8px;
+}
+
+nav[aria-label="Workflows"] li:not(:hover):not(:focus-within)
+  [data-component="ActionList.TrailingAction"] {
+  opacity: 0;
+}
+
+.gha-workflow-api-row {
+  position: relative;
+  --gha-native-picker-inset: 32px;
+}
+
+.gha-workflow-api-row > a {
+  display: block;
+  box-sizing: border-box;
+  min-height: 32px;
+  padding: 6px 72px 6px 8px;
+  color: inherit;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.gha-workflow-api-row > a[data-gha-workflow-disabled]::before,
+.gha-workflow-category-row > a[data-gha-workflow-disabled]::before {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 1px 4px;
+  color: var(--fgColor-muted, #59636e);
+  background: var(--bgColor-neutral-muted, #f6f8fa);
+  border-radius: 4px;
+  content: "Disabled";
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 14px;
+}
+
+.gha-workflow-api-row > a:hover,
+.gha-workflow-api-row:hover > a,
+.gha-workflow-api-row > a[aria-current="page"] {
+  background: var(--bgColor-neutral-muted, #f6f8fa);
+}
+
+.gha-workflow-api-pin {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  padding: 0;
+  color: var(--fgColor-muted, #59636e);
+  background: transparent;
+  border: 0;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+}
+
+.gha-workflow-api-pin:hover {
+  background: var(--bgColor-neutral-muted, #f6f8fa);
+}
+
+.gha-workflow-api-row:not(:hover):not(:focus-within) > .gha-workflow-api-pin {
+  opacity: 0;
+}
+
+.gha-workflow-api-row:has(> a[aria-current="page"]) {
+  border-left: 4px solid var(--fgColor-accent, #0969da);
+}
+
+.gha-workflow-all-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.gha-workflow-all-link:hover,
+.gha-workflow-all-link[aria-current="page"] {
+  background: var(--bgColor-neutral-muted, #f6f8fa);
+}
+
+.gha-workflow-all-link[aria-current="page"] {
+  position: relative;
+  font-weight: 600;
+}
+
+.gha-workflow-all-link[aria-current="page"]::before {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: -8px;
+  width: 4px;
+  border-radius: 2px;
+  background: var(--fgColor-accent, #0969da);
+  content: "";
+}
+
+.gha-workflow-categories-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 12px 0 4px;
+}
+
+.gha-workflow-category-title {
+  margin: 0 8px;
+  color: var(--fgColor-muted, #59636e);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.gha-workflow-category-heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.gha-workflow-categories [hidden] {
+  display: none !important;
+}
+
+.gha-workflow-categories button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.gha-workflow-category-new,
+.gha-workflow-category-form button {
+  padding: 3px 6px;
+  color: var(--fgColor-muted, #59636e);
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+}
+
+.gha-workflow-categories .gha-workflow-category-new {
+  font-size: 12px;
+}
+
+.gha-workflow-categories button:hover,
+.gha-workflow-category-row:hover {
+  background: var(--bgColor-neutral-muted, #f6f8fa);
+}
+
+.gha-workflow-categories .gha-workflow-category-new:hover {
+  color: var(--fgColor-accent, #0969da);
+  background: transparent;
+  text-decoration: underline;
+}
+
+.gha-workflow-categories .gha-workflow-categories-heading :is(.gha-workflow-category-new, .gha-workflow-category-toggle-all) {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.gha-workflow-categories .gha-workflow-categories-heading :is(.gha-workflow-category-new, .gha-workflow-category-toggle-all):hover {
+  background: var(--bgColor-neutral-muted, #f6f8fa);
+  text-decoration: none;
+}
+
+.gha-workflow-categories .gha-workflow-categories-heading :is(button, summary):hover {
+  color: var(--fgColor-default, #ffffff);
+}
+
+.gha-workflow-categories .gha-workflow-categories-heading .gha-workflow-category-new {
+  position: relative;
+  font-size: 0;
+}
+
+.gha-workflow-categories .gha-workflow-categories-heading .gha-workflow-category-new::before,
+.gha-workflow-categories .gha-workflow-categories-heading .gha-workflow-category-new::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+  content: "";
+  transform: translate(-50%, -50%);
+}
+
+.gha-workflow-categories .gha-workflow-categories-heading .gha-workflow-category-new::after {
+  width: 2px;
+  height: 12px;
+}
+
+.gha-workflow-categories .gha-workflow-category-toggle-all {
+  color: var(--fgColor-muted, #59636e);
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+}
+
+.gha-workflow-category-empty {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gha-workflow-categories .gha-workflow-category-empty .gha-workflow-category-new {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  padding: 5px 12px 5px 6px;
+  color: var(--fgColor-muted, #59636e);
+  font-size: 12px;
+  line-height: 18px;
+  text-align: left;
+}
+
+.gha-workflow-category-empty .gha-workflow-category-new::before {
+  display: grid;
+  flex: 0 0 18px;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  color: var(--fgColor-muted, #59636e);
+  content: "+";
+  font-size: 18px;
+  line-height: 18px;
+}
+
+.gha-workflow-categories .gha-workflow-category-empty .gha-workflow-category-new:hover {
+  color: var(--fgColor-accent, #0969da);
+  background: var(--bgColor-neutral-muted, #f6f8fa);
+  text-decoration: none;
+}
+
+.gha-workflow-categories :is(button, input, a):focus-visible {
+  outline: 2px solid var(--focus-outlineColor, #0969da);
+  outline-offset: -2px;
+}
+
+:is(.gha-workflow-category-options, .gha-workflow-category-picker) :is(summary, button):focus-visible {
+  outline: 2px solid var(--focus-outlineColor, #0969da);
+  outline-offset: -2px;
+}
+
+.gha-workflow-category-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+.gha-workflow-category-form input {
+  flex: 1 1 120px;
+  min-width: 0;
+  padding: 3px 6px;
+  color: inherit;
+  background: var(--bgColor-default, #ffffff);
+  border: 1px solid var(--borderColor-default, #d1d9e0);
+  border-radius: 6px;
+}
+
+.gha-workflow-category-error {
+  width: 100%;
+  color: var(--fgColor-danger, #d1242f);
+}
+
+.gha-workflow-category-save-status {
+  padding: 4px 8px;
+  color: var(--fgColor-muted, #9198a1);
+  font-size: 12px;
+}
+
+.gha-workflow-category-save-status[role="alert"] {
+  color: var(--fgColor-danger, #d1242f);
+}
+
+.gha-workflow-category-save-status button:not(.gha-workflow-category-message) {
+  margin-left: 6px;
+}
+
+.gha-workflow-category-message {
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.gha-workflow-category-message:hover {
+  text-decoration: underline;
+}
+
+.gha-workflow-category-import-prompt,
+.gha-workflow-category-import-error,
+.gha-workflow-category-import-notice {
+  padding: 6px 8px;
+  font-size: 12px;
+}
+
+.gha-workflow-category-import-prompt {
+  color: var(--fgColor-muted, #59636e);
+}
+
+.gha-workflow-category-import-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.gha-workflow-category-import-actions button {
+  padding: 2px 5px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--fgColor-accent, #0969da);
+  background: transparent;
+}
+
+.gha-workflow-category-import-error {
+  color: var(--fgColor-danger, #d1242f);
+}
+
+.gha-workflow-category-import-notice {
+  color: var(--fgColor-success, #1a7f37);
+}
+
+.gha-workflow-category {
+  margin-top: 4px;
+}
+
+.gha-workflow-category-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  min-height: 32px;
+}
+
+.gha-workflow-category-header[data-gha-editing] {
+  flex-wrap: nowrap;
+}
+
+.gha-workflow-category-header[data-gha-editing] .gha-workflow-category-toggle {
+  min-width: 0;
+}
+
+.gha-workflow-categories .gha-workflow-category-edit-save,
+.gha-workflow-categories .gha-workflow-category-edit-cancel,
+.gha-workflow-categories .gha-workflow-category-save,
+.gha-workflow-categories .gha-workflow-category-form button[type="button"] {
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+}
+
+.gha-workflow-categories .gha-workflow-category-edit-save,
+.gha-workflow-categories .gha-workflow-category-save {
+  color: var(--fgColor-onEmphasis, #ffffff);
+  background: var(--bgColor-accent-emphasis, #0969da);
+}
+
+.gha-workflow-categories .gha-workflow-category-edit-save:hover,
+.gha-workflow-categories .gha-workflow-category-save:hover {
+  filter: brightness(0.9);
+}
+
+.gha-workflow-categories .gha-workflow-category-edit-cancel,
+.gha-workflow-categories .gha-workflow-category-form button[type="button"] {
+  padding: 5px 9px;
+  color: var(--fgColor-default, #1f2328);
+  background: transparent;
+  border: 0;
+}
+
+.gha-workflow-categories .gha-workflow-category-edit-cancel:hover,
+.gha-workflow-categories .gha-workflow-category-form button[type="button"]:hover {
+  background: rgba(175, 184, 193, 0.2);
+}
+
+.gha-workflow-category-toggle {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 80px;
+  min-height: 32px;
+  padding: 5px 4px;
+  overflow: hidden;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  line-height: 20px;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gha-workflow-category-toggle::before {
+  content: "";
+  display: inline-block;
+  flex: 0 0 5px;
+  width: 5px;
+  height: 5px;
+  margin: 0 8px 0 3px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.gha-workflow-category-toggle[aria-expanded="false"]::before {
+  transform: rotate(-45deg);
+}
+
+.gha-workflow-category-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gha-workflow-category-count {
+  flex: 0 0 auto;
+  margin-left: 6px;
+  color: var(--fgColor-muted, #59636e);
+  font-size: 11px;
+}
+
+.gha-workflow-category-count::before {
+  margin-right: 4px;
+  content: "·";
+}
+
+.gha-workflow-category-options,
+.gha-workflow-category-picker {
+  position: relative;
+  flex: 0 0 auto;
+  z-index: 2;
+}
+
+.gha-workflow-category-options[open],
+.gha-workflow-category-picker[open] {
+  z-index: 10;
+}
+
+.gha-workflow-category-options > summary,
+.gha-workflow-category-picker > summary {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 30px;
+  height: 26px;
+  color: var(--fgColor-muted, #59636e);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  list-style: none;
+}
+
+.gha-workflow-category-picker > summary {
+  width: 30px;
+  height: 30px;
+}
+
+li > .gha-workflow-category-picker[data-gha-workflow-add-native] > summary {
+  width: 32px;
+  height: 100%;
+  border-radius: 0;
+}
+
+li > .gha-workflow-category-picker[data-gha-workflow-add-native]:not([data-gha-has-pin]) > summary {
+  border-radius: 0 6px 6px 0;
+}
+
+.gha-workflow-category-options > summary::-webkit-details-marker,
+.gha-workflow-category-picker > summary::-webkit-details-marker {
+  display: none;
+}
+
+.gha-workflow-category-options > summary:hover,
+.gha-workflow-category-picker > summary:hover {
+  background: var(--bgColor-neutral-muted, #f6f8fa);
+}
+
+.gha-workflow-category-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 11;
+  box-sizing: border-box;
+  min-width: 170px;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 4px;
+  color: var(--fgColor-default, #1f2328);
+  background: var(--bgColor-default, #ffffff);
+  border: 1px solid var(--borderColor-default, #d1d9e0);
+  border-radius: 6px;
+  box-shadow: var(--shadow-floating-small, 0 4px 12px rgb(0 0 0 / 16%));
+}
+
+.gha-workflow-category-menu button {
+  display: block;
+  width: 100%;
+  padding: 6px 8px;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  text-align: left;
+}
+
+.gha-workflow-category-menu button:hover {
+  background: var(--bgColor-neutral-muted, #f6f8fa);
+}
+
+li:has(> .gha-workflow-category-picker[data-gha-workflow-add-native]) {
+  position: relative;
+}
+
+li:has(> .gha-workflow-category-picker[data-gha-workflow-add-native]:hover) a[href*="/actions/workflows/"] {
+  background: var(--bgColor-neutral-muted, #f6f8fa);
+}
+
+li:has(> .gha-workflow-category-picker[data-gha-workflow-add-native]) a[href*="/actions/workflows/"] {
+  padding-right: 32px;
+}
+
+li:has(> .gha-workflow-category-picker[data-gha-has-pin]) a[href*="/actions/workflows/"] {
+  padding-right: calc(var(--gha-native-picker-inset, 48px) + 32px);
+}
+
+li > .gha-workflow-category-picker[data-gha-workflow-add-native] {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+}
+
+li > .gha-workflow-category-picker[data-gha-has-pin] {
+  right: var(--gha-native-picker-inset, 48px);
+}
+
+.gha-workflow-category-list {
+  position: relative;
+  margin: 0;
+  padding: 0 0 0 14px;
+  list-style: none;
+}
+
+.gha-workflow-category-list::before {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 6px;
+  width: 1px;
+  background: var(--borderColor-muted, #d1d9e0);
+  content: "";
+}
+
+.gha-workflow-pinned-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gha-workflow-category-row {
+  display: flex;
+  align-items: center;
+  min-height: 30px;
+  border-radius: 6px;
+}
+
+.gha-workflow-category-row[data-gha-active] {
+  position: relative;
+  background: var(--bgColor-neutral-muted, #f6f8fa);
+  font-weight: 600;
+}
+
+.gha-workflow-category-row[data-gha-active]::before {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: -8px;
+  width: 4px;
+  border-radius: 2px;
+  background: var(--fgColor-accent, #0969da);
+  content: "";
+}
+
+.gha-workflow-category-row a {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  padding: 5px 8px;
+  color: inherit;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gha-workflow-category-pin {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  color: var(--fgColor-muted, #59636e);
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+}
+
+li:has(> .gha-workflow-category-picker[data-gha-workflow-add-native]):not(:hover):not(:focus-within)
+  > .gha-workflow-category-picker:not([open]),
+li:has(> .gha-workflow-category-picker[data-gha-has-pin]):not(:hover):not(:focus-within)
+  [data-component="ActionList.TrailingAction"],
+.gha-workflow-category-row:not(:hover):not(:focus-within) > .gha-workflow-category-picker:not([open]),
+.gha-workflow-category-row:not(:hover):not(:focus-within) > .gha-workflow-category-pin {
+  opacity: 0;
+}
+
+.gha-workflow-category-editor {
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 4px 8px 4px 20px;
+}
+
+.gha-workflow-category-editor label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+  cursor: pointer;
+}

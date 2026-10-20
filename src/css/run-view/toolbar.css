@@ -1,0 +1,766 @@
+.ActionListItem[data-gha-run-view-switch] > .gha-run-view-switch-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.gha-run-view-switch-track {
+  flex: none;
+  margin-left: auto;
+  width: 34px;
+  height: 20px;
+  border: 1px solid var(--borderColor-default, #3d444d);
+  border-radius: 999px;
+  background: var(--bgColor-muted, #21262d);
+}
+
+.gha-run-view-switch-track > span {
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin: 2px;
+  border-radius: 50%;
+  background: var(--fgColor-onEmphasis, #fff);
+}
+
+.gha-run-view-switch-button[aria-pressed="true"] .gha-run-view-switch-track {
+  background: var(--bgColor-accent-emphasis, #1f6feb);
+}
+
+.gha-run-view-switch-button[aria-pressed="true"] .gha-run-view-switch-track > span {
+  transform: translateX(14px);
+}
+
+.gha-run-list .gha-run-scrollbar {
+  position: sticky;
+  top: var(--base-sticky-header-height, 0px);
+  z-index: 10;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 8px 0;
+  background: var(--bgColor-default, #0d1117);
+}
+
+.gha-run-scroll-navigation {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.gha-run-scrollbar-header {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 8px;
+  box-sizing: border-box;
+  min-width: 0;
+  margin: 0;
+  height: 32px;
+  padding: 3px 12px;
+  border: 1px solid var(--borderColor-default, #3d444d);
+  border-radius: 6px;
+  background: var(--bgColor-inset, #010409);
+  box-shadow: 0 2px 6px rgb(1 4 9 / 12%);
+}
+
+.gha-run-scrollbar[data-search-position="left"] {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.gha-run-scrollbar[data-search-position="left"] .gha-run-scroll-navigation {
+  grid-column: 2;
+}
+
+.gha-run-scrollbar:not(.gha-run-scoped)
+  .gha-run-scroll-navigation:has(input:disabled),
+.gha-run-scrollbar .gha-run-scrollbar-header:has(input:disabled) {
+  display: none;
+}
+
+.gha-run-scope-reset {
+  flex-shrink: 0;
+  box-sizing: border-box;
+  height: 32px;
+  padding: 3px 10px;
+  border: 1px solid var(--borderColor-default, #3d444d);
+  border-radius: 6px;
+  background: var(--bgColor-muted, #21262d);
+  color: var(--fgColor-default, #f0f6fc);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.gha-run-scope-reset[hidden] {
+  display: none;
+}
+
+.gha-run-scope-reset:hover {
+  border-color: var(--borderColor-accent-emphasis, #1f6feb);
+  color: var(--fgColor-accent, #4493f8);
+}
+
+.gha-run-scope-reset:focus-visible {
+  outline: 2px solid var(--focus-outlineColor, #4493f8);
+  outline-offset: 2px;
+}
+
+.gha-run-scroll-arrow {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--fgColor-muted, #9198a1);
+  cursor: pointer;
+}
+
+.gha-run-scroll-arrow::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: translateX(-2px) rotate(45deg);
+}
+
+.gha-run-scroll-arrow[data-direction="-1"]::before {
+  transform: translateX(2px) rotate(-135deg);
+}
+
+.gha-run-scroll-arrow:hover:enabled {
+  color: var(--fgColor-accent, #4493f8);
+  background: var(--bgColor-accent-muted, #121d2f);
+}
+
+.gha-run-scroll-arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.gha-run-controls {
+  grid-column: 2;
+  grid-row: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+}
+
+.gha-run-scrollbar[data-search-position="left"] .gha-run-controls {
+  grid-column: 1;
+}
+
+.gha-run-job-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.gha-run-filter-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .gha-run-list .gha-run-scrollbar,
+  .gha-run-scrollbar[data-search-position="left"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .gha-run-controls,
+  .gha-run-scrollbar[data-search-position="left"] .gha-run-controls {
+    grid-column: 1;
+    justify-self: end;
+  }
+
+  .gha-run-scrollbar[data-search-position="left"] .gha-run-controls {
+    justify-self: start;
+  }
+
+  .gha-run-scroll-navigation,
+  .gha-run-scrollbar[data-search-position="left"] .gha-run-scroll-navigation {
+    grid-column: 1;
+    grid-row: 2;
+  }
+}
+
+@media (max-width: 400px) {
+  .gha-run-controls,
+  .gha-run-scrollbar[data-search-position="left"] .gha-run-controls {
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .gha-run-job-tools,
+  .gha-run-search-filter {
+    flex: 1;
+  }
+
+  .gha-run-scrollbar .gha-run-job-search-wrap {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .gha-run-settings {
+    flex-shrink: 0;
+  }
+
+  .gha-run-hide-trigger {
+    max-width: 128px;
+  }
+
+  .gha-run-hide-trigger > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.gha-run-controls .gha-run-job-tools {
+  margin-inline-start: auto;
+}
+
+.gha-run-search-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.gha-run-job-search-wrap {
+  position: relative;
+  flex: 0 0 400px;
+  width: 400px;
+  min-width: 120px;
+}
+
+@media (max-width: 900px) {
+  .gha-run-job-search-wrap {
+    flex: 0 1 400px;
+    width: auto;
+  }
+}
+
+.gha-run-controls .gha-run-job-search {
+  box-sizing: border-box;
+  width: 100%;
+  height: 32px;
+  padding-right: 28px;
+}
+
+.gha-run-job-search::-webkit-search-cancel-button {
+  display: none;
+}
+
+.gha-run-job-search-clear {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--fgColor-muted, #9198a1);
+  font: inherit;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.gha-run-job-search-clear[hidden] {
+  display: none;
+}
+
+.gha-run-job-search-clear:hover {
+  color: var(--fgColor-default, #f0f6fc);
+}
+
+.gha-run-job-search-clear:focus-visible {
+  outline: 2px solid var(--focus-outlineColor, #4493f8);
+  outline-offset: 1px;
+}
+
+.gha-run-settings {
+  position: relative;
+}
+
+.gha-run-settings-trigger {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 28px;
+  height: 32px;
+  border: 1px solid var(--borderColor-default, #3d444d);
+  border-radius: 6px;
+  background: var(--button-default-bgColor-rest, var(--bgColor-muted, #21262d));
+  color: var(--fgColor-muted, #9198a1);
+  list-style: none;
+  cursor: pointer;
+}
+
+.gha-run-settings-trigger::-webkit-details-marker {
+  display: none;
+}
+
+.gha-run-settings-trigger::marker {
+  content: none;
+}
+
+.gha-run-settings-trigger:hover,
+.gha-run-settings[open] > .gha-run-settings-trigger {
+  color: var(--fgColor-default, #f0f6fc);
+  background: var(--button-default-bgColor-hover, var(--bgColor-emphasis, #3d444d));
+}
+
+.gha-run-settings-trigger:focus-visible {
+  outline: 2px solid var(--focus-outlineColor, #4493f8);
+  outline-offset: 2px;
+}
+
+.gha-run-settings-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  box-sizing: border-box;
+  width: 280px;
+  max-width: calc(100vw - 24px);
+  padding: 8px 0;
+  border: 1px solid var(--borderColor-default, #3d444d);
+  border-radius: 12px;
+  background: var(--overlay-bgColor, var(--bgColor-default, #0d1117));
+  box-shadow: var(--shadow-floating-small, 0 8px 24px #01040966);
+}
+
+.gha-run-controls[data-search-position="left"] .gha-run-settings-menu {
+  right: auto;
+  left: 0;
+}
+
+.gha-run-setting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 28px;
+  padding: 4px 12px;
+  color: var(--fgColor-default, #f0f6fc);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.gha-run-setting-choices {
+  display: flex;
+  gap: 4px;
+}
+
+.gha-run-setting-choices button {
+  min-height: 26px;
+  padding: 3px 7px;
+  border: 1px solid var(--borderColor-default, #3d444d);
+  border-radius: 6px;
+  background: var(--button-default-bgColor-rest, var(--bgColor-muted, #21262d));
+  color: var(--fgColor-muted, #9198a1);
+  font: inherit;
+  cursor: pointer;
+}
+
+.gha-run-setting-choices button:hover,
+.gha-run-setting-choices button[aria-pressed="true"] {
+  border-color: var(--borderColor-accent-emphasis, #1f6feb);
+  color: var(--fgColor-default, #f0f6fc);
+}
+
+.gha-run-setting-choices button[aria-pressed="true"] {
+  background: var(--bgColor-accent-muted, #121d2f);
+}
+
+.gha-run-setting-choices button:focus-visible {
+  outline: 2px solid var(--focus-outlineColor, #4493f8);
+  outline-offset: 2px;
+}
+
+.gha-run-setting-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--fgColor-muted, #9198a1);
+  font: inherit;
+  cursor: pointer;
+}
+
+.gha-run-setting-track {
+  position: relative;
+  box-sizing: border-box;
+  width: 34px;
+  height: 20px;
+  border: 1px solid var(--borderColor-default, #3d444d);
+  border-radius: 999px;
+  background: var(--bgColor-muted, #21262d);
+}
+
+.gha-run-setting-track::before {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--fgColor-onEmphasis, #fff);
+  content: "";
+}
+
+.gha-run-setting-toggle[aria-pressed="true"] .gha-run-setting-track {
+  border-color: var(--borderColor-accent-emphasis, #1f6feb);
+  background: var(--bgColor-accent-emphasis, #1f6feb);
+}
+
+.gha-run-setting-toggle[aria-pressed="true"] .gha-run-setting-track::before {
+  transform: translateX(14px);
+}
+
+.gha-run-setting-toggle:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid var(--focus-outlineColor, #4493f8);
+  outline-offset: 2px;
+}
+
+.gha-run-hide-filter {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.gha-run-hide-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  box-sizing: border-box;
+  height: 32px;
+  margin: 0;
+  padding: 4px 10px;
+  border: 1px solid
+    var(--button-default-borderColor-rest, var(--borderColor-default, #3d444d));
+  border-radius: 6px;
+  background: var(--button-default-bgColor-rest, var(--bgColor-muted, #21262d));
+  color: var(--button-default-fgColor-rest, var(--fgColor-default, #f0f6fc));
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  line-height: 18px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.gha-run-hide-trigger svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+.gha-run-hide-trigger::-webkit-details-marker {
+  display: none;
+}
+
+.gha-run-hide-trigger::marker {
+  content: none;
+}
+
+.gha-run-hide-trigger::after {
+  content: none;
+}
+
+.gha-run-hide-trigger:focus-visible {
+  outline: 2px solid var(--focus-outlineColor, #4493f8);
+  outline-offset: 2px;
+}
+
+.gha-run-hide-filter:has(input:checked) > summary {
+  color: var(--fgColor-accent, #4493f8);
+  background: var(--bgColor-accent-muted, #121d2f);
+  border-color: var(--borderColor-accent-emphasis, #1f6feb);
+}
+
+.gha-run-hide-options {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 20;
+  box-sizing: border-box;
+  width: 260px;
+  min-width: 0;
+  max-width: calc(100vw - 48px);
+  max-height: min(420px, 65vh);
+  margin: 0;
+  padding: 8px 0;
+  overflow: auto;
+  border: 1px solid var(--borderColor-default, #3d444d);
+  border-radius: 12px;
+  background: var(--overlay-bgColor, var(--bgColor-default, #0d1117));
+  box-shadow: var(--shadow-floating-small, 0 8px 24px #01040966);
+}
+
+.gha-run-controls[data-search-position="right"] .gha-run-hide-options {
+  right: 0;
+  left: auto;
+}
+
+.gha-run-hide-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--borderColor-muted, #3d444d);
+  color: var(--fgColor-muted, #9198a1);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.gha-run-hide-heading button {
+  flex-shrink: 0;
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+}
+
+.gha-run-hide-options label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  color: var(--fgColor-default, #f0f6fc);
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.gha-run-hide-options label:hover,
+.gha-run-hide-options label:has(:checked) {
+  background: var(--bgColor-accent-muted, #121d2f);
+}
+
+.gha-run-hide-count {
+  margin-left: auto;
+  color: var(--fgColor-muted, #9198a1);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.gha-run-hide-options input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--fgColor-accent, #4493f8);
+}
+
+.gha-run-hide-options svg {
+  flex-shrink: 0;
+  color: var(--fgColor-muted, #9198a1);
+}
+
+.gha-run-list .gha-run-stage-badge {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  order: -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  box-sizing: border-box;
+  min-height: 28px;
+  margin-bottom: -8px;
+  background: var(--bgColor-inset, #010409);
+  color: var(--fgColor-muted, #9198a1);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.gha-run-list .gha-run-stage-badge-label {
+  line-height: 18px;
+}
+
+.gha-run-list
+  .WorkflowStage:not([data-gha-status-hidden]):has(
+    ~ .WorkflowStage:not([data-gha-status-hidden])
+  )
+  > .gha-run-stage-badge::after {
+  position: absolute;
+  top: 50%;
+  right: -9px;
+  width: 2px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--borderColor-muted, #3d444d);
+  opacity: 0.6;
+  transform: translateY(-50%);
+  content: "";
+}
+
+.gha-run-list .gha-run-status-heading {
+  position: sticky;
+  top: 28px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  align-self: stretch;
+  box-sizing: border-box;
+  width: 100%;
+  padding-top: 4px;
+  padding-bottom: 8px;
+  margin-bottom: -8px;
+  padding-inline: 0;
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+  border-top: 1px solid var(--borderColor-muted, #3d444d);
+  background: var(--bgColor-inset, #010409);
+  color: var(--fgColor-muted, #9198a1);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  line-height: 18px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.gha-run-list .gha-run-status-heading[hidden] {
+  display: none;
+}
+
+.gha-run-list .gha-run-status-heading::before {
+  width: 6px;
+  height: 6px;
+  margin-inline: 2px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  content: "";
+}
+
+.gha-run-list .gha-run-status-heading[aria-expanded="false"]::before {
+  transform: rotate(-45deg);
+}
+
+.gha-run-list .gha-run-status-heading:hover {
+  color: var(--fgColor-default, #f0f6fc);
+}
+
+.gha-run-list .gha-run-status-heading:focus-visible {
+  outline: 2px solid var(--focus-outlineColor, #4493f8);
+  outline-offset: 2px;
+}
+
+.gha-run-list [data-gha-status-hidden],
+.gha-run-list [data-gha-scope-hidden],
+.gha-run-list [data-gha-group-collapsed] {
+  display: none !important;
+}
+
+.gha-run-scrollbar input[type="range"] {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 18px;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  touch-action: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.gha-run-scrollbar input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 6px;
+  background: var(--bgColor-muted, #151b23);
+}
+
+.gha-run-scrollbar input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: 6px;
+  background: var(--bgColor-muted, #151b23);
+}
+
+.gha-run-scrollbar input[type="range"]::-webkit-slider-thumb {
+  width: var(--gha-run-scroll-thumb-width, 64px);
+  height: 12px;
+  margin-top: -3px;
+  border: 1px solid var(--button-default-borderColor-rest, #6e7681);
+  border-radius: 6px;
+  background: var(--button-default-bgColor-rest, #30363d);
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.gha-run-scrollbar input[type="range"]::-moz-range-thumb {
+  box-sizing: border-box;
+  width: var(--gha-run-scroll-thumb-width, 64px);
+  height: 12px;
+  border: 1px solid var(--button-default-borderColor-rest, #6e7681);
+  border-radius: 6px;
+  background: var(--button-default-bgColor-rest, #30363d);
+}
+
+.gha-run-scrollbar input[type="range"]:enabled:active::-webkit-slider-thumb {
+  border-color: var(--borderColor-accent-emphasis, #1f6feb);
+  background: var(--fgColor-accent, #4493f8);
+}
+
+.gha-run-scrollbar input[type="range"]:enabled:active::-moz-range-thumb {
+  border-color: var(--borderColor-accent-emphasis, #1f6feb);
+  background: var(--fgColor-accent, #4493f8);
+}
+
+.gha-run-scrollbar input[type="range"]:enabled:active {
+  cursor: grabbing;
+}
+
+.gha-run-scroll-arrow:focus-visible {
+  outline: 2px solid var(--focus-outlineColor, #4493f8);
+  outline-offset: 2px;
+}
+
+.gha-run-scrollbar input[type="range"]:focus-visible {
+  outline: none;
+}
+
+.gha-run-scrollbar input[type="range"]:focus-visible::-webkit-slider-thumb {
+  border-color: var(--focus-outlineColor, #4493f8);
+}
+
+.gha-run-scrollbar input[type="range"]:focus-visible::-moz-range-thumb {
+  border-color: var(--focus-outlineColor, #4493f8);
+}

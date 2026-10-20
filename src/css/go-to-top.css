@@ -1,0 +1,62 @@
+.gha-go-to-top {
+  position: fixed;
+  right: calc(24px + env(safe-area-inset-right, 0px));
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--button-default-borderColor-rest, var(--borderColor-default, #d1d9e0));
+  border-radius: 8px;
+  color: var(--button-default-fgColor-rest, var(--fgColor-default, #1f2328));
+  background: var(--button-default-bgColor-rest, var(--bgColor-default, #ffffff));
+  box-shadow: 0 1px 3px rgb(0 0 0 / 15%);
+  font: inherit;
+  cursor: pointer;
+}
+
+.gha-go-to-top[hidden] {
+  display: none;
+}
+
+.gha-go-to-top:hover {
+  background: var(--button-default-bgColor-hover, var(--bgColor-muted, #f6f8fa));
+}
+
+.gha-go-to-top:focus-visible {
+  outline: 2px solid var(--focus-outlineColor, #0969da);
+  outline-offset: 2px;
+}
+
+.gha-go-to-top svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.gha-go-to-top:is(:hover, :focus-visible)::after {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + 8px);
+  padding: 6px 8px;
+  transform: translateY(-50%);
+  border-radius: 6px;
+  color: #ffffff;
+  background: #24292f;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 15%);
+  content: attr(aria-label);
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+@media (max-width: 600px) {
+  .gha-go-to-top {
+    right: calc(16px + env(safe-area-inset-right, 0px));
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+}

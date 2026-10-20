@@ -1,0 +1,159 @@
+.gha-run-section {
+  padding-top: 0 !important;
+}
+
+.gha-run-section.actions-fullwidth-module {
+  padding-top: 0 !important;
+}
+
+.gha-run-section > .gha-run-section-header {
+  margin: 0 !important;
+  padding: 8px 12px !important;
+}
+
+.gha-run-section:not([data-gha-collapsed]) > .gha-run-section-header {
+  position: sticky;
+  top: var(--base-sticky-header-height, 0px);
+  z-index: 9;
+  background: var(--bgColor-default, #0d1117);
+}
+
+.gha-run-section > .gha-run-section-header h2 {
+  margin-block: 0 !important;
+}
+
+.gha-run-summaries {
+  margin-bottom: 16px;
+}
+
+.gha-run-summaries.color-bg-default:not([data-gha-collapsed]) {
+  background: var(--bgColor-inset, var(--color-canvas-inset, #010409)) !important;
+}
+
+.gha-run-summaries:not(:has(job-summary)) {
+  display: none !important;
+}
+
+.gha-run-section.gha-run-summaries > .gha-run-section-header {
+  padding: 12px 16px !important;
+}
+
+.gha-run-summaries job-summary {
+  margin: 20px 24px !important;
+  scroll-margin-top: calc(var(--base-sticky-header-height, 0px) + 20px);
+}
+
+.gha-run-summaries job-summary > :first-child {
+  padding: 4px 12px !important;
+}
+
+.gha-run-summaries job-summary > :first-child > .d-flex {
+  padding-block: 0 !important;
+}
+
+.gha-run-summaries job-summary > :first-child h2 {
+  min-width: 0;
+  margin-block: 0 !important;
+  overflow-wrap: anywhere;
+}
+
+.gha-run-summaries job-summary > :first-child summary {
+  padding: 4px !important;
+}
+
+.gha-run-section[data-gha-collapsed] {
+  padding-bottom: 0 !important;
+}
+
+.gha-run-section[data-gha-collapsed] > :not(.gha-run-section-header) {
+  display: none !important;
+}
+
+.gha-run-section[data-gha-collapsed] > .gha-run-section-header {
+  border-bottom: 0;
+}
+
+.gha-run-section-toggle {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.gha-run-section-toggle::before {
+  content: "";
+  flex-shrink: 0;
+  align-self: center;
+  width: 6px;
+  height: 6px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+}
+
+.gha-run-section-toggle[aria-expanded="true"]::before {
+  transform: rotate(45deg);
+}
+
+.gha-run-section-toggle:focus-visible {
+  outline: 2px solid var(--focus-outlineColor, #4493f8);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+action-graph.gha-run-list {
+  display: block;
+  min-width: 0;
+  margin-bottom: 16px;
+  box-shadow: none !important;
+}
+
+.gha-run-workflow-info {
+  display: block !important;
+  min-width: 0;
+  max-width: 100%;
+  margin-top: 8px;
+  margin-inline-start: auto;
+  padding: 0 !important;
+  text-align: end;
+  overflow-wrap: anywhere;
+  touch-action: auto !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+}
+
+.gha-run-view-enabled .actions-workflow-stats.tmp-pb-3 {
+  padding-bottom: 8px !important;
+}
+
+.gha-run-view-enabled .actions-workflow-stats > .d-flex {
+  padding-block: 0 !important;
+}
+
+.gha-run-view-enabled .actions-workflow-stats > .d-flex > .tmp-mt-3 {
+  margin-top: 8px !important;
+}
+
+@media (min-width: 768px) {
+  .gha-run-view-enabled .actions-workflow-stats > .d-flex > .tmp-mt-md-3 {
+    margin-top: 8px !important;
+  }
+}
+
+.gha-run-workflow-info > div {
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.gha-run-workflow-info h2 {
+  justify-content: flex-end;
+}
+

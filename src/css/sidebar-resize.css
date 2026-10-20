@@ -1,0 +1,88 @@
+@media (min-width: 1440px) {
+  aside[aria-label="Actions"][data-expanded="true"]:has(
+      nav[aria-label="Actions workflows"]
+    ) {
+    width: 400px !important;
+    min-width: 400px !important;
+  }
+
+  split-page-layout:has(react-partial[partial-name="actions-run-jobs-list"]) {
+    --Layout-pane-width: 500px !important;
+  }
+}
+
+aside[aria-label="Actions"][data-expanded="true"][data-gha-sidebar-sized]:has(
+    nav[aria-label="Actions workflows"]
+  ) {
+  width: var(--gha-sidebar-width) !important;
+  min-width: var(--gha-sidebar-width) !important;
+}
+
+split-page-layout[data-gha-sidebar-sized],
+split-page-layout[data-gha-sidebar-sized]:has(
+    react-partial[partial-name="actions-run-jobs-list"]
+  ) {
+  --Layout-pane-width: var(--gha-sidebar-width) !important;
+}
+
+.gha-sidebar-resize-handle {
+  position: fixed;
+  top: 50%;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 10px;
+  height: 52px;
+  border: 0;
+  background: transparent;
+  color: var(--fgColor-muted, #9198a1);
+  cursor: col-resize;
+  touch-action: none;
+  transform: translateY(-50%);
+}
+
+.gha-sidebar-resize-handle::before {
+  content: "";
+  width: 4px;
+  height: 36px;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 2px 0 4px rgb(1 4 9 / 45%);
+}
+
+.gha-sidebar-resize-line {
+  color: var(--borderColor-default, #3d444d);
+  transform: none;
+}
+
+.gha-sidebar-resize-line::before {
+  width: 2px;
+  height: 100%;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.gha-sidebar-resize-handle[hidden] {
+  display: none;
+}
+
+.gha-sidebar-resize-handle:hover {
+  color: var(--fgColor-accent, #4493f8);
+}
+
+.gha-sidebar-resizing .gha-sidebar-resize-line {
+  color: var(--fgColor-accent, #4493f8);
+}
+
+.gha-sidebar-resize-handle:focus-visible {
+  outline: 2px solid var(--focus-outlineColor, #0969da);
+  outline-offset: 2px;
+}
+
+.gha-sidebar-resizing,
+.gha-sidebar-resizing * {
+  cursor: col-resize !important;
+  user-select: none !important;
+}

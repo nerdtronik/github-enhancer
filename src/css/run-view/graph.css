@@ -1,0 +1,347 @@
+.gha-run-list .gha-run-canvas-frame {
+  position: relative;
+  max-width: 100%;
+}
+
+.gha-run-list .gha-run-canvas-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 6px;
+  box-shadow:
+    inset 10px 0 14px -10px rgb(1 4 9 / 12%),
+    inset -10px 0 14px -10px rgb(1 4 9 / 12%),
+    inset 0 -16px 18px -14px rgb(1 4 9 / 10%);
+  pointer-events: none;
+}
+
+.gha-run-list [data-target="action-graph.canvas"] {
+  box-sizing: border-box;
+  max-width: 100%;
+  height: var(--gha-run-canvas-height, min(70vh, 600px)) !important;
+  min-height: 180px !important;
+  max-height: none !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  scrollbar-width: auto;
+  padding-top: 0 !important;
+  margin-block: 0 !important;
+  margin-inline: 0 !important;
+  border-top: 1px solid var(--borderColor-default, #3d444d) !important;
+  border-bottom: 0 !important;
+  border-top-left-radius: 6px !important;
+  border-top-right-radius: 6px !important;
+  border-bottom-left-radius: 6px !important;
+  border-bottom-right-radius: 6px !important;
+  box-shadow: none !important;
+  cursor: auto;
+}
+
+.gha-run-list .gha-run-resize-handle {
+  position: absolute;
+  z-index: 2;
+  bottom: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 72px;
+  height: 18px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--fgColor-muted, #9198a1);
+  cursor: ns-resize;
+  touch-action: none;
+}
+
+.gha-run-list .gha-run-resize-handle::before {
+  content: "";
+  width: 36px;
+  height: 4px;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 2px 4px rgb(1 4 9 / 45%);
+}
+
+.gha-run-list .gha-run-resize-handle:hover {
+  color: var(--fgColor-accent, #4493f8);
+}
+
+.gha-run-list .gha-run-resize-handle:focus-visible {
+  outline: 2px solid var(--focus-outlineColor, #4493f8);
+  outline-offset: 2px;
+}
+
+.gha-run-list
+  [data-target="action-graph.canvas"]
+  > .width-full:has(> [data-target="action-graph.visualGraph"]) {
+  width: auto !important;
+}
+
+.gha-run-list [style*="touch-action"] {
+  touch-action: auto !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+}
+
+.gha-run-list [data-target="action-graph.visualGraph"] {
+  width: max-content;
+  min-width: 100%;
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none;
+}
+
+.gha-run-list [data-target="action-graph.stages"] {
+  display: flex !important;
+  align-items: stretch;
+  gap: 16px;
+  padding-inline-end: 16px !important;
+  width: max-content;
+  transform: none !important;
+}
+
+.gha-run-list .WorkflowStage {
+  reading-flow: flex-visual;
+  flex: 0 0 300px;
+  width: 300px;
+  gap: 12px;
+  margin: 4px 0 16px !important;
+}
+
+.gha-run-list .WorkflowCard,
+.gha-run-list .WorkflowCard.has-title {
+  position: relative;
+  box-sizing: border-box;
+  width: 100% !important;
+  min-width: 0;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+}
+
+.gha-run-list .WorkflowCard:not(.WorkflowCard-group) {
+  min-height: 0 !important;
+  padding: 0 !important;
+}
+
+.gha-run-list
+  .WorkflowCard:not(.WorkflowCard-group)
+  > streaming-graph-job.WorkflowJob {
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.gha-run-list
+  .WorkflowCard:not(.WorkflowCard-group)
+  > streaming-graph-job.WorkflowJob
+  > .WorkflowJob-title {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 48px !important;
+  padding: 8px 16px !important;
+}
+
+.gha-run-list
+  .WorkflowCard:not(.WorkflowCard-group)
+  > streaming-graph-job.WorkflowJob
+  > .WorkflowJob-title
+  > div > .d-flex {
+  width: 100%;
+}
+
+.gha-run-list
+  .WorkflowCard:not(.WorkflowCard-group)
+  > streaming-graph-job.WorkflowJob
+  > .WorkflowJob-title
+  .flex-self-baseline {
+  margin-left: auto;
+}
+
+.gha-run-list .WorkflowCard.WorkflowCard-group {
+  padding-top: 6px !important;
+}
+
+.gha-run-list
+  .gha-run-hovering
+  .WorkflowCard:not(.gha-run-card-hovered):not(.gha-run-card-connected):not(.gha-run-card-scoped) {
+  opacity: 0.55;
+}
+
+.gha-run-list .WorkflowCard.gha-run-card-connected {
+  outline: 2px solid var(--borderColor-accent-emphasis, #1f6feb);
+  outline-offset: -2px;
+}
+
+.gha-run-list .WorkflowCard.gha-run-card-hovered,
+.gha-run-list .WorkflowCard.gha-run-card-scoped {
+  outline: 3px solid var(--borderColor-accent-emphasis, #1f6feb);
+  outline-offset: -3px;
+}
+
+.gha-run-list .gha-run-scope-button {
+  position: absolute;
+  z-index: 5;
+  top: 50%;
+  right: -12px;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: var(--bgColor-muted, #21262d);
+  color: var(--fgColor-muted, #9198a1);
+  opacity: 0;
+  pointer-events: none;
+  cursor: pointer;
+}
+
+.gha-run-list .gha-run-scope-button svg {
+  display: block;
+}
+
+.gha-run-list .WorkflowCard:hover .gha-run-scope-button,
+.gha-run-list .WorkflowCard:focus-within .gha-run-scope-button {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.gha-run-list .gha-run-scope-button:hover,
+.gha-run-list .gha-run-scope-button:focus-visible {
+  color: var(--fgColor-accent, #4493f8);
+}
+
+.gha-run-list .gha-run-scope-button:focus-visible {
+  outline: 2px solid var(--focus-outlineColor, #4493f8);
+  outline-offset: 2px;
+}
+
+.gha-run-list .WorkflowCard-heading {
+  position: static !important;
+  width: auto !important;
+  margin: 0 0 12px !important;
+  padding: 0 0 12px !important;
+  border-bottom: 1px solid var(--borderColor-muted, #3d444d);
+  border-radius: 0 !important;
+  box-shadow: none;
+}
+
+.gha-run-list .WorkflowCard-group .WorkflowCard-heading {
+  margin-bottom: 4px !important;
+  padding-bottom: 4px !important;
+}
+
+.gha-run-list .WorkflowCard-heading--content {
+  position: static !important;
+  display: block !important;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.gha-run-list .WorkflowCard-heading::after,
+.gha-run-list .WorkflowCard-port,
+.gha-run-list .WorkflowConnectors,
+.gha-run-list :has(> [data-target="action-graph.zoomFit"]) {
+  display: none !important;
+}
+
+.gha-run-list .WorkflowJob-title {
+  min-width: 0;
+  height: auto !important;
+  font-size: 14px !important;
+  line-height: 20px;
+}
+
+.gha-run-list streaming-graph-job.WorkflowJob {
+  display: block;
+  min-width: 0;
+}
+
+.gha-run-list streaming-graph-job + streaming-graph-job {
+  margin-top: 12px;
+}
+
+.gha-run-list .js-graph-matrix {
+  display: block !important;
+}
+
+.gha-run-list .js-graph-matrix streaming-graph-job.WorkflowJob + streaming-graph-job.WorkflowJob {
+  margin-top: 0;
+  border-top: 1px solid var(--borderColor-muted, #3d444d);
+}
+
+.gha-run-list .js-graph-matrix streaming-graph-job.WorkflowJob .WorkflowJob-title {
+  padding: 4px 6px;
+  margin-inline: -6px;
+  border-radius: 4px;
+  line-height: 18px;
+}
+
+.gha-run-list
+  .js-graph-matrix
+  .WorkflowJob-title
+  div:has(> [data-target="streaming-graph-job.ellipsis"])
+  > :not(:last-child) {
+  display: none !important;
+}
+
+.gha-run-list .js-graph-matrix streaming-graph-job.WorkflowJob .WorkflowJob-title:is(:hover, :focus-visible) {
+  background: var(--bgColor-accent-muted, #121d2f);
+}
+
+.gha-run-list .WorkflowJob-title > div,
+.gha-run-list .js-graph-matrix,
+.gha-run-list .MatrixComponent-pending {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.gha-run-list .WorkflowJob-title > div > .d-flex {
+  align-items: center !important;
+}
+
+.gha-run-list .WorkflowJob-title svg {
+  flex-shrink: 0;
+}
+
+.gha-run-list .js-graph-matrix .WorkflowJob,
+.gha-run-list .MatrixComponent-pending {
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+  text-align: left;
+  line-height: 20px;
+}
+
+.gha-run-list .MatrixComponent-collapse--title {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.gha-run-list .MatrixComponent-collapse--title > .flex-1 {
+  min-width: 0;
+  white-space: normal !important;
+}
+
+.gha-run-list .css-truncate,
+.gha-run-list .css-truncate-overflow {
+  max-width: none !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+}
+
+.gha-run-list .WorkflowJob-title .d-flex.css-truncate-overflow {
+  display: block !important;
+  flex: 1 1 0;
+}
+
