@@ -5,7 +5,7 @@ const { JSDOM } = require("jsdom");
 
 const root = `${__dirname}/..`;
 const manifest = JSON.parse(readFileSync(`${root}/manifest.json`, "utf8"));
-const collectorScript = readFileSync(`${root}/collector-suppress.js`, "utf8");
+const collectorScript = readFileSync(`${root}/src/js/collector-suppress.js`, "utf8");
 
 test("one MV3 manifest loads every feature without a background process", () => {
   assert.equal(manifest.manifest_version, 3);
@@ -18,21 +18,24 @@ test("one MV3 manifest loads every feature without a background process", () => 
       assert.ok(existsSync(`${root}/${file}`), `Missing manifest asset: ${file}`);
   }
   const scripts = manifest.content_scripts.flatMap(({ js }) => js);
-  assert.ok(scripts.indexOf("workflow-categories.js") < scripts.indexOf("content.js"));
-  assert.ok(scripts.includes("sidebar-resize.js"));
-  assert.ok(scripts.includes("pr-conversation.js"));
-  assert.ok(scripts.includes("run-list.js"));
-  assert.ok(scripts.includes("go-to-top.js"));
-  const settings = manifest.content_scripts.find(({ js }) => js.includes("settings-storage.js"));
-  const runView = manifest.content_scripts.find(({ js }) => js.includes("run-view.js"));
+  assert.ok(scripts.indexOf("src/js/workflow-categories.js") < scripts.indexOf("src/js/content.js"));
+  assert.ok(scripts.includes("src/js/sidebar-resize.js"));
+  assert.ok(scripts.includes("src/js/pr-conversation.js"));
+  assert.ok(scripts.includes("src/js/run-list.js"));
+  assert.ok(scripts.includes("src/js/go-to-top.js"));
+  const settings = manifest.content_scripts.find(({ js }) => js.includes("src/js/settings-storage.js"));
+  const runView = manifest.content_scripts.find(({ js }) => js.includes("src/js/run-view.js"));
   assert.equal(settings.run_at, "document_start");
   assert.equal(runView.world, "MAIN");
   assert.equal(runView.run_at, "document_start");
-  assert.ok(runView.js.indexOf("run-view/shared.js") < runView.js.indexOf("run-view.js"));
+  assert.ok(
+    runView.js.findIndex((f) => f.endsWith("run-view/shared.js")) <
+    runView.js.findIndex((f) => f.endsWith("run-view.js"))
+  );
 });
 
 test("the telemetry guard loads before GitHub scripts", () => {
-  const entry = manifest.content_scripts.find(({ js }) => js.includes("collector-suppress.js"));
+  const entry = manifest.content_scripts.find(({ js }) => js.includes("src/js/collector-suppress.js"));
   assert.equal(entry.world, "MAIN");
   assert.equal(entry.run_at, "document_start");
 });

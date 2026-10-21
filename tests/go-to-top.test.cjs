@@ -3,7 +3,7 @@ const { readFileSync } = require("node:fs");
 const { test } = require("node:test");
 const { JSDOM } = require("jsdom");
 
-const script = readFileSync(`${__dirname}/../go-to-top.js`, "utf8");
+const script = readFileSync(`${__dirname}/../src/js/go-to-top.js`, "utf8");
 
 function setup(t, reducedMotion = false, beforeEval) {
   const dom = new JSDOM("<main>GitHub page</main>", {

@@ -3,8 +3,8 @@ const { readFileSync } = require("node:fs");
 const { test } = require("node:test");
 const { JSDOM } = require("jsdom");
 
-const script = readFileSync(`${__dirname}/../sidebar-resize.js`, "utf8");
-const css = readFileSync(`${__dirname}/../sidebar-resize.css`, "utf8");
+const script = readFileSync(`${__dirname}/../src/js/sidebar-resize.js`, "utf8");
+const css = readFileSync(`${__dirname}/../src/css/sidebar-resize.css`, "utf8");
 const markup = `<aside aria-label="Actions" data-expanded="true">
   <nav aria-label="Actions workflows"></nav>
 </aside>

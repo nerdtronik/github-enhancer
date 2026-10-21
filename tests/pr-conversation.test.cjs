@@ -3,7 +3,7 @@ const { readFileSync } = require("node:fs");
 const { test } = require("node:test");
 const { JSDOM } = require("jsdom");
 
-const script = readFileSync(`${__dirname}/../pr-conversation.js`, "utf8");
+const script = readFileSync(`${__dirname}/../src/js/pr-conversation.js`, "utf8");
 const markup = `
   <div class="pull-discussion-timeline"><div class="js-discussion">
     <div class="js-timeline-item" id="description"><div class="js-comment-container"><div class="comment-body">PR description</div></div></div>
@@ -206,7 +206,7 @@ test("keeps conversation filters fixed after the sidebar ends and restores their
   let headerBottom = 60.5;
   compact.getBoundingClientRect = () => ({ bottom: headerBottom });
   const style = window.document.createElement("style");
-  style.textContent = readFileSync(`${__dirname}/../pr-conversation.css`, "utf8");
+  style.textContent = readFileSync(`${__dirname}/../src/css/pr-conversation.css`, "utf8");
   window.document.head.append(style);
   let anchorTop = 100;
   const originalRect = window.HTMLElement.prototype.getBoundingClientRect;
@@ -248,7 +248,7 @@ test("collapses one comment to its header and expands its content again", async 
     <aside id="partial-discussion-sidebar"><div class="discussion-sidebar-item"><h3>Reviewers</h3></div></aside>`;
   const window = await setup(t, "/owner/repo/pull/123", html);
   const style = window.document.createElement("style");
-  style.textContent = readFileSync(`${__dirname}/../pr-conversation.css`, "utf8");
+  style.textContent = readFileSync(`${__dirname}/../src/css/pr-conversation.css`, "utf8");
   window.document.head.append(style);
   const first = window.document.querySelector("#first-card .gha-pr-comment-toggle");
   assert.ok(first);
@@ -392,7 +392,7 @@ test("keeps native Merge and Code buttons aligned with the compact PR header", a
   const window = await setup(t, "/owner/repo/pull/123", html);
   const style = window.document.createElement("style");
   style.textContent = ".position-relative { position: relative !important; }\n" +
-    readFileSync(`${__dirname}/../pr-conversation.css`, "utf8");
+    readFileSync(`${__dirname}/../src/css/pr-conversation.css`, "utf8");
   window.document.head.append(style);
   const actions = window.document.getElementById("pr-actions");
   const compact = window.document.getElementById("compact-header");

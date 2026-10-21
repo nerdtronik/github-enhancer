@@ -3,9 +3,9 @@ const { readFileSync, existsSync } = require("node:fs");
 const { test } = require("node:test");
 const { JSDOM } = require("jsdom");
 
-const scriptPath = `${__dirname}/../content.js`;
+const scriptPath = `${__dirname}/../src/js/content.js`;
 const script = existsSync(scriptPath) ? readFileSync(scriptPath, "utf8") : "";
-const categoriesPath = `${__dirname}/../workflow-categories.js`;
+const categoriesPath = `${__dirname}/../src/js/workflow-categories.js`;
 const categoriesScript = existsSync(categoriesPath) ? readFileSync(categoriesPath, "utf8") : "";
 const categoryKey = "ghaWorkflowCategoriesV2:owner/repo";
 const savedCategory = (storage, name) => storage.data[categoryKey]?.categories
@@ -442,7 +442,7 @@ test("places fetched workflow pickers beside fixed-width pins without measuring 
   let reads = 0;
   const window = await setup(t, currentSidebar, "/owner/repo/actions", storage, async () => {}, (win) => {
     const style = win.document.createElement("style");
-    style.textContent = readFileSync(`${__dirname}/../content.css`, "utf8");
+    style.textContent = readFileSync(`${__dirname}/../src/css/content.css`, "utf8");
     win.document.head.append(style);
     const original = win.Element.prototype.getBoundingClientRect;
     win.Element.prototype.getBoundingClientRect = function (...args) {
@@ -571,7 +571,7 @@ test("filters the full fetched workflow list in GitHub's collapsed flyout", asyn
     } } }),
   }));
   const style = window.document.createElement("style");
-  style.textContent = readFileSync(`${__dirname}/../content.css`, "utf8");
+  style.textContent = readFileSync(`${__dirname}/../src/css/content.css`, "utf8");
   window.document.head.append(style);
   window.document.body.insertAdjacentHTML("beforeend", popup);
   await settle(window);
@@ -612,7 +612,7 @@ test("aligns fetched flyout rows and hides native pin controls", async (t) => {
     } } }),
   }), (page) => {
     const style = page.document.createElement("style");
-    style.textContent = readFileSync(`${__dirname}/../content.css`, "utf8");
+    style.textContent = readFileSync(`${__dirname}/../src/css/content.css`, "utf8");
     page.document.head.append(style);
   });
   window.document.body.insertAdjacentHTML("beforeend", `
@@ -766,7 +766,7 @@ test("hides pin and unpin controls when a row is idle", async (t) => {
   storage.data[categoryKey] = { categories: [{ name: "CI", workflows: ["build.yml", "deploy.yml"], collapsed: false }] };
   const window = await setup(t, markup, "/owner/repo/actions", storage, undefined, (page) => {
     const style = page.document.createElement("style");
-    style.textContent = readFileSync(`${__dirname}/../content.css`, "utf8");
+    style.textContent = readFileSync(`${__dirname}/../src/css/content.css`, "utf8");
     page.document.head.append(style);
   });
   const nativeRows = window.document.querySelectorAll('nav[aria-label="Actions workflows"] li:has(> a[href*="/actions/workflows/"])');

@@ -5,7 +5,7 @@ const { JSDOM, VirtualConsole } = require("jsdom");
 
 const manifest = JSON.parse(readFileSync(`${__dirname}/../manifest.json`, "utf8"));
 const runViewAssets = manifest.content_scripts.find(
-  (entry) => entry.js?.includes("run-view.js")
+  (entry) => entry.js?.some((path) => path.endsWith("run-view.js"))
 );
 const scripts = runViewAssets.js.map((path) =>
   readFileSync(`${__dirname}/../${path}`, "utf8")
@@ -112,7 +112,7 @@ async function setup(t, path = "/owner/repo/actions/runs/123", define = true, st
   if (define) window.customElements.define("action-graph", ActionGraph);
   window.chrome = { storage: storage ?? mockStorage() };
   beforeScripts?.(window);
-  window.eval(readFileSync(`${__dirname}/../settings-storage.js`, "utf8"));
+  window.eval(readFileSync(`${__dirname}/../src/js/settings-storage.js`, "utf8"));
   for (const script of scripts) window.eval(script);
   await settle();
   return {
@@ -144,7 +144,7 @@ test("waits for page readiness and idle before adapting the run graph", async (t
 test("manifest loads a split run view without leaving its module registry on the page", async (t) => {
   assert.ok(runViewAssets.js.length >= 4);
   assert.ok(runViewAssets.css.length >= 2);
-  assert.equal(runViewAssets.js.at(-1), "run-view.js");
+  assert.equal(runViewAssets.js.at(-1), "src/js/run-view.js");
   const { window, graph } = await setup(t);
   assert.ok(graph.classList.contains("gha-run-list"));
   assert.ok(graph.querySelector(".gha-run-controls"));

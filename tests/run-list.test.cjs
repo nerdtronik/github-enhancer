@@ -3,7 +3,7 @@ const { existsSync, readFileSync } = require("node:fs");
 const { test } = require("node:test");
 const { JSDOM } = require("jsdom");
 
-const scriptPath = `${__dirname}/../run-list.js`;
+const scriptPath = `${__dirname}/../src/js/run-list.js`;
 const script = existsSync(scriptPath) ? readFileSync(scriptPath, "utf8") : "";
 const settle = (window) => new Promise((resolve) => window.setTimeout(resolve, 50));
 
@@ -97,7 +97,7 @@ test("shows native run controls as a wrapping toolbar above the card grid", asyn
     style.textContent = `.Metadata__CBFjuU { display: grid; background: #20242a; border-bottom: 1px solid #3d444d; }
       .container__T-3mZN { display: block; }
       .ListFilterButton__ccIaF1 { border: 0; }` +
-      readFileSync(`${__dirname}/../run-list.css`, "utf8");
+      readFileSync(`${__dirname}/../src/css/run-list.css`, "utf8");
     window.document.head.append(style);
   } });
   const toolbar = window.document.querySelector(".Metadata__CBFjuU");
@@ -137,7 +137,7 @@ test("keeps native run links and actions when presenting cards on both run lists
     const { window } = await setup(t, [item], { path, html: routeHtml, beforeEval(window) {
       const style = window.document.createElement("style");
       style.textContent = ".prc-Button-ButtonContent-Iohp5 { display: grid; justify-content: center; } .ActionBar__jBtcyJ { padding-right: 16px; }" +
-        readFileSync(`${__dirname}/../run-list.css`, "utf8");
+        readFileSync(`${__dirname}/../src/css/run-list.css`, "utf8");
       window.document.head.append(style);
       originalLink = window.document.querySelector(`a[href="${item.runUrl}"]`);
       originalMenu = window.document.querySelector('button[aria-haspopup="menu"]');
@@ -218,7 +218,7 @@ test("uses live status for card pills and updates them without duplication", asy
   assert.deepEqual(rows.map((row) => row.querySelector(".gha-run-card-status")?.dataset.tone),
     ["queued", "accent", "danger", "attention"]);
   const style = window.document.createElement("style");
-  style.textContent = readFileSync(`${__dirname}/../run-list.css`, "utf8");
+  style.textContent = readFileSync(`${__dirname}/../src/css/run-list.css`, "utf8");
   window.document.head.append(style);
   for (const row of rows) {
     const pillStyle = window.getComputedStyle(row.querySelector(".gha-run-card-status"));
@@ -289,7 +289,7 @@ test("the saved setting hides the panel but leaves an accessible gear to restore
   const toggle = window.document.querySelector(".gha-run-attention-toggle");
   assert.equal(toggle.getAttribute("aria-pressed"), "false");
   const css = window.document.createElement("style");
-  css.textContent = readFileSync(`${__dirname}/../run-list.css`, "utf8");
+  css.textContent = readFileSync(`${__dirname}/../src/css/run-list.css`, "utf8");
   window.document.head.append(css);
   assert.equal(window.getComputedStyle(window.document.querySelector('search[aria-label="Filter workflow runs"]')).width, "100%");
   assert.equal(window.getComputedStyle(toggle.parentElement).justifyContent, "space-between");
@@ -350,7 +350,7 @@ test("defers saved cards until idle but enables them immediately from settings",
       path,
       beforeEval(page) {
         const style = page.document.createElement("style");
-        style.textContent = readFileSync(`${__dirname}/../run-list.css`, "utf8");
+        style.textContent = readFileSync(`${__dirname}/../src/css/run-list.css`, "utf8");
         page.document.head.append(style);
         page.requestIdleCallback = (callback) => { idleCallbacks.push(callback); };
       },
@@ -371,7 +371,7 @@ test("defers saved cards until idle but enables them immediately from settings",
   const { window } = await setup(t, [run(2, "Manual", "WORKFLOW_RUN_CONCLUSION_SUCCESS")], {
     beforeEval(page) {
       const style = page.document.createElement("style");
-      style.textContent = readFileSync(`${__dirname}/../run-list.css`, "utf8");
+      style.textContent = readFileSync(`${__dirname}/../src/css/run-list.css`, "utf8");
       page.document.head.append(style);
       page.requestIdleCallback = (callback) => { idleCallbacks.push(callback); };
     },
@@ -394,7 +394,7 @@ test("keeps the saved default run list visible while enhanced cards are deferred
     storage: { ghaRunAttentionSettingsV1: { enabled: true, enhancedViewEnabled: false } },
     beforeEval(page) {
       const style = page.document.createElement("style");
-      style.textContent = readFileSync(`${__dirname}/../run-list.css`, "utf8");
+      style.textContent = readFileSync(`${__dirname}/../src/css/run-list.css`, "utf8");
       page.document.head.append(style);
       page.requestIdleCallback = () => {};
     },
@@ -409,7 +409,7 @@ test("reveals a saved default list as soon as its setting loads", async (t) => {
     get: () => new Promise((resolve) => { resolveSettings = resolve; }),
     beforeEval(page) {
       const style = page.document.createElement("style");
-      style.textContent = readFileSync(`${__dirname}/../run-list.css`, "utf8");
+      style.textContent = readFileSync(`${__dirname}/../src/css/run-list.css`, "utf8");
       page.document.head.append(style);
     },
   });
