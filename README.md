@@ -1,56 +1,78 @@
-# GitHub Actions Enhancer
+# GitHub Enhancer
 
-Local Chrome and Firefox extension. No runtime dependencies.
+<img src="assets/icon.svg" style="display: block; margin-left: auto; margin-right: auto; margin-bottom: 1rem;" alt="GitHub Enhancer">  
+<img src="assets/screenshots/main.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 400px;" alt="main screenshot">  
 
-## Load locally
+---
+
+Chrome and Firefox extension that enhances GitHub experience in multiple places.
+
+> This repo is a bunch of scripts I manually crafted inside the browser console and injected via third party extensions, at some point I decided to move them into an extension. Typescript code was ported from my original JS using LLMs
+
+## Features
+
+> [!NOTE]
+> These features can stop working at any moment due to GH constant tweaking of the UI, if you detect an error or that something is not working properly please report it in the [Issues Page](https://github.com/nerdtronik/github-enhancer/issues)
+
+### Actions
+
+| Feature | Description | Preview |
+| --- | --- | --- |
+| [**Workflows categories**](./docs/features/actions.md#workflows-categories) | Categories in workflows list, finally 🙌 | <details><summary>Click to expand image</summary> <img src="assets/screenshots/actions/GHA_1.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="Workflows categories"> </details> |
+| [**Workflows filter**](./docs/features/actions.md#workflows-filter) | You can search your workflows in that massive list 🔎 | <details><summary>Click to expand image</summary> <img src="assets/screenshots/actions/GHA_2.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="Workflows filter"> </details> |
+| [**Remove *"Show more"* button**](./docs/features/actions.md#remove-show-more-button) | All workflows list loads from the beginning 🔃 | <details><summary>Click to expand image</summary> <img src="assets/screenshots/actions/GHA_3.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="No Show more"> </details> |
+| [**Resizable sidebar**](./docs/features/actions.md#resizable-sidebar) | Resize the sidebar as you like 🫰 | <details><summary>Click to expand image</summary> <img src="assets/screenshots/actions/GHA_4.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="Resizable bar"> </details> |
+| [**Needs Attention section**](./docs/features/actions.md#needs-attention-section) | (optional) section that shows failing workflows whiting the loaded list 🔭 | <details><summary>Click to expand image</summary> <img src="assets/screenshots/actions/GHA_5.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="Needs attention"> </details> |
+| [**Enhanced workflows view**](./docs/features/actions.md#enhanced-workflows-view) | (optional) Enhanced worflow view with cards and no animations 🎛️ | <details><summary>Click to expand image</summary> <img src="assets/screenshots/actions/GHA_6.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="Enhanced view"> </details> |
+
+### Pull Requests
+
+| Feature | Description | Preview |
+| --- | --- | --- |
+| [**Conversation filters**](./docs/features/pull-requests.md#conversation-filters) | This allows you to filter all PR comments and events, making the process to read/review PRs more easy 🗃️ | <details><summary>Click to expand image</summary> <img src="assets/screenshots/pull-requests/PR_1.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="Conversation filter"> </details> |
+| [**Collapsible comments**](./docs/features/pull-requests.md#collapsible-comments) | As the name says, you can collapse comments (threads already support this) 📪 | <details><summary>Click to expand image</summary> <img src="assets/screenshots/pull-requests/PR_3.1.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="GitHub Enhancer"> <img src="assets/screenshots/pull-requests/PR_3.2.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="GitHub Enhancer"> </details> |
+| [**Merge & Code buttons in navbar**](./docs/features/pull-requests.md#merge--code-buttons-in-navbar) | When tou scroll, the top navbar collapses and these two buttons dissapear, forcing you to go to the top/bottom of the page to see its content, this carries those buttons during all scroll 🧭 | <details><summary>Click to expand image</summary> <img src="assets/screenshots/pull-requests/PR_2.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="GitHub Enhancer"> </details> |
+
+### Action Run
+
+| Feature | Description | Preview |
+| --- | --- | --- |
+| [**Resizable sidebar**](./docs/features/action-run.md#resizable-sidebar) | Jobs list sidebar resizable 🫰 | <details><summary>Click to expand image</summary> <img src="assets/screenshots/action-run/GHA_1.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="Resizable sidebar"> </details> |
+| [**Collapsible information**](./docs/features/action-run.md#collapsible-information) | Now footer information is collapsible 📪 | <details><summary>Click to expand image</summary> <img src="assets/screenshots/action-run/GHA_2.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="Collapsible information"> </details> |
+| [**Enhanced Jobs view**](./docs/features/action-run.md#enhanced-jobs-view) | New Jobs workflow enhanced view (optimal for big workflows) 🎛️ | <details><summary>Click to expand image</summary> <img src="assets/screenshots/action-run/GHA_3.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="Enhanced jobs view"> </details> |
+
+### Quality of Life
+
+| Feature | Description | Preview |
+| --- | --- | --- |
+| **Go to Top** | Go to top button for all scrollable main views 🔝 | <details><summary>Click to expand image</summary> <img src="assets/screenshots/gototop.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 150px" alt="Resizable sidebar"> </details> |
+| **No more trackers** | Blocks basic telemetry requests | *None* |
+
+
+## Collaboration
+
+If you are a developer and you want to contribute, please feel free to open a [Pull Request](https://github.com/nerdtronik/github-enhancer/pulls) and I will review it and test it. 
+
+If you are not a developer but you still want to contribue, you can always create a [new issue](https://github.com/nerdtronik/github-enhancer/issues) to report any problems or you can go to the [discussions page](https://github.com/nerdtronik/github-enhancer/discussions) and open some topic there.
+
+
+### Load locally
 
 - **Chrome:** open `chrome://extensions`, enable **Developer mode**, click **Load unpacked**, and select this folder.
 - **Firefox:** open `about:debugging#/runtime/this-firefox`, click **Load Temporary Add-on**, and select this folder's `manifest.json`. Firefox removes temporary extensions when it closes.
 
-Refresh existing GitHub tabs after loading the extension. The Actions sidebar gets a **Filter workflows** search field that stays at the top while scrolling the workflow list. Matching ignores case and surrounding spaces. Clear the field to restore the list. The query survives workflow navigation within the same repository and resets when changing repositories or leaving Actions. It is held only in memory.
+> Refresh existing GitHub tabs after loading the extension.
 
-On any GitHub page, a **Go to top** button appears at the bottom-right after scrolling past one viewport. It scrolls the main page to the top, using reduced-motion settings when enabled; it does not scroll sidebars or job logs.
+### Tests
 
-Use **New category** in the Actions sidebar to create a collapsible workflow group. Use the **+** beside a workflow to add it to one or more categories, or create a new category and add it immediately. Pinned workflows appear in their own section above Categories and also inside expanded categories; collapsed categories hide all their workflows. Unpinned, unassigned workflows remain in GitHub's plain list. Each category's three-dot menu offers **Edit workflows** to remove assigned workflows, plus rename and delete. Category links and pin controls use the corresponding GitHub workflow controls. Categories, assignments, and collapsed state are saved in extension-local storage separately for each repository; removing a workflow from its last category returns it to the pinned or plain list according to its pin state.
+With Node.js 20+ and dependencies installed (`npm install`), run `npm test` in this folder.
 
-Use the **⋯** beside **Categories** to export a JSON backup for the current repository or import one. Import validates the file and repository before asking whether to **Merge** it with current categories or **Replace** them. Merge keeps existing category names, assignments, and collapsed choices; imported assignments and new categories are added. Replace restores the backup exactly. The extension confirms an import only after reading the saved data back. Extension-local storage survives normal browsing-data cleanup and browser restarts while the extension remains installed. Uninstalling it clears storage. Firefox's temporary add-on can also lose storage when it unloads, including on browser restart; export categories before closing Firefox when using that installation method.
 
-Category backups and new saved data use version 2: `categories` is an ordered array of `{ name, workflows, collapsed }` objects. Each workflow ID appears only in categories that contain it; a workflow may appear in more than one category. Existing version 1 storage is copied into the version 2 key on load without deleting the old key, and version 1 backup files remain importable.
+## References
 
-Category changes show **Saving category changes…** until the extension reads the same data back from storage. A failed write keeps the unsaved changes visible with **Retry save** and warns before a page reload. If the old tab reports **Extension context invalidated** after reloading the extension, that tab cannot save; note the unsaved changes, refresh the tab, and redo them.
+- [Chrome content scripts](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts)
+- [Firefox temporary installation](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/).
 
-At viewport widths of 1440px and above, the expanded workflow sidebar is widened to 400px and the jobs sidebar on run summary and job details pages to 500px. On desktop, drag the sidebar edge handle (or focus it and use the arrow keys) to resize the Actions workflow sidebar, run/job sidebar, or pull-request Files changed pane. Each page type saves its own width in extension storage, shared across runs or pull requests of that type. Narrow screens keep GitHub's default layout.
+## License
 
-On pull-request Conversation pages, filters appear in the right rail above Reviewers. The quick views show all activity, unresolved review conversations, human comments, bot comments, or comments only. **Filter activity** lets you independently show or hide human comments, bot comments, review decisions, commits and pushes, checks, deployment statuses, and other timeline activity. **Unresolved review threads** is an exclusive option in that menu; choosing an activity category switches back to category filtering. **Show all** restores every category. Counts and the Unresolved view cover entries currently loaded into the page. The PR description and comment form stay visible. Filters reset when navigating to another PR or away from Conversation, and they do not load GitHub's hidden older conversations.
-
-Run summary pages display the workflow graph as horizontally scrollable, 300px stage columns. Job names wrap at a readable size; GitHub's status icons, durations, log links, stage order, and matrix expansion remain in place. Use the slim scrollbar in the rounded bar above the dark jobs panel with a mouse, touch, or arrow keys; it stays visible while scrolling through tall graphs. Chevron buttons move to the previous or next visible stage and disable at the corresponding edge. Holding the handle highlights it with the theme's accent color and border. The scrollbar hides when all stages fit and returns when horizontal scrolling is needed. A native vertical scrollbar appears when jobs exceed the panel height; trackpads and arrow keys on the focused graph region still scroll horizontally. The gear button opens job view settings, including the Highlight related jobs on hover and Group by status switches, placement of search and filters together at the top left or top right, and Scroll arrows placement on the left, right, or both ends of the scrollbar. Turning off grouping hides status headers, expands collapsed groups, and restores card order while keeping search and filters active. Connector lines, graph ports, and zoom controls are hidden. Job details pages keep their existing view.
-
-On the **All workflows** page, a compact **Needs attention** panel links to failed, timed-out, and action-required runs in the currently loaded list. It also flags a running workflow as **Slower than usual** when an active job has run longer than both twice the median and five minutes beyond the median of five recent successful runs with the same workflow path and displayed title. This active-job time is a conservative lower bound, so some slow workflows may be flagged late or not at all; queued time is excluded. The panel leaves GitHub's search, filters, and run links in place. A gear at the right end of the run-list filters opens **Run list settings**. **Show Needs attention** hides the panel and stops its history requests; **Enhanced view** switches between cards and GitHub's native list on both run-list pages. Both choices persist across repositories, and switching views takes effect without a reload. History is fetched only for comparable active runs from GitHub's same-origin workflow pages and cached locally for ten minutes; no token or GitHub API permission is needed. If GitHub's authenticated run pages omit reliable timing fields, the panel still shows failures but does not guess at slow runs.
-
-The run page's native **…** menu has an **Enhanced view** switch. The choice is saved across runs, and switching reloads the page so GitHub's original graph is restored when the enhanced view is off.
-
-The **Search jobs** field filters cards by job name or matrix title, ignoring case. Expanded matrices also filter their individual jobs; collapsed matrices can be found by title. Search works alongside the **Filter jobs** dropdown, which shows jobs matching any selected status: completed, failed, waiting (including queued jobs), in progress, action required, cancelled, skipped, and timed out. Completed excludes failures and timeouts. The trigger shows the selected status or the number selected; **Show all jobs** clears every selection. With no selection, all statuses are visible. The dropdown stays open while selecting, and closes on Escape or a click outside. Status icons use [GitHub Octicons](THIRD_PARTY_NOTICES.md). Filtering includes rows inside expanded matrices. Each column has a `Stage N` tab-like label above its separators for completed jobs (including failures), active/pending jobs, skipped jobs, and cancelled jobs, in that order. Short dividers separate visible stages. Empty groups disappear. Filtering hides stages without matching jobs while keeping their original numbers; scoped view hides unrelated stages. Collapsed matrices use GitHub's displayed aggregate status until expanded; the Failed count shows a lower bound with `+` when a collapsed matrix contains multiple jobs, then becomes exact after expansion. Filters survive native page updates and reset when opening another run. Panel height, settings-menu switches, and layout choices are saved locally across refreshes; search and filters remain temporary.
-
-Once the overall run has finished, pending matrix placeholders and queued jobs also follow **Skipped** and appear in the skipped group. **Waiting** can show them independently. While the run is active or its overall status is unknown, pending jobs match **Waiting** instead of **Skipped**. This updates automatically when the run summary changes.
-
-Artifacts, annotations, and one shared **Summaries** section are collapsed by default on run summary pages, with compact headers. The Summaries header shows the current job summary count. Opening Summaries reveals all job summaries together, including their content, permalinks, and options menus. Click a section heading's disclosure button or use Enter/Space to expand it. Each section opens independently, and its state survives live updates and navigation back to the same run. Opening another run resets the sections to collapsed. Job summary permalinks open the shared Summaries section.
-
-Group by status is off by default. When enabled, grouping changes visual card order without moving GitHub's streaming elements. Browsers supporting CSS `reading-flow` also follow that order for keyboard navigation; other browsers, including Firefox 146, retain GitHub's original keyboard/read order. The decorative separators are hidden from screen readers; native job status labels remain available. Mixed matrix cards retain their internal native row order.
-
-Reload the extension itself after updating `manifest.json`, then refresh the GitHub tab. The ordered scripts in `run-view/` provide graph relationships, the toolbar, job filtering, and run sections; `run-view.js` starts them. Their styles are in `run-view/styles/` and load in manifest order. These scripts run in the page's `MAIN` world so they can disable GitHub's connector drawing, automatic scaling, and graph highlighting without replacing the live job-update or matrix-expansion handlers. They also prevent graph pan/zoom handlers from intercepting normal scrolling and text selection. This relies on private GitHub frontend methods: if the required methods or layout targets are missing, the native graph is left in place. GitHub can still perform its initial graph layout before the adapter attaches; this does not avoid fetching or rendering all job cards.
-
-The single manifest loads the feature scripts on `github.com`, and each feature updates only its relevant Actions or pull-request route. This keeps features available when GitHub navigates without a page reload and needs no background process or scripting permission. The telemetry guard suppresses GitHub's `/github/collect` and `/_private/browser/stats` telemetry only while on Actions routes. The category module loads before the workflow sidebar, and the isolated settings bridge communicates with the page-world run graph. Isolated content scripts store preferences in extension-local storage. They use no GitHub API, tokens, or external services. GitHub Enterprise hosts and store distribution are outside this initial version.
-
-GitHub's current React sidebar no longer contains the old `actions-workflow-list` element or `nav-list.topLevelList` target. The filter finds workflow links inside navigation instead, supports the original custom element too, and observes DOM replacements. It leaves GitHub's nodes and event handlers intact. The search field and **Loading workflows…** banner are created together in the sidebar's scroll container, outside the navigation GitHub replaces, so updates preserve the input and its focus. A single loop finds and clicks **Show more** or **Show more workflows**, waiting `CLICK_DELAY_MS` (50ms) between iterations. It waits while the button is disabled or loading. Newly loaded workflows are filtered automatically. The banner starts visible, and each click resets its `LOADING_TIMEOUT_MS` (500ms) expiration. Once expired, the existing banner is hidden rather than removed; the search field stays mounted. When expansion finishes, the sidebar, its outer containers, and the page return to the top, including when the final batch arrives after loading expires. Navigation away cancels expansion without scrolling. Both delay constants are at the top of `content.js`. The spinner respects reduced-motion preferences.
-
-## Tests
-
-With Node.js 22 and dependencies installed (`npm install`), run `npm test` in this folder. Within this FAB checkout, reuse the existing test dependency without installing anything:
-
-```bash
-NODE_PATH="$PWD/console/node_modules" npm test --prefix .local/github-actions-extension
-```
-
-Tests exercise current and original sidebar layouts, filtering, clearing, dynamic navigation, late-loaded rows, workflow expansion, and run-view adaptation without replacing job-update or matrix handlers. Fixtures represent public GitHub markup; an authenticated browser check is still needed for account-specific UI variants and performance on large workflows.
-
-References: [Chrome content scripts](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts), [Firefox temporary installation](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/).
+[The MIT License (MIT)](./LICENSE.md)
