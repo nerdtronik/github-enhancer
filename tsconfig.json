@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "lib": ["ES2021", "DOM", "DOM.Iterable"],
+    "rootDir": "src/ts",
+    "outDir": "dist",
+    "strict": true,
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "declaration": false,
+    "sourceMap": false,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": []
+  },
+  "include": ["src/ts/**/*.ts"]
+}

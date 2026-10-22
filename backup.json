@@ -1,0 +1,37 @@
+{
+  "format": "gha-workflow-categories",
+  "version": 2,
+  "repository": "wk-dxg/fab",
+  "categories": [
+    {
+      "name": "🧰 infra",
+      "workflows": [
+        "env-init.yaml",
+        "infra.yaml",
+        "lambdasMaintenance.yaml",
+        "release-management-template.yaml",
+        "release-management.yaml"
+      ],
+      "collapsed": true
+    },
+    {
+      "name": "📦 projects v1",
+      "workflows": [
+        "projects-app-build-template.yaml",
+        "projects-cd-template.yaml",
+        "projects-ci-template.yaml",
+        "projects-continuous-delivery.yaml",
+        "projects-continuous-integration.yaml",
+        "projects-continuous-scans-template.yaml",
+        "projects-database-schema-template.yaml",
+        "projects-mobile-android-ci-template.yaml",
+        "projects-mobile-android-template.yaml",
+        "projects-mobile-ios-ci-template.yaml",
+        "projects-pull-request.yaml",
+        "projects-release.yaml",
+        "projects-versioning.yaml"
+      ],
+      "collapsed": true
+    }
+  ]
+}
