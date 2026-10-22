@@ -3,62 +3,33 @@
 
 /**
  * @module run-view
- * @description TypeScript version of run-view.js — orchestrates the enhanced run view
+ * @description TypeScript version of run-view.js — activates the run view on run pages
  */
 
-/** A scrollbar binding installed for a single action-graph. */
-interface Scrollbar {
-  canvas: HTMLCanvasElement;
-  stages: HTMLElement;
-  prepare: () => void;
-  refresh: () => void;
-  updateCounts: (counts: Map<string, number | string>) => void;
-  syncHoverToggle: () => void;
-  syncGroupingToggle: () => void;
-  syncSearchPosition: () => void;
-  syncArrowPlacement: () => void;
-  remove: () => void;
-}
+import { RunViewState } from "./run-view/shared";
 
-/** The shared modules registry exposed on the global object. */
-declare const modules: {
-  state: {
-    scheduled: boolean;
-    adapted: WeakSet<Element>;
-    scrollbars: Map<Element, Scrollbar>;
-    workflowInfos: Map<Element, HTMLElement>;
-    selectedStatuses: Set<string>;
-    expandedSections: Set<string>;
-    collapsedStageGroups: Set<string>;
-    jobSearch: string;
-    appliedSearch: string;
-    jobsViewHeight: number | undefined;
-    searchTimeout: number | undefined;
-    hoverFocusEnabled: boolean;
-    statusGroupingEnabled: boolean;
-    searchPosition: string;
-    arrowPlacement: string;
-    enhancedViewEnabled: boolean | null;
-    settingsToggleId: number;
-    runPath: string;
-    sectionHash: string | null;
-  };
+type RunViewModules = {
+  state: RunViewState;
   layoutMethods: string[];
-  addScrollbar: (graph: Element, canvas: HTMLCanvasElement, stages: HTMLElement) => Scrollbar;
-  groupJobs: (graph: Element) => Map<string, number | string>;
-  moveWorkflowInfo: (graph: Element, canvas: HTMLCanvasElement) => void;
+  addScrollbar: (graph: HTMLElement, canvas: HTMLElement, stages: HTMLElement) => void;
+  groupJobs: (graph: HTMLElement) => unknown;
+  moveWorkflowInfo: (graph: HTMLElement, canvas: HTMLElement) => void;
   groupSummaries: () => void;
   collapseRunSections: () => void;
   scheduleUpdate: () => void;
-  saveSettings: (settings: Record<string, unknown>) => void;
+  saveSettings: (settings: unknown) => void;
+  [key: string]: unknown;
 };
 
-type ViewEnabled = boolean;
+const modules = globalThis.__ghaRunViewModules as RunViewModules;
+delete globalThis.__ghaRunViewModules;
+const { state, layoutMethods, addScrollbar, groupJobs, moveWorkflowInfo, groupSummaries, collapseRunSections } = modules;
+const { adapted, scrollbars, workflowInfos, selectedStatuses, expandedSections, collapsedStageGroups } = state;
+
+declare const location: { pathname: string; hash: string; origin: string; reload: () => void };
 
 function isRunPage(): boolean {
-  return /^\/[^/]+\/[^/]+\/actions\/runs\/\d+(?:\/attempts\/\d+)?\/?$/.test(
-    location.pathname
-  );
+  return /^\/[^/]+\/[^/]+\/actions\/runs\/\d+(?:\/attempts\/\d+)?\/?$/.test(location.pathname);
 }
 
 function update(): void {
@@ -86,22 +57,22 @@ function update(): void {
   if (!isRunPage()) return;
   if (state.runPath !== location.pathname) {
     state.runPath = location.pathname;
-    selectedStatuses.clear();
+    state.selectedStatuses.clear();
     clearTimeout(state.searchTimeout);
     state.searchTimeout = undefined;
     state.jobSearch = "";
     state.appliedSearch = "";
-    expandedSections.clear();
-    collapsedStageGroups.clear();
+    state.expandedSections.clear();
+    state.collapsedStageGroups.clear();
     state.sectionHash = null;
   }
-  let linkedSummary: HTMLElement | undefined;
+  let linkedSummary;
   if (state.sectionHash !== location.hash) {
     const target = document.getElementById(location.hash.slice(1));
     if (!location.hash || target) {
       state.sectionHash = location.hash;
       if (target?.matches("job-summary")) {
-        expandedSections.add("summaries");
+        state.expandedSections.add("summaries");
         linkedSummary = target;
       }
     }
@@ -111,29 +82,25 @@ function update(): void {
   linkedSummary?.scrollIntoView({ block: "start" });
 
   for (const graph of document.querySelectorAll("action-graph")) {
-    if (!layoutMethods.every((name) => typeof graph[name] === "function"))
+    const el = graph as HTMLElement;
+    if (!layoutMethods.every((name) => typeof el[name] === "function"))
       continue;
-    const canvas = graph.querySelector('[data-target="action-graph.canvas"]');
-    const stages = graph.querySelector('[data-target="action-graph.stages"]');
-    if (
-      !canvas ||
-      !graph.querySelector('[data-target="action-graph.visualGraph"]') ||
-      !stages
-    )
+    const canvas = el.querySelector('[data-target="action-graph.canvas"]') as HTMLElement;
+    const stages = el.querySelector('[data-target="action-graph.stages"]') as HTMLElement;
+    if (!canvas || !el.querySelector('[data-target="action-graph.visualGraph"]') || !stages)
       continue;
 
-    if (!scrollbars.has(graph)) addScrollbar(graph, canvas, stages);
-    moveWorkflowInfo(graph, canvas);
-    scrollbars.get(graph)!.prepare();
-    scrollbars.get(graph)!.updateCounts(groupJobs(graph));
-    scrollbars.get(graph)!.refresh();
-    if (adapted.has(graph)) continue;
+    if (!scrollbars.has(el)) addScrollbar(el, canvas, stages);
+    moveWorkflowInfo(el, canvas);
+    scrollbars.get(el)?.prepare();
+    scrollbars.get(el)?.updateCounts(groupJobs(el));
+    scrollbars.get(el)?.refresh();
+    if (adapted.has(el)) continue;
 
-    // Keep GitHub's streaming and matrix handlers; skip only graph layout work.
-    for (const name of layoutMethods) graph[name] = () => {};
-    graph.clearHighlightedGroups?.();
-    graph.classList.add("gha-run-list");
-    adapted.add(graph);
+    for (const name of layoutMethods) (el as any)[name] = () => {};
+    (el as any).clearHighlightedGroups?.();
+    el.classList.add("gha-run-list");
+    adapted.add(el);
   }
 }
 
@@ -145,6 +112,8 @@ function scheduleUpdate(): void {
     update();
   });
 }
+
+let active = false;
 
 new MutationObserver(() => {
   if (state.enhancedViewEnabled && (isRunPage() || scrollbars.size || workflowInfos.size))
@@ -160,7 +129,8 @@ customElements.whenDefined("action-graph").then(scheduleUpdate);
 document.addEventListener("turbo:load", scheduleUpdate);
 document.addEventListener("click", (event) => {
   if (!state.enhancedViewEnabled) return;
-  const stageHeading = event.target.closest?.("button.gha-run-status-heading");
+  const target = event.target as HTMLElement;
+  const stageHeading = target.closest?.("button.gha-run-status-heading") as HTMLElement;
   if (
     state.statusGroupingEnabled &&
     stageHeading?.closest("action-graph.gha-run-list")
@@ -171,16 +141,18 @@ document.addEventListener("click", (event) => {
     scheduleUpdate();
     return;
   }
-  const link = event.target.closest?.('a[href^="#"]');
+  const link = target.closest?.('a[href^="#"]') as HTMLAnchorElement;
   if (link?.hash && link.pathname === location.pathname) {
     state.sectionHash = null;
     scheduleUpdate();
   }
-  const button = event.target.closest?.(".gha-run-section-toggle");
+  const button = target.closest?.(".gha-run-section-toggle") as HTMLElement;
   if (!button) return;
   const key = button.dataset.sectionKey;
-  if (expandedSections.has(key)) expandedSections.delete(key);
-  else expandedSections.add(key);
+  if (key) {
+    if (expandedSections.has(key)) expandedSections.delete(key);
+    else expandedSections.add(key);
+  }
   scheduleUpdate();
 });
 window.addEventListener("popstate", scheduleUpdate);
@@ -262,4 +234,3 @@ const scheduleInitialUpdate = () => {
 };
 if (document.readyState === "complete") scheduleInitialUpdate();
 else window.addEventListener("load", scheduleInitialUpdate, { once: true });
-})();

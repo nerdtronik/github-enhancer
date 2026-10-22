@@ -155,8 +155,11 @@ function collapseRunSections() {
   }
 }
 
-(() => {
+
+function initSections(){
   const modules = (window as any).GHAModules || {};
   modules.moveWorkflowInfo = moveWorkflowInfo;
   modules.groupSummaries = groupSummaries;
-})();
+}
+
+initSections()

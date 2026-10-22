@@ -270,7 +270,9 @@ function groupJobs(graph: HTMLElement): Map<string, number | string> {
 let stageNumbersByCard = new Map<string, string>();
 let numberedRunPath = "";
 
-(() => {
-  const modules = (window as any).GHAModules || {};
-  modules.groupJobs = groupJobs;
-})();
+function initJobs() {  
+   const modules = (window as any).GHAModules || {};
+    modules.groupJobs = groupJobs;
+}
+
+initJobs()

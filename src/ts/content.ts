@@ -6,7 +6,7 @@
  * @description TypeScript version of content.js — workflow list indexing and pin loading
  */
 
-declare const chrome: { storage: { local: { get: (keys: string | string[]) => Promise<{ [key: string]: any }>; set: (items: { [key: string]: any }) => Promise<void> } } };
+import { chrome } from "./storage";
 
 interface WorkflowItem {
   id: string;

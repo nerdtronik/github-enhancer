@@ -6,7 +6,19 @@
  * @description TypeScript version of toolbar.js — scrollbars, search, filters, and settings UI
  */
 
-import { createIcon, statusOptions, addHoverHighlights, scheduleUpdate } from "./shared";
+const modules = globalThis.__ghaRunViewModules as {
+  state: { hoverFocusEnabled: boolean; [key: string]: unknown };
+  statusOptions: [string, string, string][];
+  createIcon: (name: string) => SVGElement;
+  addHoverHighlights: (
+    stages: HTMLElement,
+    onScopeChange: (scoped: boolean) => void,
+  ) => any;
+  scheduleUpdate: () => void;
+  [key: string]: unknown;
+};
+const { statusOptions, createIcon, addHoverHighlights, scheduleUpdate } =
+  modules;
 
 interface ScrollbarBindings {
   canvas: HTMLElement;
@@ -39,7 +51,7 @@ function listen(
   target: EventTarget,
   type: string,
   handler: any,
-  options?: AddEventListenerOptions
+  options?: AddEventListenerOptions,
 ): void {
   target.addEventListener(type, handler as EventListener, options);
 }
@@ -48,17 +60,27 @@ function listen(
 function addScrollbar(
   graph: HTMLElement,
   canvas: HTMLCanvasElement,
-  stages: HTMLElement
+  stages: HTMLElement,
 ): void {
-  const listeners: [EventTarget, string, any, AddEventListenerOptions | undefined][] = [];
-  const listen = (target: EventTarget, type: string, handler: any, options?: AddEventListenerOptions) => {
+  const listeners: [
+    EventTarget,
+    string,
+    any,
+    AddEventListenerOptions | undefined,
+  ][] = [];
+  const listen = (
+    target: EventTarget,
+    type: string,
+    handler: any,
+    options?: AddEventListenerOptions,
+  ) => {
     target.addEventListener(type, handler as EventListener, options);
     listeners.push([target, type, handler, options]);
   };
 
   // Turbo snapshots copy the toolbar without its event listeners or bindings.
   for (const stale of graph.querySelectorAll(
-    ".gha-run-scrollbar, .gha-run-resize-handle"
+    ".gha-run-scrollbar, .gha-run-resize-handle",
   ))
     stale.remove();
   const staleFrame = canvas.closest(".gha-run-canvas-frame");
@@ -180,7 +202,8 @@ function addScrollbar(
   };
 
   const dismiss = (event: Event) => {
-    if (!(filter as HTMLElement).contains(event.target as Node)) filter.open = false;
+    if (!(filter as HTMLElement).contains(event.target as Node))
+      filter.open = false;
     if (!settings.contains(event.target as Node)) settings.open = false;
   };
 
@@ -196,7 +219,8 @@ function addScrollbar(
     if (!filter.open) return;
     const bounds = controls.getBoundingClientRect();
     const below = window.innerHeight - bounds.bottom - 20;
-    const above = bounds.top - (parseFloat(getComputedStyle(bar).top) || 0) - 20;
+    const above =
+      bounds.top - (parseFloat(getComputedStyle(bar).top) || 0) - 20;
     const upwards = below < Math.min(420, popup.scrollHeight) && above > below;
     popup.style.top = upwards ? "auto" : "calc(100% + 8px)";
     popup.style.bottom = upwards ? "calc(100% + 8px)" : "auto";
@@ -275,7 +299,7 @@ function addScrollbar(
     labelText: string,
     key: "searchPosition" | "arrowPlacement",
     choices: [string, string][],
-    syncMethod: "syncSearchPosition" | "syncArrowPlacement"
+    syncMethod: "syncSearchPosition" | "syncArrowPlacement",
   ) => {
     const setting = document.createElement("div");
     setting.className = "gha-run-setting";
@@ -308,7 +332,13 @@ function addScrollbar(
       setting,
       sync() {
         for (const [value, button] of buttons)
-          button.setAttribute("aria-pressed", String((key === "searchPosition" ? searchPosition : arrowPlacement) === value));
+          button.setAttribute(
+            "aria-pressed",
+            String(
+              (key === "searchPosition" ? searchPosition : arrowPlacement) ===
+                value,
+            ),
+          );
       },
     };
   };
@@ -316,17 +346,29 @@ function addScrollbar(
   const searchSetting = createChoiceSetting(
     "Search and filter",
     "searchPosition",
-    [["left", "Left"], ["right", "Right"]],
-    "syncSearchPosition"
+    [
+      ["left", "Left"],
+      ["right", "Right"],
+    ],
+    "syncSearchPosition",
   );
   const arrowSetting = createChoiceSetting(
     "Scroll arrows",
     "arrowPlacement",
-    [["left", "Left"], ["right", "Right"], ["both", "Both"]],
-    "syncArrowPlacement"
+    [
+      ["left", "Left"],
+      ["right", "Right"],
+      ["both", "Both"],
+    ],
+    "syncArrowPlacement",
   );
 
-  settingsMenu.append(hoverSetting, groupSetting, searchSetting.setting, arrowSetting.setting);
+  settingsMenu.append(
+    hoverSetting,
+    groupSetting,
+    searchSetting.setting,
+    arrowSetting.setting,
+  );
   settings.append(settingsTrigger, settingsMenu);
   controls.append(settings);
 
@@ -382,12 +424,12 @@ function addScrollbar(
     button.dataset.direction = String(direction);
     button.setAttribute(
       "aria-label",
-      `Scroll workflow jobs ${direction < 0 ? "left" : "right"}`
+      `Scroll workflow jobs ${direction < 0 ? "left" : "right"}`,
     );
 
     const move = () => {
       const columns = stages.querySelectorAll(
-        ":scope > .WorkflowStage:not([data-gha-status-hidden])"
+        ":scope > .WorkflowStage:not([data-gha-status-hidden])",
       );
       if (!columns.length) return;
       const origin = (columns[0] as HTMLElement).offsetLeft;
@@ -412,8 +454,7 @@ function addScrollbar(
   const syncArrowPlacement = () => {
     const left = arrows.get(-1)!.button;
     const right = arrows.get(1)!.button;
-    if (arrowPlacement === "right")
-      header.replaceChildren(input, left, right);
+    if (arrowPlacement === "right") header.replaceChildren(input, left, right);
     else if (arrowPlacement === "both")
       header.replaceChildren(left, input, right);
     else header.replaceChildren(left, right, input);
@@ -477,7 +518,7 @@ function addScrollbar(
     if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
     setHeight(
       ((jobsViewHeight ?? canvas.getBoundingClientRect().height) as number) +
-        (event.key === "ArrowUp" ? -40 : 40)
+        (event.key === "ArrowUp" ? -40 : 40),
     );
     (window as any).__ghaRunViewModules?.saveSettings?.({ jobsViewHeight });
     event.preventDefault();
@@ -514,10 +555,7 @@ function addScrollbar(
   syncHoverToggle();
 
   const syncGroupingToggle = () => {
-    groupToggle.setAttribute(
-      "aria-pressed",
-      String(statusGroupingEnabled)
-    );
+    groupToggle.setAttribute("aria-pressed", String(statusGroupingEnabled));
     groupStatus.textContent = statusGroupingEnabled ? "On" : "Off";
   };
 
@@ -526,7 +564,9 @@ function addScrollbar(
     if (!statusGroupingEnabled) (window as any).collapsedStageGroups?.clear?.();
     for (const scrollbar of scrollbars.values()) scrollbar.syncGroupingToggle();
     scheduleUpdate();
-    (window as any).__ghaRunViewModules?.saveSettings?.({ statusGroupingEnabled });
+    (window as any).__ghaRunViewModules?.saveSettings?.({
+      statusGroupingEnabled,
+    });
   });
   syncGroupingToggle();
 
@@ -554,7 +594,8 @@ function addScrollbar(
         ? statusOptions.find(([status]) => selectedStatuses.has(status))?.[1]
         : `${selectedStatuses.size} selected`;
     const label = selectedStatuses.size ? selection : "Filter jobs";
-    if (triggerLabel.textContent !== label) triggerLabel.textContent = label ?? "";
+    if (triggerLabel.textContent !== label)
+      triggerLabel.textContent = label ?? "";
 
     const accessibleLabel = selectedStatuses.size
       ? `Filter jobs: ${selection}`
@@ -563,7 +604,7 @@ function addScrollbar(
       trigger.setAttribute("aria-label", accessibleLabel);
 
     const resultCount = graph.querySelectorAll(
-      ".WorkflowStage > .WorkflowCard:not([data-gha-status-hidden]):not([data-gha-scope-hidden])"
+      ".WorkflowStage > .WorkflowCard:not([data-gha-status-hidden]):not([data-gha-scope-hidden])",
     ).length;
     const announcement =
       selectedStatuses.size || appliedSearch
@@ -577,10 +618,12 @@ function addScrollbar(
 
     let max = Math.max(0, canvas.scrollWidth - canvas.clientWidth);
     const visibleStages = stages.querySelectorAll(
-      ":scope > .WorkflowStage:not([data-gha-status-hidden]):not([data-gha-scope-hidden])"
+      ":scope > .WorkflowStage:not([data-gha-status-hidden]):not([data-gha-scope-hidden])",
     );
     const firstStage = visibleStages[0] as HTMLElement;
-    const lastStage = visibleStages[visibleStages.length - 1] as HTMLElement | null;
+    const lastStage = visibleStages[
+      visibleStages.length - 1
+    ] as HTMLElement | null;
     if (!lastStage) max = 0;
     else if (lastStage.offsetWidth) {
       const visibleWidth =
@@ -596,9 +639,9 @@ function addScrollbar(
           64,
           Math.round(
             (input.clientWidth * canvas.clientWidth) /
-              (canvas.clientWidth + max * 1.5)
-          )
-        )
+              (canvas.clientWidth + max * 1.5),
+          ),
+        ),
       );
       input.style.setProperty("--gha-run-scroll-thumb-width", `${width}px`);
     }
@@ -611,7 +654,15 @@ function addScrollbar(
     sync();
   };
 
-  let drag: { id: number; startX: number; scrollLeft: number; travel: number; max: number } | undefined;
+  let drag:
+    | {
+        id: number;
+        startX: number;
+        scrollLeft: number;
+        travel: number;
+        max: number;
+      }
+    | undefined;
 
   const moveDrag = (event: PointerEvent) => {
     if (!drag || event.pointerId !== drag.id) return;
@@ -620,9 +671,10 @@ function addScrollbar(
         0,
         Math.min(
           drag.max,
-          drag.scrollLeft + ((event.clientX - drag.startX) * drag.max) / drag.travel
-        )
-      )
+          drag.scrollLeft +
+            ((event.clientX - drag.startX) * drag.max) / drag.travel,
+        ),
+      ),
     );
     sync();
     event.preventDefault();
@@ -633,11 +685,14 @@ function addScrollbar(
     const rect = input.getBoundingClientRect();
     const width = Math.min(
       rect.width,
-      parseFloat(input.style.getPropertyValue("--gha-run-scroll-thumb-width")) || 64
+      parseFloat(
+        input.style.getPropertyValue("--gha-run-scroll-thumb-width"),
+      ) || 64,
     );
     const travel = rect.width - width;
     if (travel <= 0) return;
-    const thumbLeft = rect.left + (canvas.scrollLeft / Number(input.max)) * travel;
+    const thumbLeft =
+      rect.left + (canvas.scrollLeft / Number(input.max)) * travel;
     if (event.clientX < thumbLeft || event.clientX > thumbLeft + width) return;
     drag = {
       id: event.pointerId,
@@ -659,7 +714,7 @@ function addScrollbar(
     if (!event.deltaX) return;
     canvas.scrollLeft = Math.min(
       Number(input.max),
-      Math.max(0, canvas.scrollLeft + event.deltaX)
+      Math.max(0, canvas.scrollLeft + event.deltaX),
     );
     sync();
   };
@@ -673,7 +728,7 @@ function addScrollbar(
       return;
     canvas.scrollLeft = Math.min(
       Number(input.max),
-      Math.max(0, canvas.scrollLeft + (event.key === "ArrowLeft" ? -40 : 40))
+      Math.max(0, canvas.scrollLeft + (event.key === "ArrowLeft" ? -40 : 40)),
     );
     sync();
     event.preventDefault();
@@ -684,13 +739,25 @@ function addScrollbar(
       event.stopPropagation();
   };
 
-  const canvasEvents = ["wheel", "pointerdown", "pointermove", "selectstart", "dragstart", "keydown"] as const;
+  const canvasEvents = [
+    "wheel",
+    "pointerdown",
+    "pointermove",
+    "selectstart",
+    "dragstart",
+    "keydown",
+  ] as const;
   for (const type of canvasEvents) {
     listen(canvas, type, stopCanvasInput, { capture: true });
   }
 
   const stopGraphInput = (event: Event) => event.stopPropagation();
-  for (const type of ["pointerdown", "pointermove", "wheel", "keydown"] as const) {
+  for (const type of [
+    "pointerdown",
+    "pointermove",
+    "wheel",
+    "keydown",
+  ] as const) {
     listen(bar, type, stopGraphInput);
   }
 
@@ -734,6 +801,8 @@ function addScrollbar(
   });
 }
 
-(() => {
+function initToolbars() {
   ((globalThis.__ghaRunViewModules ??= {}) as any).addScrollbar = addScrollbar;
-})();
+}
+
+initToolbars()
