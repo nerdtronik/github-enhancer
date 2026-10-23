@@ -3,34 +3,37 @@
 
 /**
  * @module collector-suppress
- * @description TypeScript version of collector-suppress.js — suppresses telemetry requests on the actions pages
+ * @description TypeScript version of collector-suppress.js — suppresses telemetry requests on Actions pages
  */
 
-declare const location: { pathname: string };
+(function() {
+  "use strict";
 
-function collectorSuppress(): void {
-  const telemetry: Set<string> = new Set([
+  type FetchInput = string | URL;
+
+  const telemetry = new Set([
     "https://collector.github.com/github/collect",
     "https://api.github.com/_private/browser/stats",
   ]);
-  const suppress = (input: RequestInfo | URL | string) => {
-    const url = typeof input === "string" ? "" : (input as URL).href;
-    return telemetry.has(url) &&
-      /^\/[^/]+\/[^/]+\/actions(?:\/|$)/.test(location.pathname);
-  };
 
-  const nativeFetch = window.fetch;
-  window.fetch = function (input: RequestInfo | URL, init: RequestInit | undefined) {
+  const suppress = (input: FetchInput) =>
+    telemetry.has(input?.toString() ?? String(input)) &&
+    /^\/[^/]+\/[^/]+\/actions(?:\/|$)/.test(location.pathname);
+
+  const _nativeFetch = window.fetch;
+
+  // Override fetch to suppress telemetry on Actions pages
+  (window as any).fetch = function(input: FetchInput, init?: RequestInit) {
     if (suppress(input)) return Promise.resolve(new Response(null, { status: 204 }));
-    return nativeFetch.call(this, input, init);
+    return (_nativeFetch as any)(input, init);
   };
 
   const nativeBeacon = navigator.sendBeacon;
-  if (typeof nativeBeacon === "function")
-    navigator.sendBeacon = function (url: string, data: Blob | undefined) {
+  if (typeof nativeBeacon === "function") {
+    navigator.sendBeacon = function(url: FetchInput, data?: BodyInit | Blob) {
       if (suppress(url)) return true;
-      return nativeBeacon.call(this, url, data);
+      // sendBeacon is synchronous and doesn't need async wrapping
+      return nativeBeacon.call(window, url, data);
     };
-}
-
-collectorSuppress();
+  }
+})();

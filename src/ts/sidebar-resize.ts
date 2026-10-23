@@ -6,7 +6,6 @@
  * @description TypeScript version of sidebar-resize.js — resizable left sidebar handles
  */
 
-import { chrome } from "./storage";
 
 declare const location: { pathname: string };
 
@@ -191,9 +190,10 @@ function attach(type: "actions" | "actions-run" | "pull-files", target: HTMLElem
   const cached = widths.get(type);
   if (cached !== undefined) applyWidth(binding, cached);
   else Promise.resolve().then(() => chrome.storage.local.get(storageKey(type))).then((stored) => {
-    const width = stored[storageKey(type)];
-    if (!Number.isSafeInteger(width) || width < MIN_WIDTH || width > MAX_WIDTH)
-      return;
+    const rawWidth = stored[storageKey(type)];
+    if (rawWidth === undefined || !Number.isSafeInteger(rawWidth)) return;
+    const width = rawWidth as number;
+    if (width < MIN_WIDTH || width > MAX_WIDTH) return;
     if (widths.has(type)) return;
     widths.set(type, width);
     if (current === binding && binding.width === undefined)

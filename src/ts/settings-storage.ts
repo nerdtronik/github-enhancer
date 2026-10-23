@@ -6,8 +6,9 @@
  * @description TypeScript version of settings-storage.js — persist and publish run-view preferences
  */
 
-import { chrome } from "./storage";
 declare const location: { origin: string; pathname: string; reload: () => void };
+
+// Browser extension runtime provides chrome globally via @types/chrome ambient declaration
 
 interface Preferences {
   enhancedViewEnabled: boolean;

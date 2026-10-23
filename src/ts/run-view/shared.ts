@@ -3,7 +3,7 @@
 
 /**
  * @module run-view/shared
- * @description TypeScript version of shared.js — module state and shared helpers
+ * @description TypeScript version of shared.js — shared types and helpers
  */
 
 export interface Scrollbar {
@@ -41,39 +41,8 @@ export interface RunViewState {
   sectionHash: string | null;
 }
 
-export const statusOptions: [string, string, string][] = [
-  ["completed", "Completed", "check-circle"],
-  ["failed", "Failed", "x-circle"],
-  ["waiting", "Waiting", "clock"],
-  ["active", "In progress", "sync"],
-  ["action-required", "Action required", "bell"],
-  ["cancelled", "Cancelled", "stop"],
-  ["skipped", "Skipped", "skip"],
-  ["timed-out", "Timed out", "stopwatch"],
-];
-
-export const state: RunViewState = {
-  scheduled: false,
-  adapted: new WeakSet(),
-  scrollbars: new Map(),
-  workflowInfos: new Map(),
-  selectedStatuses: new Set(),
-  expandedSections: new Set(),
-  collapsedStageGroups: new Set(),
-  jobSearch: "",
-  appliedSearch: "",
-  jobsViewHeight: undefined,
-  searchTimeout: undefined,
-  hoverFocusEnabled: true,
-  statusGroupingEnabled: false,
-  searchPosition: "right",
-  arrowPlacement: "left",
-  enhancedViewEnabled: null,
-  settingsToggleId: 0,
-  runPath: "",
-  sectionHash: null,
-};
-
+// Status options - will be redeclared in each module file that needs them
+export type StatusOptions = [string, string, string][];
 export const groups: string[] = ["completed", "active", "skipped", "cancelled"];
 export const groupLabels: string[] = ["Completed", "Active / pending", "Skipped", "Cancelled"];
 export const layoutMethods: string[] = [
@@ -83,7 +52,7 @@ export const layoutMethods: string[] = [
   "setDownstreamHighlightGroups",
 ];
 
-// GitHub Octicons; license and source are in THIRD_PARTY_NOTICES.md.
+// GitHub Octicons - will be redeclared in each module file that needs them
 const iconPaths: Record<string, string> = {
   filter:
     "M.75 3h14.5a.75.75 0 0 1 0 1.5H.75a.75.75 0 0 1 0-1.5ZM3 7.75A.75.75 0 0 1 3.75 7h8.5a.75.75 0 0 1 0 1.5h-8.5A.75.75 0 0 1 3 7.75Zm3 4a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z",
@@ -116,16 +85,3 @@ export function createIcon(name: string): SVGElement {
   svg.append(path);
   return svg;
 }
-
-(() => {
-  const modules: { state: RunViewState; [key: string]: unknown } = { state };
-  globalThis.__ghaRunViewModules = modules;
-  Object.assign(modules, {
-    groups,
-    groupLabels,
-    statusOptions,
-    layoutMethods,
-    iconPaths,
-    createIcon,
-  });
-})();

@@ -35,4 +35,3 @@ export interface Chrome {
   };
 }
 
-export declare const chrome: Chrome;

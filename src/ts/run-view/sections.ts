@@ -6,12 +6,13 @@
  * @description TypeScript version of sections.js — manages workflow info and job summary grouping
  */
 
-/** State for sections module. */
-let workflowInfos: Map<HTMLElement, HTMLElement> = new Map();
-let expandedSections: Set<string> = new Set();
+(function() {
+  /** State for sections module. */
+  const workflowInfos: Map<HTMLElement, HTMLElement> = new Map();
+  const expandedSections: Set<string> = new Set();
 
-/** Moves a workflow info element from the graph to the run summary area. */
-function moveWorkflowInfo(graph: HTMLElement, canvas: HTMLElement): void {
+  /** Moves a workflow info element from the graph to the run summary area. */
+  function moveWorkflowInfo(graph: HTMLElement, canvas: HTMLElement): void {
   const summary = document.querySelector(".actions-workflow-stats > .d-flex")!;
   const previous = workflowInfos.get(graph);
   const visualGraph = graph.querySelector('[data-target="action-graph.visualGraph"]')!;
@@ -162,4 +163,5 @@ function initSections(){
   modules.groupSummaries = groupSummaries;
 }
 
-initSections()
+initSections();
+})();

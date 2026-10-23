@@ -6,7 +6,6 @@
  * @description TypeScript version of content.js — workflow list indexing and pin loading
  */
 
-import { chrome } from "./storage";
 
 interface WorkflowItem {
   id: string;
@@ -36,24 +35,24 @@ interface WorkflowIndexState {
   fontSignature: string | null;
 }
 
-let repository: string = "";
-let query: string = "";
+const repository: string = "";
+const query: string = "";
 let scheduled: boolean = false;
-let fontRevision: number = 0;
-let loadingSidebars: Map<Element, WorkflowIndexState> = new Map();
-let cleanupTimers: Map<Element, ReturnType<typeof setTimeout>> = new Map();
-let workflowIndexLoads: Map<string, Promise<WorkflowItem[]>> = new Map();
-let scrollContainers: Map<Element, { container: Element; path: Array<[node: Element, parent: Element | null, className: string | null, style: string | null, expanded: string | null]> }> = new Map();
-let sidebar: HTMLElement | null = null;
-let running: boolean = false;
-let expanding: boolean = false;
-let fetching: boolean = false;
-let index: WorkflowItem[] | null = null;
-let showIndex: (() => void) | null = null;
-let loadingTimeout: ReturnType<typeof setTimeout> | null = null;
-let apiList: HTMLElement | null = null;
-let apiRows: Map<string, HTMLElement> = new Map();
-let fontSignature: string | null = null;
+const fontRevision: number = 0;
+const loadingSidebars: Map<Element, WorkflowIndexState> = new Map();
+const cleanupTimers: Map<Element, ReturnType<typeof setTimeout>> = new Map();
+const workflowIndexLoads: Map<string, Promise<WorkflowItem[]>> = new Map();
+const scrollContainers: Map<Element, { container: Element; path: Array<[node: Element, parent: Element | null, className: string | null, style: string | null, expanded: string | null]> }> = new Map();
+const sidebar: HTMLElement | null = null;
+const running: boolean = false;
+const expanding: boolean = false;
+const fetching: boolean = false;
+const index: WorkflowItem[] | null = null;
+const showIndex: (() => void) | null = null;
+const loadingTimeout: ReturnType<typeof setTimeout> | null = null;
+const apiList: HTMLElement | null = null;
+const apiRows: Map<string, HTMLElement> = new Map();
+const fontSignature: string | null = null;
 
 const CLICK_DELAY_MS = 100;
 const LOADING_TIMEOUT_MS = 30000;

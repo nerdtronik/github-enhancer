@@ -1,30 +1,30 @@
 {
   "manifest_version": 3,
   "name": "GitHub Enhancer",
-  "version": "0.9.0",
-  "description": "Filter workflows and display readable, scrollable job stages on GitHub Actions.",
+  "version": "0.1.0",
+  "description": "Enhanced GitHub Experience for developers.",
   "permissions": ["storage"],
   "content_scripts": [
     {
       "matches": ["https://github.com/*"],
-      "js": ["src/js/collector-suppress.js"],
+      "js": ["dist/collector-suppress.js"],
       "world": "MAIN",
       "run_at": "document_start"
     },
     {
       "matches": ["https://github.com/*"],
-      "js": ["src/js/settings-storage.js"],
+      "js": ["dist/settings-storage.js"],
       "run_at": "document_start"
     },
     {
       "matches": ["https://github.com/*"],
       "js": [
-        "src/js/run-view/shared.js",
-        "src/js/run-view/relationships.js",
-        "src/js/run-view/toolbar.js",
-        "src/js/run-view/jobs.js",
-        "src/js/run-view/sections.js",
-        "src/js/run-view.js"
+        "dist/run-view/shared.js",
+        "dist/run-view/relationships.js",
+        "dist/run-view/toolbar.js",
+        "dist/run-view/jobs.js",
+        "dist/run-view/sections.js",
+        "dist/run-view.js"
       ],
       "css": [
         "src/css/run-view/sections.css",
@@ -37,12 +37,12 @@
     {
       "matches": ["https://github.com/*"],
       "js": [
-        "src/js/workflow-categories.js",
-        "src/js/content.js",
-        "src/js/sidebar-resize.js",
-        "src/js/pr-conversation.js",
-        "src/js/run-list.js",
-        "src/js/go-to-top.js"
+        "dist/workflow-categories.js",
+        "dist/content.js",
+        "dist/sidebar-resize.js",
+        "dist/pr-conversation.js",
+        "dist/run-list.js",
+        "dist/go-to-top.js"
       ],
       "css": [
         "src/css/content.css",

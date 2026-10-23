@@ -6,22 +6,23 @@
  * @description TypeScript version of jobs.js — groups jobs by status, numbers stages, counts statuses
  */
 
-/** Coarse status groups a job row can be classified into. */
-type JobStatus =
-  | "skipped"
-  | "cancelled"
-  | "waiting"
-  | "timed-out"
-  | "failed"
-  | "action-required"
-  | "active"
-  | "completed";
+(function() {
+  /** Coarse status groups a job row can be classified into. */
+  type JobStatus =
+    | "skipped"
+    | "cancelled"
+    | "waiting"
+    | "timed-out"
+    | "failed"
+    | "action-required"
+    | "active"
+    | "completed";
 
-/** State for jobs module. */
-let appliedSearch: string = "";
-let selectedStatuses: Set<string> = new Set();
-let collapsedStageGroups: Set<string> = new Set();
-let statusGroupingEnabled: boolean = false;
+  /** State for jobs module. */
+  const appliedSearch: string = "";
+const selectedStatuses: Set<string> = new Set();
+const collapsedStageGroups: Set<string> = new Set();
+const statusGroupingEnabled: boolean = false;
 
 const groups: string[] = ["skipped", "cancelled", "waiting", "timed-out", "failed", "action-required", "active", "completed"];
 const groupLabels: string[] = ["Skipped", "Cancelled", "Waiting", "Timed Out", "Failed", "Action Required", "Active", "Completed"];
@@ -267,7 +268,7 @@ function groupJobs(graph: HTMLElement): Map<string, number | string> {
   return counts;
 }
 
-let stageNumbersByCard = new Map<string, string>();
+const stageNumbersByCard = new Map<string, string>();
 let numberedRunPath = "";
 
 function initJobs() {  
@@ -275,4 +276,5 @@ function initJobs() {
     modules.groupJobs = groupJobs;
 }
 
-initJobs()
+initJobs();
+})();

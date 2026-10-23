@@ -6,7 +6,8 @@
  * @description TypeScript version of go-to-top.js — "Go to top" button that hides near the top of the page
  */
 
-let active = false;
+(function() {
+  let active = false;
 let scheduled = false;
 let button: HTMLButtonElement | null = null;
 
@@ -56,3 +57,4 @@ function goToTop(): void {
 }
 
 goToTop();
+})();

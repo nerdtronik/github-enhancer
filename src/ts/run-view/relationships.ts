@@ -6,9 +6,11 @@
  * @description TypeScript version of relationships.js — dependency graph hover and scope
  */
 
-const modules = globalThis.__ghaRunViewModules;
+(function() {
+  // Register functions on the global modules object if it exists
+  const modules = (globalThis as any).__ghaRunViewModules;
 
-function createScopeIcon(): SVGElement {
+  function createScopeIcon(): SVGElement {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", "0 0 16 16");
   svg.setAttribute("width", "16");
@@ -216,4 +218,8 @@ function addHoverHighlights(stages: HTMLElement, onScopeChange: (scoped: boolean
   };
 }
 
-modules.addHoverHighlights = addHoverHighlights;
+// Register the function on the global modules object if it exists
+if (modules) {
+  modules.addHoverHighlights = addHoverHighlights;
+}
+})();

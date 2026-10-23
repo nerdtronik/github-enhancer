@@ -6,7 +6,6 @@
  * @description TypeScript version of pr-conversation.js — PR conversation filters, comment collapse, sticky header/actions
  */
 
-import { chrome } from "./storage";
 
 declare const location: { pathname: string };
 
@@ -724,7 +723,7 @@ window.addEventListener("resize", () => {
 chrome.storage.local
   .get([filterStorageKey, commentStorageKey])
   .then((stored) => {
-    const filters = stored[filterStorageKey];
+    const filters = stored[filterStorageKey] as { selected?: string[]; unresolvedOnly?: boolean; includeUnresolved?: boolean } | undefined;
     if (filters && Array.isArray(filters.selected)) {
       rememberFilters = true;
       selected = new Set(

@@ -6,7 +6,8 @@
  * @description TypeScript version of workflow-categories.js — workflow category backup/restore and management UI
  */
 
-import { chrome } from "./storage";
+
+import "chrome"; // Side-effect import to bring in @types/chrome ambient declarations
 
 declare const location: { pathname: string; origin: string };
 
@@ -139,10 +140,12 @@ function mergeBackup(backup: { categories: Category[] }): { categories: Category
   return current;
 }
 
-function sameSnapshot(left: { categories: Category[] } | null | undefined, right: { categories: Category[] } | null | undefined): boolean {
+function sameSnapshot(
+  left: { categories?: Category[] } | null | undefined,
+  right: { categories?: Category[] } | null | undefined,
+): boolean {
   if (!left || !right) return false;
-  const fields = (value: { categories: Category[] }): Array<[string, string[], boolean]> => value.categories?.map(({ name, workflows, collapsed }) =>
-    [name, workflows, collapsed]);
+  const fields = (value: { categories?: Category[] }): Array<[string, string[], boolean]> | undefined => value.categories?.map(({ name, workflows, collapsed }) => [name, workflows, collapsed]);
   return JSON.stringify(fields(left)) === JSON.stringify(fields(right));
 }
 
@@ -155,8 +158,12 @@ async function persist(): Promise<void> {
     try {
       await chrome.storage.local.set({ [current.key]: current.snapshot });
       const stored = await chrome.storage.local.get(current.key);
-      if (!sameSnapshot(stored[current.key], current.snapshot))
+      const saved = stored[current.key] as { categories?: Category[] } | undefined;
+      if (saved === undefined || !saved.categories) {
         throw new Error("Saved categories did not match the requested changes");
+      } else if (!sameSnapshot(saved, current.snapshot as any)) {
+        throw new Error("Saved categories did not match the requested changes");
+      }
       const savedRepository = current.key.slice(storagePrefix.length);
       if (sameSnapshot(drafts.get(savedRepository), current.snapshot)) {
         drafts.delete(savedRepository);
@@ -861,8 +868,9 @@ function sync(nextRepository: string, nextSidebar: HTMLElement, nextWorkflows: H
     };
     chrome.storage.local.get([key, legacyKey]).then((stored) => {
       const draft = drafts.get(nextRepository);
-      const legacy = stored[key] === undefined && stored[legacyKey] !== undefined;
-      showStored(draft ?? stored[key] ?? (legacy ? fromLegacy(stored[legacyKey]) : undefined), !!draft);
+      const legacyStored = stored[key] ?? stored[legacyKey];
+      const legacy = legacyStored && typeof legacyStored === "object";
+      showStored(draft ?? (legacy ? fromLegacy(legacyStored as any) : undefined), !!draft);
       if (legacy && !draft && revision === loadRevision) save(false);
     }).catch((error) => {
       console.warn("Could not load workflow categories", error);

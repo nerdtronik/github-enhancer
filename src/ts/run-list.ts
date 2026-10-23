@@ -6,7 +6,6 @@
  * @description TypeScript version of run-list.js — workflow run cards, attention overlay, history median
  */
 
-import { chrome } from "./storage";
 
 declare const location: { pathname: string };
 
@@ -442,7 +441,7 @@ async function cachedMedian(
       repo,
       chrome.storage.local
         .get(storageKey)
-        .then((stored) => stored[storageKey] ?? {})
+        .then((stored) => (stored[storageKey] as any) ?? {})
         .catch(() => ({})),
     );
   const cache = await historyCaches.get(repo)!;
@@ -812,8 +811,9 @@ scheduleUpdate();
 chrome.storage.local
   .get(settingsKey)
   .then((value) => {
-    enabled = value[settingsKey]?.enabled !== false;
-    enhancedViewEnabled = value[settingsKey]?.enhancedViewEnabled !== false;
+    const settings = value[settingsKey] as { enabled?: boolean; enhancedViewEnabled?: boolean } | undefined;
+    enabled = settings?.enabled !== false;
+    enhancedViewEnabled = settings?.enhancedViewEnabled !== false;
   })
   .catch(() => {})
   .finally(() => {
