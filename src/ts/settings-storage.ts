@@ -10,6 +10,9 @@ declare const location: { origin: string; pathname: string; reload: () => void }
 
 // Browser extension runtime provides chrome globally via @types/chrome ambient declaration
 
+// @ts-ignore
+import "./definitions";
+
 interface Preferences {
   enhancedViewEnabled: boolean;
   jobsViewHeight: number | null;
@@ -60,7 +63,7 @@ const publish = () =>
 
 const persist = (): Promise<void> => {
   const snapshot = { ...preferences };
-  const write = writes.then(() => chrome.storage.local.set({ [key]: snapshot }));
+  const write = writes.then(() => browser.storage.local.set({ [key]: snapshot }));
   writes = write.catch((error) => console.warn("Could not save job view settings", error));
   return write;
 };
@@ -167,7 +170,7 @@ function settingsStorage(): void {
     persist();
   });
 
-  chrome.storage.local
+  browser.storage.local
     .get(key)
     .then((stored) => {
       preferences = { ...defaults, ...validPatch(stored[key]), ...pending };
@@ -180,6 +183,8 @@ function settingsStorage(): void {
       if (Object.keys(pending).length) persist();
       pending = {};
     });
+  
+   // "//header[@aria-label='Global navigation menu']//*[@data-component='Octicon' and contains(@class, 'octicon-globe')]/..",
 }
 
 settingsStorage();

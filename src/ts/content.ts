@@ -103,14 +103,14 @@ function loadWorkflowIndex(currentRepository: string): Promise<WorkflowItem[]> {
     const key = `ghaWorkflowIndexV1:${currentRepository}`;
     let cached: { workflows: WorkflowItem[]; uses: number } | null = null;
     try {
-      cached = (await chrome.storage.local.get(key))[key] as { workflows: WorkflowItem[]; uses: number } | null;
+      cached = (await browser.storage.local.get(key))[key] as { workflows: WorkflowItem[]; uses: number } | null;
     } catch (error) {
       console.warn("Could not read cached workflow list", error);
     }
     if (Array.isArray(cached?.workflows) && Number.isInteger(cached.uses) &&
       cached.uses >= 0 && cached.uses < CACHED_WORKFLOW_RELOADS) {
       try {
-        await chrome.storage.local.set({ [key]: { ...cached, uses: cached.uses + 1 } });
+        await browser.storage.local.set({ [key]: { ...cached, uses: cached.uses + 1 } });
       } catch (error) {
         console.warn("Could not update cached workflow list", error);
       }
@@ -118,7 +118,7 @@ function loadWorkflowIndex(currentRepository: string): Promise<WorkflowItem[]> {
     }
     const workflows = await fetchWorkflowIndex(currentRepository);
     try {
-      await chrome.storage.local.set({ [key]: { workflows, uses: 0 } });
+      await browser.storage.local.set({ [key]: { workflows, uses: 0 } });
     } catch (error) {
       console.warn("Could not cache workflow list", error);
     }

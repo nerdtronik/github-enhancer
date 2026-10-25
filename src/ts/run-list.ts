@@ -439,7 +439,7 @@ async function cachedMedian(
   if (!historyCaches.has(repo))
     historyCaches.set(
       repo,
-      chrome.storage.local
+      browser.storage.local
         .get(storageKey)
         .then((stored) => (stored[storageKey] as any) ?? {})
         .catch(() => ({})),
@@ -456,7 +456,7 @@ async function cachedMedian(
   const samples = await readHistory(repo, run, loaded, generation);
   if (!samples) return null;
   cache[identity] = { fetchedAt: Date.now(), samples };
-  chrome.storage.local
+  browser.storage.local
     .set({ [storageKey]: cache })
     .catch((error) => console.warn("Could not cache run history", error));
   return [...samples].sort((a, b) => a - b)[2];
@@ -537,7 +537,7 @@ function inspectRunning(
 }
 
 function saveSettings(): void {
-  chrome.storage.local
+  browser.storage.local
     .set({ [settingsKey]: { enabled, enhancedViewEnabled } })
     .catch((error) => console.warn("Could not save run list settings", error));
 }
@@ -808,7 +808,7 @@ if (runListRepository())
     .querySelector(runListSelector)
     ?.classList.add("gha-run-card-pending");
 scheduleUpdate();
-chrome.storage.local
+browser.storage.local
   .get(settingsKey)
   .then((value) => {
     const settings = value[settingsKey] as { enabled?: boolean; enhancedViewEnabled?: boolean } | undefined;

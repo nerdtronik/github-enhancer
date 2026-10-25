@@ -284,8 +284,8 @@ function persistFilters(): void {
   writes = writes
     .then(() =>
       snapshot
-        ? chrome.storage.local.set({ [filterStorageKey]: snapshot })
-        : chrome.storage.local.remove(filterStorageKey),
+        ? browser.storage.local.set({ [filterStorageKey]: snapshot })
+        : browser.storage.local.remove(filterStorageKey),
     )
     .catch((error) =>
       console.warn("Could not save conversation filters", error),
@@ -297,7 +297,7 @@ function persistComments(): void {
   else delete collapsedByPr[path];
   const snapshot = { ...collapsedByPr };
   writes = writes
-    .then(() => chrome.storage.local.set({ [commentStorageKey]: snapshot }))
+    .then(() => browser.storage.local.set({ [commentStorageKey]: snapshot }))
     .catch((error) => console.warn("Could not save collapsed comments", error));
 }
 
@@ -720,7 +720,7 @@ window.addEventListener("resize", () => {
   syncFixedPosition();
   syncStickyActions();
 });
-chrome.storage.local
+browser.storage.local
   .get([filterStorageKey, commentStorageKey])
   .then((stored) => {
     const filters = stored[filterStorageKey] as { selected?: string[]; unresolvedOnly?: boolean; includeUnresolved?: boolean } | undefined;

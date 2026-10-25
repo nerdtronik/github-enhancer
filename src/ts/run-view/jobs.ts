@@ -271,8 +271,8 @@ function groupJobs(graph: HTMLElement): Map<string, number | string> {
 const stageNumbersByCard = new Map<string, string>();
 let numberedRunPath = "";
 
-function initJobs() {  
-   const modules = (window as any).GHAModules || {};
+function initJobs() {
+    const modules = (globalThis as any).__ghaRunViewModules || {};
     modules.groupJobs = groupJobs;
 }
 

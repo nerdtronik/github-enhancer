@@ -22,7 +22,6 @@ type RunViewModules = {
 };
 
 const modules = globalThis.__ghaRunViewModules as RunViewModules;
-delete globalThis.__ghaRunViewModules;
 const { state, layoutMethods, addScrollbar, groupJobs, moveWorkflowInfo, groupSummaries, collapseRunSections } = modules;
 const { adapted, scrollbars, workflowInfos, selectedStatuses, expandedSections, collapsedStageGroups } = state;
 

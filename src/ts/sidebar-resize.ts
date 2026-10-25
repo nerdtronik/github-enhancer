@@ -6,9 +6,6 @@
  * @description TypeScript version of sidebar-resize.js — resizable left sidebar handles
  */
 
-
-declare const location: { pathname: string };
-
 const MIN_WIDTH = 240;
 const MAX_WIDTH = 800;
 const MIN_CONTENT_WIDTH = 360;
@@ -34,30 +31,44 @@ function pageType(): "actions-run" | "actions" | "pull-files" | null {
   const path = location.pathname.replace(/^\/[^/]+\/[^/]+\//, "");
   if (/^actions\/runs\/[^/]+(?:\/|$)/.test(path)) return "actions-run";
   if (/^actions(?:\/|$)/.test(path)) return "actions";
-  if (/^pull\/\d+\/(?:files|changes)(?:\/|$)/.test(path))
-    return "pull-files";
+  if (/^pull\/\d+\/(?:files|changes)(?:\/|$)/.test(path)) return "pull-files";
   return null;
 }
 
-function findSidebar(type: "actions" | "actions-run" | "pull-files"): { target: HTMLElement; pane: HTMLElement } | null {
+function findSidebar(
+  type: "actions" | "actions-run" | "pull-files",
+): { target: HTMLElement; pane: HTMLElement } | null {
   if (type === "actions") {
     const target = document.querySelector(
-      'aside[aria-label="Actions"][data-expanded="true"]:has(nav[aria-label="Actions workflows"])'
+      'aside[aria-label="Actions"][data-expanded="true"]:has(nav[aria-label="Actions workflows"])',
     ) as HTMLElement | null;
-    return target && { target, pane: target } as { target: HTMLElement; pane: HTMLElement } | null;
+    return (
+      target &&
+      ({ target, pane: target } as {
+        target: HTMLElement;
+        pane: HTMLElement;
+      } | null)
+    );
   }
-  const selector = type === "actions-run"
-    ? 'split-page-layout:has(react-partial[partial-name="actions-run-jobs-list"])'
-    : "split-page-layout";
+  const selector =
+    type === "actions-run"
+      ? 'split-page-layout:has(react-partial[partial-name="actions-run-jobs-list"])'
+      : "split-page-layout";
   const target = document.querySelector(selector) as HTMLElement | null;
   const pane = target?.querySelector(".PageLayout-pane") as HTMLElement | null;
-  return pane && { target: target as HTMLElement, pane } as { target: HTMLElement; pane: HTMLElement } | null;
+  return (
+    pane &&
+    ({ target: target as HTMLElement, pane } as {
+      target: HTMLElement;
+      pane: HTMLElement;
+    } | null)
+  );
 }
 
 function maxWidth(): number {
   return Math.max(
     MIN_WIDTH,
-    Math.min(MAX_WIDTH, window.innerWidth - MIN_CONTENT_WIDTH)
+    Math.min(MAX_WIDTH, window.innerWidth - MIN_CONTENT_WIDTH),
   );
 }
 function clamp(width: number): number {
@@ -67,13 +78,17 @@ function storageKey(type: "actions" | "actions-run" | "pull-files"): string {
   return `ghaSidebarWidthV1:${type}`;
 }
 
-function position(binding: SidebarBinding, rect = binding.pane.getBoundingClientRect()): void {
+function position(
+  binding: SidebarBinding,
+  rect = binding.pane.getBoundingClientRect(),
+): void {
   binding.rect = rect;
   const top = binding.type === "actions" ? Math.max(0, rect.top) : 0;
-  const bottom = binding.type === "actions" ? Math.min(window.innerHeight, rect.bottom) : 0;
-  binding.handle.hidden = rect.width === 0 || (binding.type === "actions" && bottom <= top);
-  if (!binding.handle.hidden)
-    binding.handle.style.left = `${rect.right - 5}px`;
+  const bottom =
+    binding.type === "actions" ? Math.min(window.innerHeight, rect.bottom) : 0;
+  binding.handle.hidden =
+    rect.width === 0 || (binding.type === "actions" && bottom <= top);
+  if (!binding.handle.hidden) binding.handle.style.left = `${rect.right - 5}px`;
   if (binding.type === "actions") {
     binding.handle.style.top = `${top}px`;
     binding.handle.style.height = `${Math.max(0, bottom - top)}px`;
@@ -85,19 +100,29 @@ function position(binding: SidebarBinding, rect = binding.pane.getBoundingClient
 function applyWidth(binding: SidebarBinding, width: number): void {
   binding.width = clamp(width);
   binding.target.style.setProperty("--gha-sidebar-width", `${binding.width}px`);
-  binding.target.setAttribute("data-gha-sidebar-sized", "");
+  if (
+    binding.target.getAttribute("data-gha-sidebar-sized") === null ||
+    binding.target.getAttribute("data-gha-sidebar-sized") === ""
+  ) {
+    binding.target.setAttribute("data-gha-sidebar-sized", "");
+  }
   const rect = binding.rect;
-  if (rect) position(binding, {
-    left: rect.left, right: rect.left + binding.width, width: binding.width,
-    top: rect.top, bottom: rect.bottom,
-  } as DOMRectReadOnly);
+  if (rect)
+    position(binding, {
+      left: rect.left,
+      right: rect.left + binding.width,
+      width: binding.width,
+      top: rect.top,
+      bottom: rect.bottom,
+    } as DOMRectReadOnly);
 }
 
 function save(binding: SidebarBinding): void {
   widths.set(binding.type, binding.width);
   const key = storageKey(binding.type);
   const width = binding.width;
-  writes = writes.then(() => chrome.storage.local.set({ [key]: width }))
+  writes = writes
+    .then(() => browser.storage.local.set({ [key]: width }))
     .catch((error) => storageFailure("save", error));
 }
 
@@ -122,10 +147,18 @@ function detach(): void {
   current = undefined;
 }
 
-function attach(type: "actions" | "actions-run" | "pull-files", target: HTMLElement, pane: HTMLElement): void {
+function attach(
+  type: "actions" | "actions-run" | "pull-files",
+  target: HTMLElement,
+  pane: HTMLElement,
+): void {
   const handle = document.createElement("div");
   handle.className = "gha-sidebar-resize-handle";
-  if (type === "actions") handle.classList.add("gha-sidebar-resize-line");
+  if (
+    type === "actions" &&
+    !handle.classList.contains("gha-sidebar-resize-line")
+  )
+    handle.classList.add("gha-sidebar-resize-line");
   handle.setAttribute("role", "separator");
   handle.setAttribute("aria-orientation", "vertical");
   handle.setAttribute("aria-label", "Resize left sidebar");
@@ -133,20 +166,28 @@ function attach(type: "actions" | "actions-run" | "pull-files", target: HTMLElem
   handle.tabIndex = 0;
   handle.hidden = true;
   document.body.append(handle);
-  let binding: SidebarBinding = undefined!;
+  let binding: SidebarBinding;
   binding = {
-    type, target, pane, handle, width: undefined, rect: new DOMRectReadOnly(),
-    position: () => position(binding),
-    resize: () => {
-      const width = widths.get(type) ?? binding.width;
-      if (width === undefined) position(binding);
-      else {
-        applyWidth(binding, width);
-        position(binding);
-      }
-    },
-    observer: new ResizeObserver(binding.position),
+    type,
+    target,
+    pane,
+    handle,
+    width: undefined,
+    rect: new DOMRectReadOnly(),
+    position: () => {},
+    resize: () => {},
+    observer: new ResizeObserver(() => {}),
   };
+  binding.position = () => position(binding);
+  binding.resize = () => {
+    const width = widths.get(type) ?? binding.width;
+    if (width === undefined) position(binding);
+    else {
+      applyWidth(binding, width);
+      position(binding);
+    }
+  };
+  binding.observer = new ResizeObserver(binding.position);
   binding.observer.observe(pane);
   window.addEventListener("resize", binding.resize);
   window.addEventListener("scroll", binding.position, { passive: true });
@@ -189,29 +230,45 @@ function attach(type: "actions" | "actions-run" | "pull-files", target: HTMLElem
 
   const cached = widths.get(type);
   if (cached !== undefined) applyWidth(binding, cached);
-  else Promise.resolve().then(() => chrome.storage.local.get(storageKey(type))).then((stored) => {
-    const rawWidth = stored[storageKey(type)];
-    if (rawWidth === undefined || !Number.isSafeInteger(rawWidth)) return;
-    const width = rawWidth as number;
-    if (width < MIN_WIDTH || width > MAX_WIDTH) return;
-    if (widths.has(type)) return;
-    widths.set(type, width);
-    if (current === binding && binding.width === undefined)
-      applyWidth(binding, width);
-  }).catch((error) => storageFailure("load", error));
+  else
+    Promise.resolve()
+      .then(() => browser.storage.local.get(storageKey(type)))
+      .then((stored) => {
+        const rawWidth = stored[storageKey(type)];
+        if (rawWidth === undefined || !Number.isSafeInteger(rawWidth)) return;
+        const width = rawWidth as number;
+        if (width < MIN_WIDTH || width > MAX_WIDTH) return;
+        if (widths.has(type)) return;
+        widths.set(type, width);
+        if (current === binding && binding.width === undefined)
+          applyWidth(binding, width);
+      })
+      .catch((error) => storageFailure("load", error));
 }
 
 function update(): void {
   if (invalidated) return;
   const type = window.innerWidth >= 800 && pageType();
-  const sidebar = ((type && findSidebar(type)) ?? null) as { target: HTMLElement; pane: HTMLElement } | null;
-  if (current && (
-    current.type !== type || current.target !== sidebar?.target ||
-    current.pane !== sidebar?.pane || !current.handle.isConnected
-  )) detach();
+  const sidebar = ((type && findSidebar(type)) ?? null) as {
+    target: HTMLElement;
+    pane: HTMLElement;
+  } | null;
+  if (
+    current &&
+    (current.type !== type ||
+      current.target !== sidebar?.target ||
+      current.pane !== sidebar?.pane ||
+      !current.handle.isConnected)
+  )
+    detach();
   for (const handle of document.querySelectorAll(".gha-sidebar-resize-handle"))
     if (handle !== current?.handle) handle.remove();
-  if (sidebar && !current) attach(type as "actions" | "actions-run" | "pull-files", sidebar.target, sidebar.pane);
+  if (sidebar && !current)
+    attach(
+      type as "actions" | "actions-run" | "pull-files",
+      sidebar.target,
+      sidebar.pane,
+    );
 }
 
 function scheduleUpdate(): void {
@@ -233,5 +290,5 @@ new MutationObserver(() => {
 });
 document.addEventListener("turbo:load", scheduleUpdate);
 window.addEventListener("popstate", scheduleUpdate);
-window.addEventListener("resize", scheduleUpdate);
-update();
+window.addEventListener("resize", update);
+// update();

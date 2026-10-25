@@ -13,7 +13,7 @@ export async function newBrowser(options: {
     pretendToBeVisual: true,
   });
 
-  // Set up chrome.storage on the window object and make it globally accessible
+  // Set up browser.storage on the window object and make it globally accessible
   const globalChrome = { storage: chrome };
   (window as any).chrome = globalChrome;
 

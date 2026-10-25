@@ -80,7 +80,7 @@ async function setup(
 
   const mock = storage ?? mockStorage();
 
-  // Set up chrome.storage BEFORE any eval
+  // Set up browser.storage BEFORE any eval
   dom.window.chrome = { storage: mock };
 
   // Wrap eval to catch any errors from scripts failing in test environment

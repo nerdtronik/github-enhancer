@@ -2,8 +2,9 @@
   "name": "github-enhancer",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "build": "tsc && node scripts/build.js",
+    "build": "node scripts/build.js",
     "lint": "rslint --fix .",
     "test": "rstest"
   },
@@ -11,6 +12,8 @@
     "@rslint/core": "^0.9.5",
     "@rstest/core": "^0.12.4",
     "@types/chrome": "^0.3.6",
+    "@types/firefox-webext-browser": "^143.0.1",
+    "esbuild": "^0.24.2",
     "happy-dom": "^20.14.6",
     "rollup": "^4.65.0",
     "typescript": "^6.0.3"

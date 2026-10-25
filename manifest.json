@@ -4,6 +4,12 @@
   "version": "0.1.0",
   "description": "Enhanced GitHub Experience for developers.",
   "permissions": ["storage"],
+  "web_accessible_resources":[
+    {
+      "resources": ["assets/extension/*.svg"],
+      "matches": ["https://github.com/*"]
+    }
+  ],
   "content_scripts": [
     {
       "matches": ["https://github.com/*"],
@@ -19,11 +25,6 @@
     {
       "matches": ["https://github.com/*"],
       "js": [
-        "dist/run-view/shared.js",
-        "dist/run-view/relationships.js",
-        "dist/run-view/toolbar.js",
-        "dist/run-view/jobs.js",
-        "dist/run-view/sections.js",
         "dist/run-view.js"
       ],
       "css": [

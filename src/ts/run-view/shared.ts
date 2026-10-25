@@ -42,10 +42,19 @@ export interface RunViewState {
 }
 
 // Status options - will be redeclared in each module file that needs them
-export type StatusOptions = [string, string, string][];
-export const groups: string[] = ["completed", "active", "skipped", "cancelled"];
-export const groupLabels: string[] = ["Completed", "Active / pending", "Skipped", "Cancelled"];
-export const layoutMethods: string[] = [
+const statusOptions: [string, string, string][] = [
+  ["completed", "Completed", "check-circle"],
+  ["failed", "Failed", "x-circle"],
+  ["waiting", "Waiting", "clock"],
+  ["active", "In progress", "sync"],
+  ["action-required", "Action required", "bell"],
+  ["cancelled", "Cancelled", "stop"],
+  ["skipped", "Skipped", "skip"],
+  ["timed-out", "Timed out", "stopwatch"],
+];
+const groups: string[] = ["completed", "active", "skipped", "cancelled"];
+const groupLabels: string[] = ["Completed", "Active / pending", "Skipped", "Cancelled"];
+const layoutMethods: string[] = [
   "drawLines",
   "fitToWindow",
   "setHighlightedGroup",
@@ -85,3 +94,38 @@ export function createIcon(name: string): SVGElement {
   svg.append(path);
   return svg;
 }
+
+// The other run-view modules read a shared registry on globalThis.__ghaRunViewModules
+// and extend it (e.g. modules.groupJobs, modules.addHoverHighlights). Build it here,
+// mirroring the original shared.js, then publish it to the global.
+const modules = {
+  state: {
+    scheduled: false,
+    adapted: new WeakSet(),
+    scrollbars: new Map(),
+    workflowInfos: new Map(),
+    selectedStatuses: new Set(),
+    expandedSections: new Set(),
+    collapsedStageGroups: new Set(),
+    jobSearch: "",
+    appliedSearch: "",
+    jobsViewHeight: undefined,
+    searchTimeout: undefined,
+    hoverFocusEnabled: true,
+    statusGroupingEnabled: false,
+    searchPosition: "right",
+    arrowPlacement: "left",
+    enhancedViewEnabled: null,
+    settingsToggleId: 0,
+    runPath: "",
+    sectionHash: null,
+  },
+};
+Object.assign(modules, {
+  groups,
+  groupLabels,
+  statusOptions,
+  layoutMethods,
+  createIcon,
+});
+(globalThis as any).__ghaRunViewModules = modules;

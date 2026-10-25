@@ -158,9 +158,10 @@ function collapseRunSections() {
 
 
 function initSections(){
-  const modules = (window as any).GHAModules || {};
+  const modules = (globalThis as any).__ghaRunViewModules;
   modules.moveWorkflowInfo = moveWorkflowInfo;
   modules.groupSummaries = groupSummaries;
+  modules.collapseRunSections = collapseRunSections;
 }
 
 initSections();

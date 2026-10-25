@@ -85,7 +85,7 @@ function listen(
   handler: any,
   options?: AddEventListenerOptions,
 ): void {
-  target.addEventListener(type, handler as EventListener, options);
+  target.addEventListener(type, handler as EventListener, options && { passive: true, ...options });
 }
 
 /** Adds a floating scrollbar with search/filter controls and settings UI. */
