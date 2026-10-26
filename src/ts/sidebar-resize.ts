@@ -8,7 +8,7 @@
 
 import { DEFAULTS } from "./defaults.js";
 import { pageType, $x, randomString } from "./definitions.js";
-import { EXTENSION_SETTINGS } from "./settings.js";
+import { addNavigationListener } from "./settings.js";
 const SETTINGS = globalThis.EXTENSION_SETTINGS;
 let STATE = globalThis.EXTENSION_STATE as { [key: string | symbol]: any };
 
@@ -85,10 +85,10 @@ class SidebarResizer {
     STATE.sidebars[this.type as string] = this;
     switch (this.type) {
       case "actionRun":
-        this.width = EXTENSION_SETTINGS.sidebar_actionRun_width;
+        this.width = SETTINGS.sidebar_actionRun_width;
         break;
       case "actions":
-        this.width = EXTENSION_SETTINGS.sidebar_actions_width;
+        this.width = SETTINGS.sidebar_actions_width;
         break;
       default:
         console.warn("Sidebar not supported in page type:", this.type);
@@ -131,18 +131,29 @@ class SidebarResizer {
     );
   }
 
+  public hide() {
+    this.target.hidden = true;
+    this.position();
+  }
+  public show() {
+    this.target.hidden = false;
+    this.position();
+  }
   private position(): void {
     this.rect = this.target.getBoundingClientRect();
 
-    this.handle.hidden = this.rect.width === 0;
+    this.handle.hidden =
+      this.rect.width === 0 || this.target.style.display === "none";
     if (this.type === "actions") {
       const top = Math.max(0, this.rect.top);
       const bottom = Math.min(window.innerHeight, this.rect.bottom);
       this.handle.style.top = `${top}px`;
       this.handle.style.height = `${Math.max(0, bottom - top)}px`;
-      this.handle.hidden = this.rect.width === 0 || bottom <= top;
+      this.handle.hidden =
+        this.rect.width === 0 ||
+        bottom <= top ||
+        this.target.style.display === "none";
     }
-    // this.handle.setAttribute("aria-valuenow", String(Math.round(rect.width)));
   }
 
   private applyWidth(width: number): void {
@@ -161,12 +172,9 @@ class SidebarResizer {
     }
     if (!this.target.classList.contains("gha-sidebar-target"))
       this.target.classList.add("gha-sidebar-target");
-    this.handle.style.left = `${Math.round(this.width - 5)}px`;
-    const rect = this.target.getBoundingClientRect();
-    this.rect = {
-      ...rect,
-      width: this.width,
-    };
+    this.handle.style.left = `${Math.round(this.width - (this.type === "actionRun" ? -7 : 5))}px`;
+    this.rect = this.target.getBoundingClientRect();
+
     if (this.type === "actionRun") {
       let parent = this.target.parentElement;
       if (parent) {
@@ -175,8 +183,12 @@ class SidebarResizer {
       }
       let sibling = this.target.nextElementSibling;
       if (sibling) {
-        if (!sibling.classList.contains("flex-auto"))
-          sibling.classList.add("flex-auto");
+        // if (!sibling.classList.contains("flex-auto"))
+        //   sibling.classList.add("flex-auto");
+        // (sibling as HTMLElement).style.setProperty(
+        //   "width",
+        //   `${(parent?.getBoundingClientRect().width ?? window.innerWidth) - this.width}`,
+        // );
       }
     }
     this.position();
@@ -307,7 +319,12 @@ class SidebarResizer {
 
   public static update(): void {
     const page_type = pageType();
-    if (!["actions", "actionRun"].includes(page_type as string)) return;
+    if (!["actions", "actionRun"].includes(page_type as string)) {
+      Object.values(STATE.sidebars).forEach((e) =>
+        (e as SidebarResizer).detach(),
+      );
+      return;
+    }
     const type = page_type as SidebarType;
 
     const sidebar = (SidebarResizer.findSidebar(type) ??
@@ -316,6 +333,16 @@ class SidebarResizer {
       Object.values(STATE.sidebars).forEach((e) =>
         (e as SidebarResizer).detach(),
       );
+      return;
+    }
+    if (sidebar.style.display === "none") {
+      Object.keys(STATE.sidebars).forEach((key) => {
+        if (sidebar === STATE.sidebars[key].target) STATE.sidebars[key].hide();
+      });
+    } else {
+      Object.keys(STATE.sidebars).forEach((key) => {
+        if (sidebar === STATE.sidebars[key].target) STATE.sidebars[key].show();
+      });
     }
     if (!Object.keys(STATE.sidebars).includes(type as string)) {
       Object.keys(STATE.sidebars).forEach((key) => {
@@ -339,6 +366,8 @@ function scheduleUpdate(): void {
   });
 }
 
-window.addEventListener("resize", scheduleUpdate);
+addNavigationListener(scheduleUpdate);
+window.addEventListener("resize", SidebarResizer.update);
+window.addEventListener("scroll", scheduleUpdate);
 document.addEventListener("turbo:load", scheduleUpdate);
 window.addEventListener("popstate", scheduleUpdate);
