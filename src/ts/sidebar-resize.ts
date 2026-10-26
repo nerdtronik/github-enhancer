@@ -6,289 +6,339 @@
  * @description TypeScript version of sidebar-resize.js — resizable left sidebar handles
  */
 
-const MIN_WIDTH = 240;
-const MAX_WIDTH = 800;
-const MIN_CONTENT_WIDTH = 360;
-const widths = new Map<string, number | undefined>();
-let current: SidebarBinding | undefined = undefined;
+import { DEFAULTS } from "./defaults.js";
+import { pageType, $x, randomString } from "./definitions.js";
+import { EXTENSION_SETTINGS } from "./settings.js";
+const SETTINGS = globalThis.EXTENSION_SETTINGS;
+let STATE = globalThis.EXTENSION_STATE as { [key: string | symbol]: any };
+
+type SidebarType = "actions" | "actionRun";
+
+STATE.sidebar_widths = new Map<string, number | undefined>();
+STATE.sidebars = {} as { [key: string]: SidebarResizer };
 let scheduled = false;
-let writes = Promise.resolve();
-let invalidated = false;
 
-interface SidebarBinding {
-  type: "actions" | "actions-run" | "pull-files";
+class SidebarResizer {
+  type: SidebarType;
   target: HTMLElement;
-  pane: HTMLElement;
   handle: HTMLElement;
-  width: number | undefined;
-  rect: DOMRectReadOnly;
-  position: () => void;
-  resize: () => void;
-  observer: ResizeObserver;
-}
+  width: number;
+  rect: DOMRect;
+  enabled: boolean = true;
+  id: string;
+  observer: MutationObserver;
 
-function pageType(): "actions-run" | "actions" | "pull-files" | null {
-  const path = location.pathname.replace(/^\/[^/]+\/[^/]+\//, "");
-  if (/^actions\/runs\/[^/]+(?:\/|$)/.test(path)) return "actions-run";
-  if (/^actions(?:\/|$)/.test(path)) return "actions";
-  if (/^pull\/\d+\/(?:files|changes)(?:\/|$)/.test(path)) return "pull-files";
-  return null;
-}
-
-function findSidebar(
-  type: "actions" | "actions-run" | "pull-files",
-): { target: HTMLElement; pane: HTMLElement } | null {
-  if (type === "actions") {
-    const target = document.querySelector(
-      'aside[aria-label="Actions"][data-expanded="true"]:has(nav[aria-label="Actions workflows"])',
-    ) as HTMLElement | null;
-    return (
-      target &&
-      ({ target, pane: target } as {
-        target: HTMLElement;
-        pane: HTMLElement;
-      } | null)
-    );
-  }
-  const selector =
-    type === "actions-run"
-      ? 'split-page-layout:has(react-partial[partial-name="actions-run-jobs-list"])'
-      : "split-page-layout";
-  const target = document.querySelector(selector) as HTMLElement | null;
-  const pane = target?.querySelector(".PageLayout-pane") as HTMLElement | null;
-  return (
-    pane &&
-    ({ target: target as HTMLElement, pane } as {
-      target: HTMLElement;
-      pane: HTMLElement;
-    } | null)
-  );
-}
-
-function maxWidth(): number {
-  return Math.max(
-    MIN_WIDTH,
-    Math.min(MAX_WIDTH, window.innerWidth - MIN_CONTENT_WIDTH),
-  );
-}
-function clamp(width: number): number {
-  return Math.min(maxWidth(), Math.max(MIN_WIDTH, Math.round(width)));
-}
-function storageKey(type: "actions" | "actions-run" | "pull-files"): string {
-  return `ghaSidebarWidthV1:${type}`;
-}
-
-function position(
-  binding: SidebarBinding,
-  rect = binding.pane.getBoundingClientRect(),
-): void {
-  binding.rect = rect;
-  const top = binding.type === "actions" ? Math.max(0, rect.top) : 0;
-  const bottom =
-    binding.type === "actions" ? Math.min(window.innerHeight, rect.bottom) : 0;
-  binding.handle.hidden =
-    rect.width === 0 || (binding.type === "actions" && bottom <= top);
-  if (!binding.handle.hidden) binding.handle.style.left = `${rect.right - 5}px`;
-  if (binding.type === "actions") {
-    binding.handle.style.top = `${top}px`;
-    binding.handle.style.height = `${Math.max(0, bottom - top)}px`;
-  }
-  binding.handle.setAttribute("aria-valuemax", String(maxWidth()));
-  binding.handle.setAttribute("aria-valuenow", String(Math.round(rect.width)));
-}
-
-function applyWidth(binding: SidebarBinding, width: number): void {
-  binding.width = clamp(width);
-  binding.target.style.setProperty("--gha-sidebar-width", `${binding.width}px`);
-  if (
-    binding.target.getAttribute("data-gha-sidebar-sized") === null ||
-    binding.target.getAttribute("data-gha-sidebar-sized") === ""
-  ) {
-    binding.target.setAttribute("data-gha-sidebar-sized", "");
-  }
-  const rect = binding.rect;
-  if (rect)
-    position(binding, {
-      left: rect.left,
-      right: rect.left + binding.width,
-      width: binding.width,
-      top: rect.top,
-      bottom: rect.bottom,
-    } as DOMRectReadOnly);
-}
-
-function save(binding: SidebarBinding): void {
-  widths.set(binding.type, binding.width);
-  const key = storageKey(binding.type);
-  const width = binding.width;
-  writes = writes
-    .then(() => browser.storage.local.set({ [key]: width }))
-    .catch((error) => storageFailure("save", error));
-}
-
-function storageFailure(action: string, error: any): void {
-  if (error?.message?.includes("Extension context invalidated")) {
-    invalidated = true;
-    detach();
-    return;
-  }
-  console.warn(`Could not ${action} sidebar width`, error);
-}
-
-function detach(): void {
-  if (!current) return;
-  current.target.style.removeProperty("--gha-sidebar-width");
-  current.target.removeAttribute("data-gha-sidebar-sized");
-  current.handle.remove();
-  current.observer.disconnect();
-  window.removeEventListener("resize", current.resize);
-  window.removeEventListener("scroll", current.position);
-  document.documentElement.classList.remove("gha-sidebar-resizing");
-  current = undefined;
-}
-
-function attach(
-  type: "actions" | "actions-run" | "pull-files",
-  target: HTMLElement,
-  pane: HTMLElement,
-): void {
-  const handle = document.createElement("div");
-  handle.className = "gha-sidebar-resize-handle";
-  if (
-    type === "actions" &&
-    !handle.classList.contains("gha-sidebar-resize-line")
-  )
-    handle.classList.add("gha-sidebar-resize-line");
-  handle.setAttribute("role", "separator");
-  handle.setAttribute("aria-orientation", "vertical");
-  handle.setAttribute("aria-label", "Resize left sidebar");
-  handle.setAttribute("aria-valuemin", String(MIN_WIDTH));
-  handle.tabIndex = 0;
-  handle.hidden = true;
-  document.body.append(handle);
-  let binding: SidebarBinding;
-  binding = {
-    type,
-    target,
-    pane,
-    handle,
-    width: undefined,
-    rect: new DOMRectReadOnly(),
-    position: () => {},
-    resize: () => {},
-    observer: new ResizeObserver(() => {}),
-  };
-  binding.position = () => position(binding);
-  binding.resize = () => {
-    const width = widths.get(type) ?? binding.width;
-    if (width === undefined) position(binding);
-    else {
-      applyWidth(binding, width);
-      position(binding);
+  public constructor() {
+    this.id = randomString();
+    this.type = pageType() as SidebarType;
+    this.handle = document.createElement("div");
+    this.handle.id = this.id;
+    this.rect = new DOMRect();
+    this.width = DEFAULTS.SIDEBAR_DEFAULT_WIDTH;
+    this.observer = new MutationObserver(() => {});
+    const target = SidebarResizer.findSidebar(this.type);
+    this.observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === "attributes") {
+          if (mutation.attributeName === "data-expanded") {
+            if (
+              (mutation.target as HTMLElement).getAttribute(
+                mutation.attributeName,
+              ) === "true"
+            ) {
+              (mutation.target as HTMLElement).style.setProperty(
+                "transition",
+                "width var(--motion-transition-stateChange), min-width var(--motion-transition-stateChange);",
+              );
+              (mutation.target as HTMLElement).style.setProperty(
+                "--gha-sidebar-width",
+                `${this.width}px`,
+              );
+              this.handle.hidden = false;
+            } else {
+              (mutation.target as HTMLElement).style.removeProperty(
+                "--gha-sidebar-width",
+              );
+              (mutation.target as HTMLElement).style.setProperty(
+                "transition",
+                "none !important",
+              );
+              this.handle.hidden = true;
+            }
+          }
+        }
+      });
+    });
+    this.target = document.createElement("div");
+    if (!target) {
+      console.warn("Unable to locate sidebar in page");
+      this.detach();
+      return;
     }
-  };
-  binding.observer = new ResizeObserver(binding.position);
-  binding.observer.observe(pane);
-  window.addEventListener("resize", binding.resize);
-  window.addEventListener("scroll", binding.position, { passive: true });
-  current = binding;
+    this.target = target;
+    if (this.type !== "actionRun")
+      this.observer.observe(this.target, {
+        attributes: true,
+      });
+    this.rect = this.target.getBoundingClientRect();
+    this.width = this.rect.width;
+    STATE.sidebars[this.type as string] = this;
+    switch (this.type) {
+      case "actionRun":
+        this.width = EXTENSION_SETTINGS.sidebar_actionRun_width;
+        break;
+      case "actions":
+        this.width = EXTENSION_SETTINGS.sidebar_actions_width;
+        break;
+      default:
+        console.warn("Sidebar not supported in page type:", this.type);
+        break;
+    }
+    this.attach();
+  }
 
-  let drag: { id: number; x: number; width: number } | undefined;
-  handle.addEventListener("pointerdown", (event) => {
-    if (event.button !== 0) return;
-    const rect = pane.getBoundingClientRect();
-    position(binding, rect);
-    drag = {
-      id: event.pointerId,
-      x: event.clientX,
-      width: rect.width,
-    };
-    handle.setPointerCapture?.(event.pointerId);
-    document.documentElement.classList.add("gha-sidebar-resizing");
-    event.preventDefault();
-  });
-  handle.addEventListener("pointermove", (event) => {
-    if (!drag || event.pointerId !== drag.id) return;
-    applyWidth(binding, drag.width + event.clientX - drag.x);
-  });
-  const finish = (event: PointerEvent) => {
-    if (!drag || event.pointerId !== drag.id) return;
-    drag = undefined;
-    document.documentElement.classList.remove("gha-sidebar-resizing");
-    if (binding.width !== undefined) save(binding);
-  };
-  handle.addEventListener("pointerup", finish);
-  handle.addEventListener("pointercancel", finish);
-  handle.addEventListener("keydown", (event) => {
-    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
-    position(binding);
-    const width = binding.width ?? binding.rect.width;
-    applyWidth(binding, width + (event.key === "ArrowRight" ? 20 : -20));
-    save(binding);
-    event.preventDefault();
-  });
+  private static findSidebar(type: SidebarType): HTMLElement | null {
+    if (type === "actions") {
+      const target = $x(
+        document,
+        '//aside[@aria-label="Actions"]',
+      )[0] as HTMLElement | null;
+      return target;
+    } else if (type === "actionRun") {
+      const target = $x(
+        document,
+        '//div[@data-target="split-page-layout.pane"]',
+      )[0] as HTMLElement | null;
+      return target;
+    }
+    console.warn(`Sidebar type: ${type} not supported yet`);
+    return null;
+  }
 
-  const cached = widths.get(type);
-  if (cached !== undefined) applyWidth(binding, cached);
-  else
-    Promise.resolve()
-      .then(() => browser.storage.local.get(storageKey(type)))
-      .then((stored) => {
-        const rawWidth = stored[storageKey(type)];
-        if (rawWidth === undefined || !Number.isSafeInteger(rawWidth)) return;
-        const width = rawWidth as number;
-        if (width < MIN_WIDTH || width > MAX_WIDTH) return;
-        if (widths.has(type)) return;
-        widths.set(type, width);
-        if (current === binding && binding.width === undefined)
-          applyWidth(binding, width);
-      })
-      .catch((error) => storageFailure("load", error));
-}
-
-function update(): void {
-  if (invalidated) return;
-  const type = window.innerWidth >= 800 && pageType();
-  const sidebar = ((type && findSidebar(type)) ?? null) as {
-    target: HTMLElement;
-    pane: HTMLElement;
-  } | null;
-  if (
-    current &&
-    (current.type !== type ||
-      current.target !== sidebar?.target ||
-      current.pane !== sidebar?.pane ||
-      !current.handle.isConnected)
-  )
-    detach();
-  for (const handle of document.querySelectorAll(".gha-sidebar-resize-handle"))
-    if (handle !== current?.handle) handle.remove();
-  if (sidebar && !current)
-    attach(
-      type as "actions" | "actions-run" | "pull-files",
-      sidebar.target,
-      sidebar.pane,
+  private maxWidth(): number {
+    return Math.max(
+      DEFAULTS.SIDEBAR_MAX_WIDTH,
+      Math.min(
+        DEFAULTS.SIDEBAR_MIN_WIDTH,
+        window.innerWidth - DEFAULTS.SIDEBAR_MIN_CONTENT_WIDTH,
+      ),
     );
+  }
+  private clamp(width: number): number {
+    return Math.min(
+      this.maxWidth(),
+      Math.max(DEFAULTS.SIDEBAR_MIN_WIDTH, Math.round(width)),
+    );
+  }
+
+  private position(): void {
+    this.rect = this.target.getBoundingClientRect();
+
+    this.handle.hidden = this.rect.width === 0;
+    if (this.type === "actions") {
+      const top = Math.max(0, this.rect.top);
+      const bottom = Math.min(window.innerHeight, this.rect.bottom);
+      this.handle.style.top = `${top}px`;
+      this.handle.style.height = `${Math.max(0, bottom - top)}px`;
+      this.handle.hidden = this.rect.width === 0 || bottom <= top;
+    }
+    // this.handle.setAttribute("aria-valuenow", String(Math.round(rect.width)));
+  }
+
+  private applyWidth(width: number): void {
+    this.width = this.clamp(width);
+    if (this.type === "actionRun")
+      this.target.style.setProperty("width", `${this.width}px`);
+
+    if (this.type === "actions") {
+      this.target.style.setProperty("--gha-sidebar-width", `${this.width}px`);
+      if (
+        this.target.getAttribute("data-gha-sidebar-sized") === null ||
+        this.target.getAttribute("data-gha-sidebar-sized") === ""
+      ) {
+        this.target.setAttribute("data-gha-sidebar-sized", "");
+      }
+    }
+    if (!this.target.classList.contains("gha-sidebar-target"))
+      this.target.classList.add("gha-sidebar-target");
+    this.handle.style.left = `${Math.round(this.width - 5)}px`;
+    const rect = this.target.getBoundingClientRect();
+    this.rect = {
+      ...rect,
+      width: this.width,
+    };
+    if (this.type === "actionRun") {
+      let parent = this.target.parentElement;
+      if (parent) {
+        if (!parent.classList.contains("gha-sidebar-parent"))
+          parent.classList.add("gha-sidebar-parent");
+      }
+      let sibling = this.target.nextElementSibling;
+      if (sibling) {
+        if (!sibling.classList.contains("flex-auto"))
+          sibling.classList.add("flex-auto");
+      }
+    }
+    this.position();
+  }
+
+  public save(): void {
+    STATE.sidebar_widths.set(this.type, this.width);
+    switch (this.type) {
+      case "actions":
+        SETTINGS.sidebar_actions_width = this.width;
+        break;
+      case "actionRun":
+        SETTINGS.sidebar_actionRun_width = this.width;
+        break;
+      default:
+        break;
+    }
+  }
+
+  private detach(): void {
+    if (this.target) {
+      this.target.style.removeProperty("--gha-sidebar-width");
+      this.target.removeAttribute("data-gha-sidebar-sized");
+    }
+    if (this.handle) {
+      this.handle.hidden = true;
+      this.handle.remove();
+      this.enabled = false;
+    }
+    // STATE.sidebar_current.observer.disconnect();
+    // window.removeEventListener("resize", STATE.sidebar_current.resize);
+    // window.removeEventListener("scroll", STATE.sidebar_current.position);
+    document.documentElement.classList.remove("gha-sidebar-resizing");
+    if (Object.keys(STATE.sidebars).includes(this.type)) {
+      delete STATE.sidebars[this.type];
+    }
+  }
+
+  public attach(): void {
+    this.enabled = true;
+
+    this.handle.className = "gha-sidebar-resize-handle";
+    if (this.type === "actions")
+      this.handle.classList.add("gha-sidebar-resize-line");
+    this.handle.setAttribute("role", "separator");
+    this.handle.setAttribute("aria-orientation", "vertical");
+    this.handle.setAttribute("aria-label", "Resize left sidebar");
+    this.handle.setAttribute(
+      "aria-valuemin",
+      String(DEFAULTS.SIDEBAR_MIN_WIDTH),
+    );
+    this.handle.setAttribute("aria-valuemax", String(this.maxWidth()));
+    this.handle.tabIndex = 0;
+    this.handle.hidden = false;
+    document.body.append(this.handle);
+
+    ((this.rect = this.target.getBoundingClientRect()), this.position());
+
+    window.addEventListener("scroll", () => this.position, { passive: true });
+
+    let drag: { id: number; x: number; width: number } | undefined;
+
+    const start = (event: PointerEvent) => {
+      if (event.button !== 0 || !this.target) return;
+      this.position();
+      drag = {
+        id: event.pointerId,
+        x: event.clientX,
+        width: this.rect.width,
+      };
+      this.handle.setPointerCapture?.(event.pointerId);
+      document.documentElement.classList.add("gha-sidebar-resizing");
+      // event.preventDefault();
+    };
+    const move = (event: PointerEvent) => {
+      if (!drag || event.pointerId !== drag.id) return;
+      this.applyWidth(drag.width + event.clientX - drag.x);
+    };
+    const finish = (event: PointerEvent) => {
+      if (!drag || event.pointerId !== drag.id) return;
+      drag = undefined;
+      document.documentElement.classList.remove("gha-sidebar-resizing");
+      this.save();
+    };
+
+    const keysMove = (event: KeyboardEvent) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      this.position();
+      const width =
+        this.width ?? this.rect?.width ?? DEFAULTS.SIDEBAR_MIN_WIDTH;
+      this.applyWidth(width + (event.key === "ArrowRight" ? 20 : -20));
+      this.save();
+      event.preventDefault();
+    };
+
+    this.handle.addEventListener("pointerdown", start);
+    this.handle.addEventListener("pointermove", move, { passive: true });
+    this.handle.addEventListener("pointerup", finish);
+    this.handle.addEventListener("pointercancel", finish);
+    this.handle.addEventListener("keydown", keysMove);
+    this.width = this.rect.width;
+
+    const cached = STATE.sidebar_widths.get(this.type);
+    if (cached !== undefined) this.applyWidth(cached);
+    else {
+      let width = 0;
+      switch (this.type) {
+        case "actionRun":
+          width = SETTINGS.sidebar_actionRun_width;
+          break;
+        case "actions":
+          width = SETTINGS.sidebar_actions_width;
+          break;
+        default:
+          break;
+      }
+      if (width === 0) return;
+      if (
+        width < DEFAULTS.SIDEBAR_MIN_WIDTH ||
+        width > DEFAULTS.SIDEBAR_MAX_WIDTH
+      )
+        return;
+      if (STATE.sidebar_widths.has(this.type)) return;
+
+      this.applyWidth(width);
+    }
+  }
+
+  public static update(): void {
+    const page_type = pageType();
+    if (!["actions", "actionRun"].includes(page_type as string)) return;
+    const type = page_type as SidebarType;
+
+    const sidebar = (SidebarResizer.findSidebar(type) ??
+      null) as HTMLElement | null;
+    if (!sidebar) {
+      Object.values(STATE.sidebars).forEach((e) =>
+        (e as SidebarResizer).detach(),
+      );
+    }
+    if (!Object.keys(STATE.sidebars).includes(type as string)) {
+      Object.keys(STATE.sidebars).forEach((key) => {
+        STATE.sidebars[key].detach();
+      });
+      STATE.sidebars[type] = new SidebarResizer();
+    } else if (STATE.sidebars[type].enabled === false) {
+      STATE.sidebars[type].attach();
+    }
+  }
 }
+
+SidebarResizer.update();
 
 function scheduleUpdate(): void {
   if (scheduled) return;
   scheduled = true;
   requestAnimationFrame(() => {
     scheduled = false;
-    update();
+    SidebarResizer.update();
   });
 }
 
-new MutationObserver(() => {
-  if (current || pageType()) scheduleUpdate();
-}).observe(document.documentElement, {
-  childList: true,
-  subtree: true,
-  attributes: true,
-  attributeFilter: ["data-expanded"],
-});
+window.addEventListener("resize", scheduleUpdate);
 document.addEventListener("turbo:load", scheduleUpdate);
 window.addEventListener("popstate", scheduleUpdate);
-window.addEventListener("resize", update);
-// update();

@@ -1,9 +1,14 @@
 "use strict";
 
-if (typeof chrome === "undefined" && typeof browser !== "undefined") {
-  // @ts-ignore
-  chrome = browser;
-}
+export declare type PageType =
+  | "repo"
+  | "issues"
+  | "pr"
+  | "discussions"
+  | "projects"
+  | "actions"
+  | "actionRun"
+  | null;
 
 export function parseSVG(svgText: string): HTMLElement {
   const parser = new DOMParser();
@@ -30,25 +35,33 @@ export function $x(node: Node | Document, expr: string) {
   return found;
 }
 
-// export function pageType(): "repo" | "issues" | "pulls" | "discussions" | "projects" | "actions" | "action-run" | null {
-//   const path = window.location.pathname;
-//   if (/^\/[^/]+\/[^/]+\/(issues|pull|discussions|projects|actions)(?:\/|$)/.test(path)) {
-//     const match = path.match(/^\/[^/]+\/[^/]+\/([^/]+)(?:\/|$)/);
-//     if (match) {
-//       const type = match[1];
-//       if (type === "issues") return "issues";
-//       if (type === "pull") return "pulls";
-//       if (type === "discussions") return "discussions";
-//       if (type === "projects") return "projects";
-//       if (type === "actions") {
-//         if (/^\/[^/]+\/[^/]+\/actions\/runs\/[^/]+(?:\/|$)/.test(path)) {
-//           return "action-run";
-//         }
-//         return "actions";
-//       }
-//     }
-//   }
+export function pageType(): PageType {
+  const path = window.location.pathname;
+  if (
+    /^\/[^/]+\/[^/]+\/(issues|pull|discussions|projects|actions)(?:\/|$)/.test(
+      path,
+    )
+  ) {
+    const match = path.match(/^\/[^/]+\/[^/]+\/([^/]+)(?:\/|$)/);
+    if (match) {
+      const type = match[1];
+      if (type === "issues") return "issues";
+      if (type === "pull") return "pr";
+      if (type === "discussions") return "discussions";
+      if (type === "projects") return "projects";
+      if (type === "actions") {
+        if (/^\/[^/]+\/[^/]+\/actions\/runs\/[^/]+(?:\/|$)/.test(path)) {
+          return "actionRun";
+        }
+        return "actions";
+      }
+    }
+  }
+  return null;
+}
 
+export const randomString = (lenght: number = 15) =>
+  Math.random().toString(36).substring(0, Math.max(lenght, 63));
 
 // <div class="text-bold prc-Button-ButtonBase-9n-Xk appHeaderButton__sQ5HIU prc-Button-IconButton-fyge7" style="
 //     display: block;
