@@ -13,6 +13,7 @@ search[aria-label="Filter workflow runs"] > :first-child {
   max-width: none;
 }
 
+/* Hidden until the cards are applied so the native list does not flash first. */
 .gha-run-card-pending[data-listview-component="items-list"] {
   display: none !important;
 }
@@ -33,7 +34,7 @@ section[aria-label^="Workflow runs"] [aria-label="Workflow runs results"] > :has
 }
 
 section[aria-label="Workflow runs"] [aria-label="Workflow runs results"] > :has(.gha-run-card-list) {
-  border: 1px solid var(--borderColor-default, #3d444d);
+  border: 1px solid var(--borderColor-default);
 }
 
 section[aria-label^="Workflow runs"] div:has(> .gha-run-card-list) > div:has(+ .gha-run-card-list) {
@@ -52,7 +53,7 @@ section[aria-label^="Workflow runs"] div:has(> .gha-run-card-list) > div:has(+ .
 
 section[aria-label^="Workflow runs"] div:has(> .gha-run-card-list) > div:has(+ .gha-run-card-list) > h3 {
   margin: 0;
-  color: var(--fgColor-muted, #9198a1);
+  color: var(--fgColor-muted);
   font-size: 13px;
   font-weight: 500;
 }
@@ -72,9 +73,9 @@ section[aria-label^="Workflow runs"] div:has(> .gha-run-card-list) > div:has(+ .
   padding: 3px 8px;
   border-width: 1px;
   border-style: solid;
-  border-color: var(--borderColor-default, #3d444d);
+  border-color: var(--borderColor-default);
   border-radius: 6px;
-  background: var(--bgColor-default, #0d1117);
+  background: var(--bgColor-default);
   font-size: 13px;
 }
 
@@ -86,14 +87,14 @@ section[aria-label^="Workflow runs"] div:has(> .gha-run-card-list) > div:has(+ .
   row-gap: 4px;
   min-width: 0;
   padding: 6px 12px;
-  border: 1px solid var(--borderColor-default, #3d444d);
+  border: 1px solid var(--borderColor-default);
   border-radius: 6px;
-  background: var(--bgColor-default, #0d1117);
+  background-color: var(--bgColor-muted);
   cursor: pointer;
 }
 
 .gha-run-card-list > .gha-run-card:hover {
-  background: var(--bgColor-muted, #161b22);
+  background-image: linear-gradient(var(--control-transparent-bgColor-hover), var(--control-transparent-bgColor-hover));
 }
 
 .gha-run-card > .gha-run-card-title {
@@ -132,22 +133,20 @@ section[aria-label^="Workflow runs"] div:has(> .gha-run-card-list) > div:has(+ .
 }
 
 .gha-run-card-status:empty { display: none; }
-.gha-run-card-status[data-tone="success"] { color: var(--fgColor-success, #3fb950); background: var(--bgColor-success-muted, #23863626); }
-.gha-run-card-status[data-tone="danger"] { color: var(--fgColor-danger, #f85149); background: var(--bgColor-danger-muted, #da363326); border-color: var(--borderColor-danger-emphasis, #f85149); }
-.gha-run-card-status[data-tone="attention"] { color: var(--fgColor-attention, #d29922); background: var(--bgColor-attention-muted, #9e6a0326); border-color: var(--borderColor-attention-emphasis, #d29922); }
-.gha-run-card-status[data-tone="accent"] {
-  border-color: var(--borderColor-accent-emphasis, #4493f8);
-  background: var(--bgColor-accent-muted, #388bfd26);
-  color: var(--fgColor-accent, #4493f8);
-}
-.gha-run-card-status[data-tone="queued"] { color: var(--fgColor-muted, #9198a1); background: var(--bgColor-muted, #21262d); border-color: var(--borderColor-muted, #30363d); }
-.gha-run-card-status[data-tone="neutral"] { color: var(--fgColor-muted, #9198a1); background: var(--bgColor-muted, #21262d); }
+.gha-run-card-status[data-tone="success"] { color: var(--fgColor-success); background: var(--bgColor-success-muted); border-color: var(--borderColor-success-emphasis); }
+.gha-run-card-status[data-tone="danger"] { color: var(--fgColor-danger); background: var(--bgColor-danger-muted); border-color: var(--borderColor-danger-emphasis); }
+.gha-run-card-status[data-tone="severe"] { color: var(--fgColor-severe); background: var(--bgColor-severe-muted); border-color: var(--borderColor-severe-emphasis); }
+.gha-run-card-status[data-tone="accent"] { color: var(--fgColor-accent); background: var(--bgColor-accent-muted); border-color: var(--borderColor-accent-emphasis); }
+.gha-run-card-status[data-tone="attention"] { color: var(--fgColor-attention); background: var(--bgColor-attention-muted); border-color: var(--borderColor-attention-emphasis); }
+.gha-run-card-status[data-tone="neutral"] { color: var(--fgColor-muted); background: var(--bgColor-neutral-muted); border-color: var(--borderColor-neutral-emphasis); }
 
 .gha-run-card > .gha-run-card-icon { display: none; }
 .gha-run-card > .gha-run-card-metadata { display: contents; }
 .gha-run-card > .gha-run-card-details { grid-column: 1 / -1; grid-row: 3; align-self: end; min-width: 0; }
 .gha-run-card .gha-run-card-branch { grid-column: 1 / -1; grid-row: 2; min-width: 0; padding: 0; }
 .gha-run-card .gha-run-card-branch:empty { display: none; }
+/* !important on the timing container and its children beats the native row layout so the
+   timing stays on one line. */
 .gha-run-card .gha-run-card-timing {
   display: flex;
   grid-column: 1;
@@ -177,7 +176,7 @@ section[aria-label^="Workflow runs"] div:has(> .gha-run-card-list) > div:has(+ .
   grid-column: 1 / -1;
   grid-row: 4;
   margin: 0 -12px;
-  border-top: 1px solid var(--borderColor-muted, #30363d);
+  border-top: 1px solid var(--borderColor-muted);
 }
 
 .gha-run-attention-settings {
@@ -192,10 +191,10 @@ section[aria-label^="Workflow runs"] div:has(> .gha-run-card-list) > div:has(+ .
   place-items: center;
   width: 28px;
   height: 28px;
-  border: 1px solid var(--borderColor-default, #3d444d);
+  border: 1px solid var(--borderColor-default);
   border-radius: 6px;
-  background: var(--button-default-bgColor-rest, #21262d);
-  color: var(--fgColor-muted, #9198a1);
+  background: var(--button-default-bgColor-rest);
+  color: var(--fgColor-muted);
   cursor: pointer;
   list-style: none;
 }
@@ -203,10 +202,10 @@ section[aria-label^="Workflow runs"] div:has(> .gha-run-card-list) > div:has(+ .
 .gha-run-attention-settings > summary::marker { content: none; }
 .gha-run-attention-settings > summary::-webkit-details-marker { display: none; }
 .gha-run-attention-settings > summary:hover,
-.gha-run-attention-settings[open] > summary { color: var(--fgColor-default, #f0f6fc); }
+.gha-run-attention-settings[open] > summary { color: var(--fgColor-default); }
 .gha-run-attention-settings > summary:focus-visible,
 .gha-run-attention-toggle:focus-visible,
-.gha-run-list-view-toggle:focus-visible { outline: 2px solid var(--focus-outlineColor, #4493f8); outline-offset: 2px; }
+.gha-run-list-view-toggle:focus-visible { outline: 2px solid var(--focus-outline-color); outline-offset: 2px; }
 
 .gha-run-attention-settings-menu {
   position: absolute;
@@ -218,11 +217,11 @@ section[aria-label^="Workflow runs"] div:has(> .gha-run-card-list) > div:has(+ .
   gap: 10px;
   width: 260px;
   padding: 12px;
-  border: 1px solid var(--borderColor-default, #3d444d);
+  border: 1px solid var(--borderColor-default);
   border-radius: 12px;
-  background: var(--overlay-bgColor, #0d1117);
-  box-shadow: var(--shadow-floating-small, 0 8px 24px #01040966);
-  color: var(--fgColor-default, #f0f6fc);
+  background: var(--overlay-bgColor);
+  box-shadow: var(--shadow-floating-small);
+  color: var(--fgColor-default);
   font-size: 12px;
   font-weight: 600;
 }
@@ -237,9 +236,9 @@ section[aria-label^="Workflow runs"] div:has(> .gha-run-card-list) > div:has(+ .
   width: 34px;
   height: 20px;
   padding: 0;
-  border: 1px solid var(--borderColor-default, #3d444d);
+  border: 1px solid var(--borderColor-default);
   border-radius: 999px;
-  background: var(--bgColor-muted, #21262d);
+  background: var(--bgColor-muted);
   cursor: pointer;
 }
 
@@ -250,30 +249,30 @@ section[aria-label^="Workflow runs"] div:has(> .gha-run-card-list) > div:has(+ .
   height: 14px;
   margin: 2px;
   border-radius: 50%;
-  background: var(--fgColor-onEmphasis, #fff);
+  background: var(--fgColor-onEmphasis);
 }
 
 .gha-run-attention-toggle[aria-pressed="true"],
-.gha-run-list-view-toggle[aria-pressed="true"] { background: var(--bgColor-accent-emphasis, #1f6feb); }
+.gha-run-list-view-toggle[aria-pressed="true"] { background: var(--bgColor-accent-emphasis); }
 .gha-run-attention-toggle[aria-pressed="true"] span,
 .gha-run-list-view-toggle[aria-pressed="true"] span { transform: translateX(14px); }
 
 .gha-run-attention {
   margin: 16px 0;
   padding: 12px 16px;
-  border: 1px solid var(--borderColor-default, #3d444d);
+  border: 1px solid var(--borderColor-default);
   border-radius: 8px;
-  background: var(--bgColor-muted, #161b22);
+  background: var(--bgColor-muted);
 }
 
 .gha-run-attention-header { display: flex; align-items: baseline; gap: 10px; }
 .gha-run-attention h2 { margin: 0; font-size: 14px; }
 .gha-run-attention-header span,
-.gha-run-attention p { color: var(--fgColor-muted, #9198a1); font-size: 12px; }
+.gha-run-attention p { color: var(--fgColor-muted); font-size: 12px; }
 .gha-run-attention p { margin: 8px 0 0; }
 .gha-run-attention ul { display: grid; gap: 6px; margin: 10px 0 0; padding: 0; list-style: none; }
 .gha-run-attention li { display: flex; gap: 10px; align-items: baseline; font-size: 13px; }
-.gha-run-attention li strong { flex: none; color: var(--fgColor-danger, #f85149); }
+.gha-run-attention li strong { flex: none; color: var(--fgColor-danger); }
 .gha-run-attention li a { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .gha-run-attention-branch {
   flex: none;
@@ -281,8 +280,8 @@ section[aria-label^="Workflow runs"] div:has(> .gha-run-card-list) > div:has(+ .
   overflow: hidden;
   padding: 2px 6px;
   border-radius: 6px;
-  background: var(--bgColor-accent-muted, #1f6feb26);
-  color: var(--fgColor-accent, #4493f8);
+  background: var(--bgColor-accent-muted);
+  color: var(--fgColor-accent);
   font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;

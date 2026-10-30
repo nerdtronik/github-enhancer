@@ -10,9 +10,9 @@
   z-index: 1;
   border-radius: 6px;
   box-shadow:
-    inset 10px 0 14px -10px rgb(1 4 9 / 12%),
-    inset -10px 0 14px -10px rgb(1 4 9 / 12%),
-    inset 0 -16px 18px -14px rgb(1 4 9 / 10%);
+    inset 10px 0 14px -10px color-mix(in srgb, var(--bgColor-black) 12%, transparent),
+    inset -10px 0 14px -10px color-mix(in srgb, var(--bgColor-black) 12%, transparent),
+    inset 0 -16px 18px -14px color-mix(in srgb, var(--bgColor-black) 10%, transparent);
   pointer-events: none;
 }
 
@@ -28,14 +28,26 @@
   padding-top: 0 !important;
   margin-block: 0 !important;
   margin-inline: 0 !important;
-  border-top: 1px solid var(--borderColor-default, #3d444d) !important;
-  border-bottom: 1px solid var(--borderColor-default, #3d444d) !important;
+  border-top: 1px solid var(--borderColor-default) !important;
+  border-bottom: 1px solid var(--borderColor-default) !important;
   border-top-left-radius: 6px !important;
   border-top-right-radius: 6px !important;
   border-bottom-left-radius: 6px !important;
   border-bottom-right-radius: 6px !important;
   box-shadow: none !important;
-  cursor: auto;
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.gha-run-list [data-target="action-graph.canvas"].gha-run-panning,
+.gha-run-list [data-target="action-graph.canvas"].gha-run-panning * {
+  cursor: grabbing !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+.gha-run-list [data-target="action-graph.canvas"].gha-run-panning {
+  will-change: scroll-position;
 }
 
 .gha-run-list .gha-run-resize-handle {
@@ -53,7 +65,7 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--fgColor-muted, #9198a1);
+  color: var(--fgColor-muted);
   cursor: ns-resize;
   touch-action: none;
 }
@@ -64,15 +76,15 @@
   height: 4px;
   border-radius: 999px;
   background: currentColor;
-  box-shadow: 0 2px 4px rgb(1 4 9 / 45%);
+  box-shadow: var(--shadow-resting-small);
 }
 
 .gha-run-list .gha-run-resize-handle:hover {
-  color: var(--fgColor-accent, #4493f8);
+  color: var(--fgColor-accent);
 }
 
 .gha-run-list .gha-run-resize-handle:focus-visible {
-  outline: 2px solid var(--focus-outlineColor, #4493f8);
+  outline: 2px solid var(--focus-outline-color);
   outline-offset: 2px;
 }
 
@@ -171,17 +183,17 @@
 .gha-run-list
   .gha-run-hovering
   .WorkflowCard:not(.gha-run-card-hovered):not(.gha-run-card-connected):not(.gha-run-card-scoped) {
-  opacity: 0.55;
+  opacity: 0.7;
 }
 
 .gha-run-list .WorkflowCard.gha-run-card-connected {
-  outline: 2px solid var(--borderColor-accent-emphasis, #1f6feb);
+  outline: 2px solid var(--borderColor-accent-emphasis);
   outline-offset: -2px;
 }
 
 .gha-run-list .WorkflowCard.gha-run-card-hovered,
 .gha-run-list .WorkflowCard.gha-run-card-scoped {
-  outline: 3px solid var(--borderColor-accent-emphasis, #1f6feb);
+  outline: 3px solid var(--borderColor-accent-emphasis);
   outline-offset: -3px;
 }
 
@@ -198,8 +210,8 @@
   padding: 0;
   border: 0;
   border-radius: 4px;
-  background: var(--bgColor-muted, #21262d);
-  color: var(--fgColor-muted, #9198a1);
+  background: var(--bgColor-muted);
+  color: var(--fgColor-muted);
   opacity: 0;
   pointer-events: none;
   cursor: pointer;
@@ -217,11 +229,11 @@
 
 .gha-run-list .gha-run-scope-button:hover,
 .gha-run-list .gha-run-scope-button:focus-visible {
-  color: var(--fgColor-accent, #4493f8);
+  color: var(--fgColor-accent);
 }
 
 .gha-run-list .gha-run-scope-button:focus-visible {
-  outline: 2px solid var(--focus-outlineColor, #4493f8);
+  outline: 2px solid var(--focus-outline-color);
   outline-offset: 2px;
 }
 
@@ -230,7 +242,7 @@
   width: auto !important;
   margin: 0 0 12px !important;
   padding: 0 0 12px !important;
-  border-bottom: 1px solid var(--borderColor-muted, #3d444d);
+  border-bottom: 1px solid var(--borderColor-muted);
   border-radius: 0 !important;
   box-shadow: none;
 }
@@ -276,7 +288,7 @@
 
 .gha-run-list .js-graph-matrix streaming-graph-job.WorkflowJob + streaming-graph-job.WorkflowJob {
   margin-top: 0;
-  border-top: 1px solid var(--borderColor-muted, #3d444d);
+  border-top: 1px solid var(--borderColor-muted);
 }
 
 .gha-run-list .js-graph-matrix streaming-graph-job.WorkflowJob .WorkflowJob-title {
@@ -295,7 +307,7 @@
 }
 
 .gha-run-list .js-graph-matrix streaming-graph-job.WorkflowJob .WorkflowJob-title:is(:hover, :focus-visible) {
-  background: var(--bgColor-accent-muted, #121d2f);
+  background: var(--bgColor-accent-muted);
 }
 
 .gha-run-list .WorkflowJob-title > div,

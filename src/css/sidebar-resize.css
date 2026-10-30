@@ -1,3 +1,5 @@
+/* Wide-screen (>=1440px) defaults: Actions list 400px, run jobs pane 500px. !important so they
+   win over the page's own widths. */
 @media (min-width: 1440px) {
   aside[aria-label="Actions"][data-expanded="true"]:has(
       nav[aria-label="Actions workflows"]
@@ -11,6 +13,7 @@
   }
 }
 
+/* Once the user has resized (data-gha-sidebar-sized), their width replaces the defaults above. */
 aside[aria-label="Actions"][data-expanded="true"][data-gha-sidebar-sized]:has(
     nav[aria-label="Actions workflows"]
   ) {
@@ -25,6 +28,8 @@ split-page-layout[data-gha-sidebar-sized]:has(
   --Layout-pane-width: var(--gha-sidebar-width) !important;
 }
 
+/* position: fixed; the script sets left from the pane's rect (and top/height for the Actions
+   list only). */
 .gha-sidebar-resize-handle {
   position: fixed;
   top: 50%;
@@ -37,7 +42,7 @@ split-page-layout[data-gha-sidebar-sized]:has(
   height: 52px;
   border: 0;
   background: transparent;
-  color: var(--fgColor-muted, #9198a1);
+  color: var(--fgColor-muted);
   cursor: col-resize;
   touch-action: none;
   transform: translateY(-50%);
@@ -49,11 +54,11 @@ split-page-layout[data-gha-sidebar-sized]:has(
   height: 36px;
   border-radius: 999px;
   background: currentColor;
-  box-shadow: 2px 0 4px rgb(1 4 9 / 45%);
+  box-shadow: var(--shadow-resting-small);
 }
 
 .gha-sidebar-resize-line {
-  color: var(--borderColor-default, #3d444d);
+  color: var(--borderColor-default);
   transform: none;
   opacity: 0;
 }
@@ -70,22 +75,22 @@ split-page-layout[data-gha-sidebar-sized]:has(
 }
 
 .gha-sidebar-resize-handle:hover {
-  color: var(--fgColor-muted, #6c6c6c78);
+  color: var(--fgColor-muted);
   opacity: 0.4;
 }
 
 .gha-sidebar-resizing .gha-sidebar-resize-line {
-  color: var(--fgColor-accent, #4493f8);
+  color: var(--fgColor-accent);
   opacity: 1;
 }
 
 .gha-sidebar-resizing .gha-sidebar-resize-handle {
-  color: var(--fgColor-accent, #4493f8);
+  color: var(--fgColor-accent);
   opacity: 1;
 }
 
 .gha-sidebar-resize-handle:focus-visible {
-  outline: 2px solid var(--focus-outlineColor, #0969da);
+  outline: 2px solid var(--focus-outline-color);
   outline-offset: 2px;
 }
 
@@ -95,13 +100,13 @@ split-page-layout[data-gha-sidebar-sized]:has(
   user-select: none !important;
 }
 
-.gha-sidebar-parent {
-  grid-template-columns: auto !important;
+/* .gha-sidebar-parent { */
+  /* grid-template-columns: auto !important;
   justify-content: left;
   display: grid !important;
   /* flex-direction: row; */
-  flex: content;
-}
+  /* flex: content; */
+/* } */
 
 .gha-sidebar-target {
   --motion-transition-enter: var(--motion-duration-medium)

@@ -1,0 +1,56 @@
+[data-gha-theme] .Label {
+  vertical-align: middle;
+}
+
+[data-gha-themes-toolbar],
+[data-gha-theme-actions] {
+  gap: var(--base-size-8);
+}
+
+[data-gha-theme][data-gha-active] > label,
+[data-gha-theme-default][data-gha-active] > label {
+  border-color: var(--borderColor-accent-emphasis);
+}
+
+/* A <dialog> gets browser default colors, not the page's, so the variables are applied here. */
+[data-gha-theme-editor] {
+  width: min(560px, calc(100vw - var(--base-size-32)));
+  max-height: calc(100vh - var(--base-size-32));
+  color: var(--fgColor-default);
+  background-color: var(--bgColor-default);
+}
+
+[data-gha-theme-editor]::backdrop {
+  background-color: var(--overlay-backdrop-bgColor);
+}
+
+[data-gha-theme-editor] .Box-body {
+  max-height: calc(100vh - 12rem);
+  overflow-y: auto;
+}
+
+[data-gha-theme-editor] [data-gha-role] input[type="color"] {
+  width: var(--base-size-32);
+  height: var(--base-size-24);
+  padding: 0;
+  border: var(--borderWidth-thin) solid var(--borderColor-default);
+  border-radius: var(--borderRadius-small);
+  background: none;
+}
+
+[data-gha-theme-editor] [data-gha-role] input[type="text"] {
+  width: 7rem;
+  font-family: var(--fontStack-monospace);
+}
+
+[data-gha-theme-editor] [data-gha-role][aria-invalid="true"] input[type="text"] {
+  border-color: var(--borderColor-danger-emphasis);
+}
+
+[data-gha-theme-editor] [data-gha-preview] {
+  max-width: 320px;
+}
+
+[data-gha-theme-editor] [data-gha-warnings] li + li {
+  margin-top: var(--base-size-4);
+}

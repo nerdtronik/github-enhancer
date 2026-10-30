@@ -15,7 +15,7 @@
   position: sticky;
   top: var(--base-sticky-header-height, 0px);
   z-index: 9;
-  background: var(--bgColor-default, #0d1117);
+  background: var(--bgColor-default);
 }
 
 .gha-run-section > .gha-run-section-header h2 {
@@ -27,7 +27,7 @@
 }
 
 .gha-run-summaries.color-bg-default:not([data-gha-collapsed]) {
-  background: var(--bgColor-inset, var(--color-canvas-inset, #010409)) !important;
+  background: var(--bgColor-inset) !important;
 }
 
 .gha-run-summaries:not(:has(job-summary)) {
@@ -104,7 +104,7 @@
 }
 
 .gha-run-section-toggle:focus-visible {
-  outline: 2px solid var(--focus-outlineColor, #4493f8);
+  outline: 2px solid var(--focus-outline-color);
   outline-offset: 4px;
   border-radius: 2px;
 }
