@@ -1,55 +1,108 @@
 {
   "manifest_version": 3,
   "name": "GitHub Enhancer",
-  "version": "0.9.0",
-  "description": "Filter workflows and display readable, scrollable job stages on GitHub Actions.",
-  "permissions": ["storage"],
+  "version": "0.1.0",
+  "description": "Enhanced GitHub Experience for developers.",
+  "icons": {
+    "16": "dist/icons/icon-16.png",
+    "32": "dist/icons/icon-32.png",
+    "48": "dist/icons/icon-48.png",
+    "128": "dist/icons/icon-128.png"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "dist/icons/*.svg"
+      ],
+      "matches": [
+        "https://github.com/*"
+      ]
+    }
+  ],
   "content_scripts": [
     {
-      "matches": ["https://github.com/*"],
-      "js": ["src/js/collector-suppress.js"],
-      "world": "MAIN",
-      "run_at": "document_start"
-    },
-    {
-      "matches": ["https://github.com/*"],
-      "js": ["src/js/settings-storage.js"],
-      "run_at": "document_start"
-    },
-    {
-      "matches": ["https://github.com/*"],
-      "js": [
-        "src/js/run-view/shared.js",
-        "src/js/run-view/relationships.js",
-        "src/js/run-view/toolbar.js",
-        "src/js/run-view/jobs.js",
-        "src/js/run-view/sections.js",
-        "src/js/run-view.js"
+      "matches": [
+        "https://github.com/*"
       ],
-      "css": [
-        "src/css/run-view/sections.css",
-        "src/css/run-view/graph.css",
-        "src/css/run-view/toolbar.css"
+      "js": [
+        "dist/collector-suppress.js"
       ],
       "world": "MAIN",
       "run_at": "document_start"
     },
     {
-      "matches": ["https://github.com/*"],
+      "matches": [
+        "https://github.com/*"
+      ],
       "js": [
-        "src/js/workflow-categories.js",
-        "src/js/content.js",
-        "src/js/sidebar-resize.js",
-        "src/js/pr-conversation.js",
-        "src/js/run-list.js",
-        "src/js/go-to-top.js"
+        "dist/settings.js",
+        "dist/navigation-guard.js",
+        "dist/themes.js"
       ],
       "css": [
-        "src/css/content.css",
-        "src/css/sidebar-resize.css",
-        "src/css/pr-conversation.css",
-        "src/css/run-list.css",
-        "src/css/go-to-top.css"
+        "dist/css/themes.css"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://github.com/*"
+      ],
+      "js": [
+        "dist/go-to-top.js",
+        "dist/enterprise-header.js"
+      ],
+      "css": [
+        "dist/css/go-to-top.css",
+        "dist/css/enterprise-header.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://github.com/*/*/actions*"
+      ],
+      "js": [
+        "dist/workflow-filter.js",
+        "dist/run-list.js",
+        "dist/sidebar-resize.js"
+      ],
+      "css": [
+        "dist/css/content.css",
+        "dist/css/run-list.css",
+        "dist/css/sidebar-resize.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://github.com/*/*/actions*"
+      ],
+      "js": [
+        "dist/run-view.js"
+      ],
+      "css": [
+        "dist/css/run-view/sections.css",
+        "dist/css/run-view/graph.css",
+        "dist/css/run-view/toolbar.css"
+      ],
+      "world": "MAIN",
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://github.com/*/*/pull/*"
+      ],
+      "js": [
+        "dist/pr-conversation.js",
+        "dist/sidebar-resize.js"
+      ],
+      "css": [
+        "dist/css/pr-conversation.css",
+        "dist/css/sidebar-resize.css"
       ],
       "run_at": "document_idle"
     }

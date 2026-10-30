@@ -41,12 +41,23 @@ Chrome and Firefox extension that enhances GitHub experience in multiple places.
 | [**Collapsible information**](./docs/features/action-run.md#collapsible-information) | Now footer information is collapsible 📪 | <details><summary>Click to expand image</summary> <img src="assets/screenshots/action-run/GHA_2.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="Collapsible information"> </details> |
 | [**Enhanced Jobs view**](./docs/features/action-run.md#enhanced-jobs-view) | New Jobs workflow enhanced view (optimal for big workflows) 🎛️ | <details><summary>Click to expand image</summary> <img src="assets/screenshots/action-run/GHA_3.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="Enhanced jobs view"> </details> |
 
+### Themes
+
+| Feature | Description | Preview |
+| --- | --- | --- |
+| [**IDE themes for GitHub**](./docs/features/themes.md) | 14 built-in themes (Dracula, Alucard, One Dark, Monokai, Catppuccin Mocha/Latte, Nord, Tokyo Night, Gruvbox dark/light, Solarized dark/light, Ayu Dark, Rosé Pine) that recolor the whole site and code, chosen in a Custom themes section (Dark and Light) on the GitHub appearance settings page | <details><summary>Click to expand image</summary> <img src="assets/screenshots/themes.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="IDE themes"> </details> |
+| [**Custom themes**](./docs/features/themes.md#creating-a-custom-theme) | Create, edit, duplicate, delete, import and export your own themes | <details><summary>Click to expand image</summary> <img src="assets/screenshots/custom-theme.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="Custom theme editor"> </details> |
+| [**Active theme per mode**](./docs/features/themes.md#modes-and-active-themes) | One Active theme for light and one for dark, applied on every github.com page | — |
+
+Testers: see the [themes testing checklist](./docs/themes-testing.md).
+
 ### Quality of Life
 
 | Feature | Description | Preview |
 | --- | --- | --- |
-| **Go to Top** | Go to top button for all scrollable main views 🔝 | <details><summary>Click to expand image</summary> <img src="assets/screenshots/gototop.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 150px" alt="Resizable sidebar"> </details> |
-| **No more trackers** | Blocks basic telemetry requests | *None* |
+| [**Go to Top**](./docs/features/quality-of-life.md#go-to-top) | Go to top button for all scrollable main views 🔝 | <details><summary>Click to expand image</summary> <img src="assets/screenshots/gototop.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 150px" alt="Resizable sidebar"> </details> |
+| [**No more trackers**](./docs/features/quality-of-life.md#no-more-trackers) | Blocks basic telemetry requests | *None* |
+| [**Enterprise header tab**](./docs/features/header.md#enterprise-header-tab) | Collapses the extra "GitHub Enterprise" row at the top of the header of org-managed repos into a small tab under the header (best-effort) | *None* |
 
 
 ## Collaboration

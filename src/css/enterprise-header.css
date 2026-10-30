@@ -1,0 +1,72 @@
+/* Hides the row that enterpriseRow.ts marks with data-gha-enterprise-row. The header-scoped
+   selector (0,1,1) outranks a single-class !important rule such as Primer's .d-flex, which the
+   row may use; enterpriseRow.ts adds an inline fallback for the rest. */
+[data-gha-enterprise-row],
+header [data-gha-enterprise-row] {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  overflow: hidden !important;
+}
+
+[data-gha-enterprise-host] {
+  position: relative;
+}
+
+.gha-enterprise-tab {
+  position: absolute;
+  top: 100%;
+  right: 15px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: max-content;
+  padding: 3px 10px;
+  font-size: 80%;
+  line-height: 1.4;
+  white-space: nowrap;
+  color: var(--fgColor-muted);
+  background-color: var(--gha-enterprise-bg, inherit);
+  border: 1px solid var(--borderColor-muted, var(--borderColor-default));
+  border-top: 0;
+  border-radius: 0 0 var(--borderRadius-medium) var(--borderRadius-medium);
+  text-decoration: none;
+}
+
+.gha-enterprise-tab--fallback-bg {
+  background-color: var(--bgColor-default);
+}
+
+.gha-enterprise-tab svg {
+  flex: none;
+  fill: currentColor;
+}
+
+.gha-enterprise-text {
+  min-width: 0;
+  max-width: min(60vw, 520px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.gha-enterprise-link {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.gha-enterprise-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 543px) {
+  .gha-enterprise-text {
+    display: none;
+  }
+}
