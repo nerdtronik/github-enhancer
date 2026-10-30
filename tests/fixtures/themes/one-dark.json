@@ -1,0 +1,23 @@
+{
+  "id": "one-dark",
+  "name": "One Dark",
+  "mode": "dark",
+  "palette": {
+    "bg": "#282c34",
+    "bgAlt": "#2c323c",
+    "fg": "#abb2bf",
+    "fgMuted": "#9197a3",
+    "comment": "#5c6370",
+    "border": "#3e4452",
+    "selection": "#3e4452",
+    "accent": "#61afef",
+    "red": "#e06c75",
+    "orange": "#d19a66",
+    "yellow": "#e5c07b",
+    "green": "#98c379",
+    "cyan": "#56b6c2",
+    "blue": "#61afef",
+    "purple": "#c678dd",
+    "pink": "#c678dd"
+  }
+}
