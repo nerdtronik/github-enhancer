@@ -2,7 +2,7 @@ import { execFileSync } from "node:child_process";
 import * as fs from "node:fs";
 
 const OUTPUT_DIR = "release";
-const FILES = ["manifest.json", "LICENSE.md", "THIRD_PARTY_NOTICES.md", "dist"];
+const FILES = ["manifest.json", "LICENSE.md", "PRIVACY.md", "THIRD_PARTY_NOTICES.md", "dist"];
 
 const { version } = JSON.parse(fs.readFileSync("package.json", "utf8"));
 const archive = `${OUTPUT_DIR}/github-enhancer-${version}.zip`;
