@@ -5,17 +5,20 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.js",
+    "typecheck": "tsc --noEmit",
     "lint": "rslint --fix .",
-    "test": "rstest"
+    "test": "rstest",
+    "bundle": "node scripts/build.js && node scripts/bundle.js",
+    "check": "tsc --noEmit && rslint . && rstest"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@rslint/core": "^0.9.5",
     "@rstest/core": "^0.12.4",
     "@types/chrome": "^0.3.6",
     "@types/firefox-webext-browser": "^143.0.1",
     "esbuild": "^0.24.2",
     "happy-dom": "^20.14.6",
-    "rollup": "^4.65.0",
     "typescript": "^6.0.3"
   }
 }
