@@ -44,6 +44,7 @@ type CategoriesState = {
   editing: string;
   editingRemoved: Set<string>;
   editingAdded: Set<string>;
+  editingOrder: string[];
 };
 
 // All per-repository view state in one object so reset() can replace it wholesale.
@@ -76,6 +77,7 @@ const createState = (): CategoriesState => ({
   editing: "",
   editingRemoved: new Set(),
   editingAdded: new Set(),
+  editingOrder: [],
 });
 
 // `revision` bumps on every reset(); async loads and saves compare it to ignore results that belong
@@ -93,6 +95,23 @@ const snapshot = (): Snapshot => ({
   categories: cloneCategories(state.data.categories),
 });
 
+function resetEditing(): void {
+  state.editingRemoved.clear();
+  state.editingAdded.clear();
+  state.editingOrder = [];
+}
+
+// Members follow the category's stored order (editable by the user), not the sidebar order; while
+// editing, workflows added in the editor are appended after the stored ones.
+function categoryMembers(name: string, ids: string[]): HTMLAnchorElement[] {
+  const byId = new Map(state.workflows.map((link) => [workflowId(link), link]));
+  const order =
+    state.editing === name
+      ? [...state.editingOrder, ...[...state.editingAdded].filter((id) => !state.editingOrder.includes(id))]
+      : ids;
+  return order.flatMap((id) => byId.get(id) ?? []);
+}
+
 const workflowId = (link: HTMLAnchorElement): string =>
   link.pathname.slice(state.workflowPath.length);
 const categoryFor = (name: string): Category | undefined =>
@@ -103,9 +122,11 @@ const assigned = (id: string): string[] =>
     .map((category) => category.name);
 const matching = (link: HTMLAnchorElement): boolean =>
   link.textContent.toLowerCase().includes(state.query.trim().toLowerCase());
+// GitHub renders native rows as <li> or, in the newer Sidebar component, as Sidebar.Item divs.
+const NATIVE_ROW = 'li, [data-component="Sidebar.Item"]';
 const pinButton = (row: Element | null): HTMLElement | null =>
   row?.querySelector(
-    '[data-component="ActionList.TrailingAction"][class*="pinButton"] button, button[aria-label*="pin" i]',
+    '[data-component="ActionList.TrailingAction"][class*="pinButton"] button, [data-component="Sidebar.Action"] button, button[aria-label*="pin" i]',
   ) ??
   ([...(row?.querySelectorAll("button[aria-labelledby]") ?? [])].find(
     (button) =>
@@ -211,8 +232,7 @@ async function applyImport(mode: "merge" | "replace"): Promise<void> {
   state.importNotice = "";
   state.formMode = "";
   state.editing = "";
-  state.editingRemoved.clear();
-  state.editingAdded.clear();
+  resetEditing();
   const write = save();
   render();
   await write;
@@ -282,7 +302,7 @@ export function reset(): void {
 // Hides native rows already listed under a category or in Pinned, or filtered out by the query.
 function nativeVisibility(): void {
   for (const link of state.workflows) {
-    const row = link.closest("li");
+    const row = link.closest<HTMLElement>(NATIVE_ROW);
     row?.toggleAttribute(
       "data-gha-workflow-hidden",
       !matching(link) ||
@@ -314,7 +334,7 @@ function updateToggleAll(
   const expand = state.data.categories.some((category) => category.collapsed);
   const label = expand ? "Expand all categories" : "Collapse all categories";
   button.setAttribute("aria-label", label);
-  button.title = label;
+  button.setAttribute("data-gha-tooltip", label);
   const icon = expand ? "chevrons-down" : "chevrons-up";
   if (button.dataset.icon === icon) return;
   button.dataset.icon = icon;
@@ -408,7 +428,7 @@ function categoryPicker(link: HTMLAnchorElement, native = false): HTMLElement {
     "aria-label",
     `Add ${link.textContent.trim()} to categories`,
   );
-  summary.title = "Add to category";
+  summary.setAttribute("data-gha-tooltip", "Add to category");
   summary.textContent = "+";
   const panel = document.createElement("div");
   panel.className = "gha-workflow-category-menu";
@@ -457,7 +477,7 @@ function categoryPicker(link: HTMLAnchorElement, native = false): HTMLElement {
 function syncNativePickers(): void {
   const pinnedRows = new Map<HTMLElement, HTMLElement>();
   for (const link of state.workflows) {
-    const row = link.closest("li");
+    const row = link.closest<HTMLElement>(NATIVE_ROW);
     if (!row) continue;
     const pin = pinButton(row);
     const key = JSON.stringify([
@@ -544,7 +564,7 @@ function categoryLink(link: HTMLAnchorElement): HTMLElement {
   if (
     link.pathname === location.pathname ||
     link.hasAttribute("aria-current") ||
-    link.closest("li")?.hasAttribute("aria-current")
+    link.closest<HTMLElement>(NATIVE_ROW)?.hasAttribute("aria-current")
   ) {
     row.setAttribute("data-gha-active", "");
     anchor.setAttribute("aria-current", "page");
@@ -555,13 +575,13 @@ function categoryLink(link: HTMLAnchorElement): HTMLElement {
     link.click();
   });
   row.append(anchor, categoryPicker(link));
-  const nativePin = pinButton(link.closest("li"));
+  const nativePin = pinButton(link.closest<HTMLElement>(NATIVE_ROW));
   if (nativePin) {
     const pin = document.createElement("button");
     pin.type = "button";
     pin.className = "gha-workflow-category-pin";
     pin.setAttribute("aria-label", pinLabel(nativePin));
-    pin.title = pinLabel(nativePin);
+    pin.setAttribute("data-gha-tooltip", pinLabel(nativePin));
     pin.toggleAttribute("data-gha-pinned", isPinned(nativePin));
     const icon = nativePin.querySelector("svg")?.cloneNode(true);
     pin.append(icon ?? document.createTextNode("Pin"));
@@ -574,16 +594,37 @@ function categoryLink(link: HTMLAnchorElement): HTMLElement {
   return row;
 }
 
+function moveButton(name: string, link: HTMLAnchorElement, step: -1 | 1): HTMLButtonElement {
+  const id = workflowId(link);
+  const order = categoryMembers(name, []).map(workflowId);
+  const index = order.indexOf(id);
+  const button = makeButton(
+    step < 0 ? "Move up" : "Move down",
+    () => {
+      const target = index + step;
+      [order[index], order[target]] = [order[target], order[index]];
+      state.editingOrder = order;
+      state.editingAdded.clear();
+      render();
+      const rows = state.view?.querySelectorAll<HTMLElement>(".gha-workflow-category-editor-row");
+      const moved = [...(rows ?? [])].find((row) => row.querySelector(`input[data-workflow-id="${CSS.escape(id)}"]`));
+      moved?.querySelector<HTMLElement>(`button[data-step="${step}"]`)?.focus();
+    },
+    "gha-workflow-category-move",
+  );
+  button.dataset.step = String(step);
+  button.replaceChildren(createIcon(step < 0 ? "chevron-up" : "chevron-down"));
+  button.setAttribute("aria-label", `${step < 0 ? "Move up" : "Move down"} ${link.textContent.trim()}`);
+  button.disabled = step < 0 ? index <= 0 : index >= order.length - 1;
+  return button;
+}
+
 function categorySection(name: string): HTMLElement {
   const category = categoryFor(name)!;
   const section = document.createElement("section");
   section.className = "gha-workflow-category";
   section.setAttribute("data-gha-category-name", name);
-  const allMembers = state.workflows.filter(
-    (link) =>
-      category.workflows.includes(workflowId(link)) ||
-      (state.editing === name && state.editingAdded.has(workflowId(link))),
-  );
+  const allMembers = categoryMembers(name, category.workflows);
   const members = allMembers.filter(matching);
   if (state.query.trim() && !members.length && state.editing !== name)
     section.hidden = true;
@@ -634,8 +675,8 @@ function categorySection(name: string): HTMLElement {
   if (allMembers.length && !state.editing) {
     const edit = makeButton("Edit workflows", () => {
       state.editing = name;
-      state.editingRemoved.clear();
-      state.editingAdded.clear();
+      resetEditing();
+      state.editingOrder = [...category.workflows];
       if (category.collapsed) {
         category.collapsed = false;
         save(false);
@@ -674,8 +715,7 @@ function categorySection(name: string): HTMLElement {
   if (state.editing === name) {
     const finishEditing = () => {
       state.editing = "";
-      state.editingRemoved.clear();
-      state.editingAdded.clear();
+      resetEditing();
       render();
       [...(state.view?.querySelectorAll(".gha-workflow-category") ?? [])]
         .find((item) => item.getAttribute("data-gha-category-name") === name)
@@ -686,14 +726,18 @@ function categorySection(name: string): HTMLElement {
       makeButton(
         "Save",
         () => {
-          for (const id of state.editingRemoved)
-            category.workflows = category.workflows.filter(
-              (item) => item !== id,
-            );
-          for (const id of state.editingAdded)
-            if (!state.editingRemoved.has(id) && !category.workflows.includes(id))
-              category.workflows.push(id);
-          if (state.editingRemoved.size || state.editingAdded.size) save();
+          const kept = categoryMembers(name, category.workflows)
+            .map(workflowId)
+            .filter((id) => !state.editingRemoved.has(id));
+          // Ids not loaded in the sidebar are not editable here; keep them where they were.
+          const hidden = category.workflows.filter(
+            (id) => !state.workflows.some((link) => workflowId(link) === id),
+          );
+          const next = [...kept, ...hidden];
+          if (next.join("\n") !== category.workflows.join("\n")) {
+            category.workflows = next;
+            save();
+          }
           finishEditing();
         },
         "gha-workflow-category-edit-save",
@@ -724,7 +768,10 @@ function categorySection(name: string): HTMLElement {
         else state.editingRemoved.add(id);
       });
       label.append(checkbox, document.createTextNode(link.textContent.trim()));
-      editor.append(label);
+      const row = document.createElement("div");
+      row.className = "gha-workflow-category-editor-row";
+      row.append(label, moveButton(name, link, -1), moveButton(name, link, 1));
+      editor.append(row);
     }
     section.append(editor);
   }
@@ -743,13 +790,13 @@ function render(): void {
       link.origin === location.origin &&
       link.pathname.replace(/\/$/, "") === `/${state.repository}/actions`,
   );
-  const allRow = allLink?.closest("li") ?? allLink;
+  const allRow = allLink?.closest<HTMLElement>(NATIVE_ROW) ?? allLink;
   if (state.hiddenAllRow !== allRow) {
     state.hiddenAllRow?.removeAttribute("data-gha-workflow-all-hidden");
     allRow?.setAttribute("data-gha-workflow-all-hidden", "");
     state.hiddenAllRow = allRow;
   }
-  const pins = state.workflows.map((link) => pinButton(link.closest("li")));
+  const pins = state.workflows.map((link) => pinButton(link.closest<HTMLElement>(NATIVE_ROW)));
   const signature = JSON.stringify([
     state.repository,
     state.data,
@@ -761,7 +808,7 @@ function render(): void {
       link.textContent,
       pinLabel(pins[index]),
       link.hasAttribute("aria-current") ||
-        link.closest("li")?.hasAttribute("aria-current"),
+        link.closest<HTMLElement>(NATIVE_ROW)?.hasAttribute("aria-current"),
     ]),
     location.pathname,
     state.formMode,
@@ -769,6 +816,7 @@ function render(): void {
     state.pendingWorkflowId,
     state.editing,
     [...state.editingAdded],
+    state.editingOrder,
     state.pendingImport?.categories.length,
     state.importError,
     state.importNotice,
@@ -783,7 +831,7 @@ function render(): void {
     state.renderedAllLink === allLink &&
     state.workflows.every((link) =>
       link
-        .closest("li")
+        .closest<HTMLElement>(NATIVE_ROW)
         ?.querySelector(":scope > [data-gha-workflow-add-native]"),
     )
   )
@@ -822,7 +870,7 @@ function render(): void {
     heading.className = "gha-workflow-categories-heading";
     const title = document.createElement("h3");
     title.className = "gha-workflow-category-title";
-    title.textContent = "Pinned workflows";
+    title.append(createIcon("pin"), "Pinned workflows");
     heading.append(title);
     const list = document.createElement("ul");
     list.className = "gha-workflow-pinned-list";
@@ -834,7 +882,7 @@ function render(): void {
   heading.className = "gha-workflow-categories-heading";
   const title = document.createElement("h3");
   title.className = "gha-workflow-category-title";
-  title.textContent = "Categories";
+  title.append(createIcon("tag"), "Categories");
   const newCategory = makeButton(
     "New category",
     () => {
@@ -856,7 +904,7 @@ function render(): void {
   backupOptions.addEventListener("click", menuClick);
   const backupTrigger = document.createElement("summary");
   backupTrigger.setAttribute("aria-label", "Category backup options");
-  backupTrigger.title = "Import or export categories";
+  backupTrigger.setAttribute("data-gha-tooltip", "Import or export categories");
   backupTrigger.textContent = "⋯";
   const backupMenu = document.createElement("div");
   backupMenu.className = "gha-workflow-category-menu";
@@ -917,7 +965,7 @@ function render(): void {
     );
     updateToggleAll(toggleAll);
     newCategory.textContent = "+";
-    newCategory.title = "New category";
+    newCategory.setAttribute("data-gha-tooltip", "New category");
     newCategory.setAttribute("aria-label", "New category");
     headingActions.append(toggleAll, newCategory);
   }

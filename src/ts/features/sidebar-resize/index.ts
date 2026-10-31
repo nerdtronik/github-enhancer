@@ -41,7 +41,7 @@ function sidebarPage(): SidebarType | null {
 function findSidebar(type: SidebarType): { target: HTMLElement; pane: HTMLElement } | null {
   if (type === "actions") {
     const target = document.querySelector<HTMLElement>(
-      'aside[aria-label="Actions"][data-expanded="true"]:has(nav[aria-label="Actions workflows"])',
+      'aside[aria-label="Actions"][data-expanded="true"]:has(:is(nav[aria-label="Actions workflows"], nav[aria-label="Workflows"]))',
     );
     return target && { target, pane: target };
   }

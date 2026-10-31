@@ -2,7 +2,7 @@
    win over the page's own widths. */
 @media (min-width: 1440px) {
   aside[aria-label="Actions"][data-expanded="true"]:has(
-      nav[aria-label="Actions workflows"]
+      :is(nav[aria-label="Actions workflows"], nav[aria-label="Workflows"])
     ) {
     width: 400px !important;
     min-width: 400px !important;
@@ -15,7 +15,7 @@
 
 /* Once the user has resized (data-gha-sidebar-sized), their width replaces the defaults above. */
 aside[aria-label="Actions"][data-expanded="true"][data-gha-sidebar-sized]:has(
-    nav[aria-label="Actions workflows"]
+    :is(nav[aria-label="Actions workflows"], nav[aria-label="Workflows"])
   ) {
   width: var(--gha-sidebar-width) !important;
   min-width: var(--gha-sidebar-width) !important;

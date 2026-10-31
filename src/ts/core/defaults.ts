@@ -29,6 +29,7 @@ const STORAGE_KEYS = {
   sidebarWidth: "ghaSidebarWidthV1:",
   workflowIndex: "ghaWorkflowIndexV1:",
   runHistory: "ghaRunAttentionHistoryV1:",
+  attentionDismissed: "ghaRunAttentionDismissedV1:",
   themes: "ghaThemesV1",
 } as const;
 
@@ -61,6 +62,8 @@ export const PREFERENCES: Preferences = {
   actionRun_arrowPlacement: "left",
   runList_enabled: true,
   runList_enhancedViewEnabled: true,
+  runList_attentionCollapsed: false,
+  runList_attentionLatestOnly: true,
   appearance_lightTheme: null,
   appearance_darkTheme: null,
 };

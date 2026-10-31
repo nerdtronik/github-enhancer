@@ -5,16 +5,36 @@
 import { createPageScheduler } from "../../core/scheduler";
 import { createIcon, settings as prefs, store } from "../../core/settings";
 import { actionsRepository, route, workflowRoute } from "../../core/routes";
+import { installTooltips } from "../../core/tooltip";
 import { ui } from "../../core/ui";
+import {
+  dismissedToStore,
+  formatAge,
+  latestPerWorkflow,
+  parseDismissed,
+  sortAttention,
+  workflowName,
+} from "./attention";
+import { createAttentionPanel, type PanelItem } from "./attentionPanel";
 import { durationSeconds, formatDuration, median, runState, statusTone } from "./runState";
 
 declare const location: { pathname: string };
+
+installTooltips();
 
 const runListSelector =
   'section[aria-label^="Workflow runs"] [data-listview-component="items-list"]';
 const isEnabled = () => prefs.get("runList_enabled");
 const isEnhancedView = () => prefs.get("runList_enhancedViewEnabled");
 let settingsLoaded = false;
+// The panel element persists between updates (see attentionPanel.ts). Dismissed ids are loaded
+// per repository before the panel is shown, so dismissed items never flash.
+let attentionPanel: ReturnType<typeof createAttentionPanel> | null = null;
+let attentionShowAll = false;
+let attentionTicker = 0;
+let attentionCandidates: string[] = [];
+const dismissed = new Map<string, Set<string>>();
+const dismissedRequested = new Set<string>();
 let cardsReady = false;
 let cardsScheduled = false;
 // Generation counter: bumped when the user toggles the panel; async work started under an older
@@ -223,6 +243,7 @@ function currentRuns(
   active: boolean;
   status: string;
   detail: string;
+  createdAt: number;
 }[] {
   const embedded = embeddedRuns(document, "allWorkflowRunsRoute");
   const byId = new Map(embedded.map((run) => [String(run.id), run]));
@@ -235,6 +256,7 @@ function currentRuns(
     active: boolean;
     status: string;
     detail: string;
+    createdAt: number;
   }[] = [];
   const prefix = `/${repo}/actions/runs/`;
   for (const row of list.querySelectorAll(":scope > li")) {
@@ -260,6 +282,7 @@ function currentRuns(
       active: state.active,
       status: state.attention,
       detail: "",
+      createdAt: Date.parse(data?.createdAt?.timestamp) || 0,
     });
   }
   return rows;
@@ -510,13 +533,27 @@ function settings(filters: HTMLElement, allWorkflows: boolean): void {
         update();
       },
     });
+    const latest = ui.toggle({
+      label: "Only latest run per workflow",
+      labelId: "gha-run-attention-latest-label",
+      pressed: prefs.get("runList_attentionLatestOnly"),
+      variant: "knob",
+      rowClass: "gha-run-settings-row gha-run-attention-setting-row",
+      buttonClass: "gha-run-attention-toggle",
+      onChange: () => {
+        const next = !prefs.get("runList_attentionLatestOnly");
+        latest.sync(next);
+        void prefs.set("runList_attentionLatestOnly", next);
+        update();
+      },
+    });
     const viewRow = view.row;
-    popup.append(attentionRow, viewRow);
+    popup.append(attentionRow, latest.row, viewRow);
     menu.append(trigger, popup);
   }
   ui.detailsMenu(menu);
-  menu.querySelector<HTMLElement>(".gha-run-attention-setting-row")!.hidden =
-    !allWorkflows;
+  for (const row of menu.querySelectorAll<HTMLElement>(".gha-run-attention-setting-row"))
+    row.hidden = !allWorkflows;
   if (menu.parentElement !== filters || menu !== filters.lastElementChild)
     filters.append(menu);
 }
@@ -539,13 +576,13 @@ function update(): void {
   const filters =
     list?.previousElementSibling?.querySelector<HTMLElement>(":scope > div");
   if (!runRepo || !filters) {
-    document.querySelector(".gha-run-attention")?.remove();
+    removePanel();
     document.querySelector(".gha-run-attention-settings")?.remove();
     return;
   }
   settings(filters, !!repo);
   if (!repo) {
-    document.querySelector(".gha-run-attention")?.remove();
+    removePanel();
     return;
   }
   const heading = document.querySelector(
@@ -566,37 +603,47 @@ function update(): void {
     !search ||
     !section
   ) {
-    document.querySelector(".gha-run-attention")?.remove();
+    removePanel();
     return;
   }
-  let panel = document.querySelector(
-    ".gha-run-attention",
-  ) as HTMLElement | null;
   if (!isEnabled()) {
-    panel?.remove();
+    removePanel();
     return;
   }
-  if (panel?.nextElementSibling !== section) {
-    panel?.remove();
-    panel = document.createElement("section");
-    panel.className = "gha-run-attention";
-    panel.setAttribute("aria-label", "Needs attention");
-    section.before(panel);
+  loadDismissed(repo);
+  const dismissedIds = dismissed.get(repo);
+  if (!dismissedIds) return;
+  if (!attentionPanel || attentionPanel.element.nextElementSibling !== section) {
+    attentionPanel?.element.remove();
+    attentionPanel = createAttentionPanel({
+      toggleCollapsed: () => {
+        void prefs.set("runList_attentionCollapsed", !prefs.get("runList_attentionCollapsed"));
+        scheduleUpdate();
+      },
+      toggleShowAll: () => {
+        attentionShowAll = !attentionShowAll;
+        scheduleUpdate();
+      },
+      dismiss: (id) => {
+        dismissed.get(repository() ?? "")?.add(id);
+        saveDismissed(repository() ?? "");
+        scheduleUpdate();
+      },
+      restore: () => {
+        const ids = dismissed.get(repository() ?? "");
+        for (const id of attentionCandidates) ids?.delete(id);
+        saveDismissed(repository() ?? "");
+        scheduleUpdate();
+      },
+    });
+    section.before(attentionPanel.element);
   }
-  panel!.replaceChildren();
-  const title = document.createElement("h2");
-  title.textContent = "Needs attention";
-  const scope = document.createElement("span");
-  scope.textContent = "Current list";
-  const header = document.createElement("div");
-  header.className = "gha-run-attention-header";
-  header.append(title, scope);
-  panel.append(header);
   const current = currentRuns(repo, list!);
   for (const run of current)
     if (run.active)
       inspectRunning(repo, run, embeddedRuns(document, "allWorkflowRunsRoute"));
-  const attention = current.filter((run) => run.status);
+  syncTicker(current.some((run) => run.active));
+  let attention = current.filter((run) => run.status);
   for (const run of current) {
     const checked = checkedRuns.get(`${repo}:${run.id}`);
     if (
@@ -616,36 +663,65 @@ function update(): void {
       detail: `Running at least ${formatDuration(elapsed)} · usually ${formatDuration(checked.median)}`,
     });
   }
-  if (!attention.length) {
-    const empty = document.createElement("p");
-    empty.textContent = "No runs need attention in the current list.";
-    panel.append(empty);
-    return;
+  if (prefs.get("runList_attentionLatestOnly"))
+    attention = latestPerWorkflow(current, attention);
+  const sorted = sortAttention(attention);
+  attentionCandidates = sorted.map((run) => run.id);
+  const now = Date.now();
+  const items: PanelItem[] = sorted
+    .filter((run) => !dismissedIds.has(run.id))
+    .map((run) => ({
+      id: run.id,
+      url: run.url,
+      title: run.title,
+      status: run.status,
+      tone: statusTone(run.status),
+      branch: run.branch,
+      meta: [workflowName(run.workflowPath), formatAge(run.createdAt, now)].filter(Boolean).join(" · "),
+      detail: run.detail,
+    }));
+  attentionPanel.render({
+    items,
+    collapsed: prefs.get("runList_attentionCollapsed"),
+    showAll: attentionShowAll,
+    dismissed: sorted.length - items.length,
+  });
+}
+
+function removePanel(): void {
+  attentionPanel?.element.remove();
+  attentionPanel = null;
+  syncTicker(false);
+}
+
+// "Slower than usual" depends on the clock, so while runs are active the panel is re-evaluated
+// every 30 seconds even if the page itself does not change.
+function syncTicker(needed: boolean): void {
+  if (needed && !attentionTicker) attentionTicker = window.setInterval(() => scheduleUpdate(), 30000);
+  else if (!needed && attentionTicker) {
+    window.clearInterval(attentionTicker);
+    attentionTicker = 0;
   }
-  const items = document.createElement("ul");
-  for (const run of attention) {
-    const item = document.createElement("li");
-    const status = document.createElement("strong");
-    status.textContent = run.status;
-    const link = document.createElement("a");
-    link.href = run.url;
-    link.textContent = run.title;
-    item.append(status, link);
-    if (run.branch) {
-      const branch = document.createElement("span");
-      branch.className = "gha-run-attention-branch";
-      branch.textContent = run.branch;
-      branch.title = run.branch;
-      item.append(branch);
-    }
-    if (run.detail) {
-      const detail = document.createElement("span");
-      detail.textContent = run.detail;
-      item.append(detail);
-    }
-    items.append(item);
-  }
-  panel.append(items);
+}
+
+function loadDismissed(repo: string): void {
+  if (dismissedRequested.has(repo)) return;
+  dismissedRequested.add(repo);
+  store
+    .read<unknown>("attentionDismissed", repo)
+    .catch(() => undefined)
+    .then((stored) => {
+      dismissed.set(repo, parseDismissed(stored));
+      scheduleUpdate();
+    });
+}
+
+function saveDismissed(repo: string): void {
+  const ids = dismissed.get(repo);
+  if (!ids) return;
+  store
+    .write("attentionDismissed", repo, dismissedToStore(ids))
+    .catch((error) => console.warn("Could not save dismissed runs", error));
 }
 
 const relevant =

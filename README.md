@@ -1,7 +1,6 @@
 # GitHub Enhancer
 
-<img src="assets/icon.svg" style="display: block; margin-left: auto; margin-right: auto; margin-bottom: 1rem;" alt="GitHub Enhancer">  
-<img src="assets/screenshots/main.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 400px;" alt="main screenshot">  
+<img src="assets/main.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 400px;" alt="GitHub Enhancer">  
 
 ---
 
@@ -10,9 +9,6 @@ Chrome and Firefox extension that enhances GitHub experience in multiple places.
 > This repo is a bunch of scripts I manually crafted inside the browser console and injected via third party extensions, at some point I decided to move them into an extension. Typescript code was ported from my original JS using LLMs
 
 ## Features
-
-> [!NOTE]
-> These features can stop working at any moment due to GH constant tweaking of the UI, if you detect an error or that something is not working properly please report it in the [Issues Page](https://github.com/nerdtronik/github-enhancer/issues)
 
 ### Actions
 
@@ -49,14 +45,13 @@ Chrome and Firefox extension that enhances GitHub experience in multiple places.
 | [**Custom themes**](./docs/features/themes.md#creating-a-custom-theme) | Create, edit, duplicate, delete, import and export your own themes | <details><summary>Click to expand image</summary> <img src="assets/screenshots/custom-theme.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="Custom theme editor"> </details> |
 | [**Active theme per mode**](./docs/features/themes.md#modes-and-active-themes) | One Active theme for light and one for dark, applied on every github.com page | — |
 
-Testers: see the [themes testing checklist](./docs/themes-testing.md).
-
 ### Quality of Life
 
 | Feature | Description | Preview |
 | --- | --- | --- |
 | [**Go to Top**](./docs/features/quality-of-life.md#go-to-top) | Go to top button for all scrollable main views 🔝 | <details><summary>Click to expand image</summary> <img src="assets/screenshots/gototop.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 150px" alt="Resizable sidebar"> </details> |
 | [**No more trackers**](./docs/features/quality-of-life.md#no-more-trackers) | Blocks basic telemetry requests | *None* |
+| [**Refresh now button**](./docs/features/quality-of-life.md#refresh-now-button) | A refresh button next to the Auto-refresh dropdown, with a short cooldown against spamming | *None* |
 | [**Enterprise header tab**](./docs/features/header.md#enterprise-header-tab) | Collapses the extra "GitHub Enterprise" row at the top of the header of org-managed repos into a small tab under the header (best-effort) | *None* |
 
 

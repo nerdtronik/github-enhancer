@@ -29,3 +29,10 @@ Each of the three pages saves its own width in the browser extension storage (sh
 ## Limits
 
 This is best-effort: GitHub's markup can change. If something stops working, report it in a [new issue](https://github.com/nerdtronik/github-enhancer/issues).
+
+## Refresh now button
+
+On Actions pages that have GitHub's **Auto-refresh** dropdown, a small refresh button is added next to it, so you can refresh without opening the menu. It clicks GitHub's own **Refresh now** item (the menu is kept out of sight while it does), so the refresh behaves exactly as if you had used the menu. After a click the icon spins and the button ignores clicks ("Refreshing…") until the refreshed content appears on the page, or 5 seconds at most, which prevents repeated refreshes. The tooltip shows above the button.
+
+This is best-effort: the dropdown is found by its label and role. If GitHub renames it or changes its structure, the button simply does not appear; please report it in the Issues page.
+

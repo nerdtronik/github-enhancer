@@ -265,15 +265,53 @@ section[aria-label^="Workflow runs"] div:has(> .gha-run-card-list) > div:has(+ .
   background: var(--bgColor-muted);
 }
 
-.gha-run-attention-header { display: flex; align-items: baseline; gap: 10px; }
-.gha-run-attention h2 { margin: 0; font-size: 14px; }
-.gha-run-attention-header span,
+.gha-run-attention [hidden] { display: none !important; }
+.gha-run-attention-header { display: flex; align-items: center; }
+.gha-run-attention-chevron { display: inline-flex; }
+.gha-run-attention-toggle-panel {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  color: var(--fgColor-muted);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+}
+.gha-run-attention-toggle-panel:hover { color: var(--fgColor-default); }
+.gha-run-attention-toggle-panel:focus-visible { outline: 2px solid var(--focus-outlineColor); outline-offset: 2px; }
+.gha-run-attention h2 { margin: 0; color: var(--fgColor-default); font-size: 14px; }
+.gha-run-attention-count {
+  min-width: 20px;
+  padding: 0 6px;
+  color: var(--fgColor-default);
+  background: var(--bgColor-neutral-muted);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+}
+.gha-run-attention-scope,
 .gha-run-attention p { color: var(--fgColor-muted); font-size: 12px; }
 .gha-run-attention p { margin: 8px 0 0; }
 .gha-run-attention ul { display: grid; gap: 6px; margin: 10px 0 0; padding: 0; list-style: none; }
-.gha-run-attention li { display: flex; gap: 10px; align-items: baseline; font-size: 13px; }
-.gha-run-attention li strong { flex: none; color: var(--fgColor-danger); }
-.gha-run-attention li a { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gha-run-attention li { display: flex; gap: 8px; align-items: center; font-size: 13px; }
+.gha-run-attention li .gha-run-attention-pill { margin-left: 0; font-size: 12px; line-height: 16px; }
+.gha-run-attention li a { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gha-run-attention-meta { flex: none; color: var(--fgColor-muted); font-size: 12px; white-space: nowrap; }
+.gha-run-attention-more {
+  margin-top: 8px;
+  padding: 0;
+  color: var(--fgColor-accent);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-size: 12px;
+}
+.gha-run-attention-more:hover { text-decoration: underline; }
 .gha-run-attention-branch {
   flex: none;
   max-width: 160px;
@@ -286,3 +324,22 @@ section[aria-label^="Workflow runs"] div:has(> .gha-run-card-list) > div:has(+ .
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.gha-run-attention-dismiss {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-left: auto;
+  padding: 0;
+  color: var(--fgColor-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+.gha-run-attention-dismiss:hover { color: var(--fgColor-default); background: var(--control-transparent-bgColor-hover); }
+.gha-run-attention-more + .gha-run-attention-more { margin-left: 12px; }

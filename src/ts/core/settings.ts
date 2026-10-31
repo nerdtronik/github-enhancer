@@ -58,6 +58,8 @@ const VALID: { [K in keyof Preferences]?: (value: unknown) => boolean } = {
   actionRun_arrowPlacement: (v) => v === "left" || v === "right" || v === "both",
   runList_enabled: (v) => typeof v === "boolean",
   runList_enhancedViewEnabled: (v) => typeof v === "boolean",
+  runList_attentionCollapsed: (v) => typeof v === "boolean",
+  runList_attentionLatestOnly: (v) => typeof v === "boolean",
   appearance_lightTheme: isThemeId,
   appearance_darkTheme: isThemeId,
 };

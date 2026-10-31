@@ -81,8 +81,6 @@ Optional roles (alternate background, inset background, comment, selection and p
 - A Custom Active theme is applied only after custom themes are read from storage, so it appears slightly later than a Built-in one.
 - Monokai Pro is not included because its palette is proprietary; the Built-in Monokai is the classic palette.
 
-See [Themes testing](../themes-testing.md) for the manual test checklist.
-
 ## Palette credits and removal requests
 
 The built-in themes use color values from well-known editor themes. The sources, licenses and copyright lines are listed in [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md). If you own one of these palettes and do not want your theme to be here, please [reach out](https://github.com/nerdtronik/github-enhancer/issues) and we will remove it. We do not want to conflict with the owners.

@@ -33,6 +33,8 @@ export interface Preferences {
   actionRun_arrowPlacement: "left" | "right" | "both";
   runList_enabled: boolean;
   runList_enhancedViewEnabled: boolean;
+  runList_attentionCollapsed: boolean;
+  runList_attentionLatestOnly: boolean;
   appearance_lightTheme: string | null;
   appearance_darkTheme: string | null;
 }

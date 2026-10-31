@@ -9,6 +9,16 @@
     "48": "dist/icons/icon-48.png",
     "128": "dist/icons/icon-128.png"
   },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "@github-enhancer",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  },
   "permissions": [
     "storage"
   ],
@@ -68,12 +78,14 @@
       "js": [
         "dist/workflow-filter.js",
         "dist/run-list.js",
-        "dist/sidebar-resize.js"
+        "dist/sidebar-resize.js",
+        "dist/refresh-now.js"
       ],
       "css": [
         "dist/css/content.css",
         "dist/css/run-list.css",
-        "dist/css/sidebar-resize.css"
+        "dist/css/sidebar-resize.css",
+        "dist/css/refresh-now.css"
       ],
       "run_at": "document_idle"
     },

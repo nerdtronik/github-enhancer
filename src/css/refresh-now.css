@@ -1,0 +1,46 @@
+.gha-refresh-now {
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 32px;
+  height: 32px;
+  margin-left: 8px;
+  padding: 0;
+  color: var(--fgColor-muted);
+  background: var(--button-default-bgColor-rest);
+  border: 1px solid var(--button-default-borderColor-rest);
+  border-radius: 6px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.gha-refresh-now:hover:not([aria-disabled="true"]) {
+  color: var(--fgColor-default);
+  background: var(--button-default-bgColor-hover);
+}
+
+.gha-refresh-now[aria-disabled="true"] {
+  cursor: default;
+}
+
+.gha-refresh-now[aria-disabled="true"]:not([data-loading]) svg {
+  opacity: 0.5;
+}
+
+/* The cooldown doubles as the loading state: the icon spins until the button is usable again. */
+.gha-refresh-now[data-loading] svg {
+  animation: gha-refresh-spin 1s linear infinite;
+}
+
+@keyframes gha-refresh-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gha-refresh-now[data-loading] svg {
+    animation: none;
+    opacity: 0.5;
+  }
+}

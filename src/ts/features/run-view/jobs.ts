@@ -295,3 +295,9 @@ export function groupJobs(graph: HTMLElement): Map<string, number | string> {
     counts.set("failed", `${counts.get("failed")}+`);
   return counts;
 }
+
+/** Shows the full deployment URL of a job as a tooltip, since the card truncates it. */
+export function labelDeploymentLinks(graph: HTMLElement): void {
+  for (const link of graph.querySelectorAll<HTMLAnchorElement>('streaming-graph-job > div a[href^="http"]'))
+    if (/^https?:\/\//i.test(link.href) && link.title !== link.href) link.title = link.href;
+}

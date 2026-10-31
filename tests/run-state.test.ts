@@ -30,6 +30,7 @@ test("sets active and attention", () => {
   expect(runState("Requires action", null).attention).toBe("Action required");
   expect(runState("Queued", null)).toMatchObject({ active: false, attention: "" });
   expect(runState("Cancelled", null).attention).toBe("");
+  expect(runState("Waiting", null).attention).toBe("Waiting for approval");
 });
 
 test("statusTone", () => {

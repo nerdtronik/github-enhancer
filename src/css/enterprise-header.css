@@ -19,9 +19,10 @@ header [data-gha-enterprise-row] {
 
 .gha-enterprise-tab {
   position: absolute;
-  top: 100%;
-  right: 15px;
+  top: 0;
+  left: 50%;
   z-index: 1;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 6px;

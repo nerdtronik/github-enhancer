@@ -5,7 +5,7 @@
  */
 import { createPageScheduler } from "../../core/scheduler";
 import { settings } from "../../core/settings";
-import { groupJobs } from "./jobs";
+import { groupJobs, labelDeploymentLinks } from "./jobs";
 import {
   collapseRunSections,
   groupSummaries,
@@ -131,8 +131,10 @@ function update(): void {
     collapseRunSections();
     linkedSummary?.scrollIntoView({ block: "start" });
   }
-  for (const graph of document.querySelectorAll("action-graph"))
+  for (const graph of document.querySelectorAll("action-graph")) {
     adaptGraph(graph as HTMLElement);
+    labelDeploymentLinks(graph as HTMLElement);
+  }
 }
 
 // One delegated listener: stage-group headings and section toggles are re-created by updates,
