@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { beforeEach, describe, expect, test } from "@rstest/core";
-import { BUILTIN_THEMES } from "../src/ts/features/themes/builtins";
+import { BUILTIN_THEMES } from "./shipped-themes";
 import { isAppearancePage, shouldRemount, startAndMount } from "../src/ts/features/themes/appearancePage";
 import { parseColor } from "../src/ts/features/themes/color";
 import { mountThemesSection } from "../src/ts/features/themes/themesSection";
@@ -126,7 +126,7 @@ describe("mountThemesSection layout", () => {
     );
     expect(grid("dark").getAttribute("aria-label")).toBe("Custom dark themes");
     expect(grid("light").getAttribute("aria-label")).toBe("Custom light themes");
-    expect(grid("dark").className).toBe("d-flex gutter-condensed flex-wrap");
+    expect(grid("dark").className).toBe("gha-theme-list");
     expect(section()!.querySelector("[data-mode]")).toBeNull();
   });
 
@@ -139,38 +139,37 @@ describe("mountThemesSection layout", () => {
     expect(builtinIds("light")).toHaveLength(4);
   });
 
-  test("builtin card markup", () => {
+  test("builtin row markup: a chip with the theme colors, the name and a badge", () => {
     mountThemesSection(document, BUILTIN_THEMES, none, handlers);
-    const card = document.querySelector<HTMLElement>('[data-gha-theme="dracula"]')!;
-    expect(card.className).toBe("position-relative tmp-mb-3 flex-shrink-0 col-6 col-lg-4");
-    expect(card.querySelector(".Label")?.textContent).toBe("Built-in");
-    expect(card.querySelector("img")!.getAttribute("src")).toMatch(/^data:image\/svg\+xml/);
-    expect(card.querySelector(".f5")?.firstChild?.textContent).toBe("Dracula");
-    expect(card.querySelector("p")!.textContent).toBe("Dark theme");
-    expect(card.querySelector("label")!.htmlFor).toBe("gha-theme-dracula-dark");
-    expect(document.querySelector('[data-gha-theme="alucard"] p')!.textContent).toBe("Light theme");
+    const row = document.querySelector<HTMLElement>('[data-gha-theme="dracula"]')!;
+    expect(row.className).toBe("gha-theme-row");
+    expect(row.querySelector(".Label")?.textContent).toBe("Built-in");
+    expect(row.querySelector("img")).toBeNull();
+    const chip = row.querySelector<HTMLElement>(".gha-theme-chip")!;
+    expect(chip.style.backgroundColor).not.toBe("");
+    expect(chip.querySelectorAll(".gha-theme-dot")).toHaveLength(6);
+    expect(row.querySelector(".gha-theme-name")?.textContent).toBe("Dracula");
+    expect(row.querySelector("label")!.htmlFor).toBe("gha-theme-dracula-dark");
+    expect(document.querySelector('[data-gha-theme="alucard"] .gha-theme-name')!.textContent).toBe("Alucard");
   });
 
-  test("GitHub default card", () => {
+  test("GitHub default row", () => {
     mountThemesSection(document, BUILTIN_THEMES, none, handlers);
-    const card = grid("dark").firstElementChild as HTMLElement;
-    expect(card.hasAttribute("data-gha-theme-default")).toBe(true);
-    const input = card.querySelector("input")!;
+    const row = grid("dark").firstElementChild as HTMLElement;
+    expect(row.hasAttribute("data-gha-theme-default")).toBe(true);
+    const input = row.querySelector("input")!;
     expect([input.id, input.name, input.value]).toEqual(["gha-theme-default-dark", "gha_theme_dark", ""]);
-    const preview = card.querySelector<HTMLElement>("label > div")!;
-    expect(preview.className).toBe("d-block border-bottom width-full");
-    expect(preview.getAttribute("style")).toBe("aspect-ratio: 190 / 100;");
-    expect(card.querySelector(".f5")!.textContent).toBe("GitHub default");
-    expect(card.querySelector("p")!.textContent).toBe("Use GitHub's own colors in this mode.");
-    expect(card.querySelector(".Label, button, img")).toBeNull();
+    expect(row.querySelector(".gha-theme-chip")!.classList.contains("gha-theme-chip-empty")).toBe(true);
+    expect(row.querySelector(".gha-theme-name")!.textContent).toBe("GitHub default");
+    expect(row.querySelector(".Label, button, img")).toBeNull();
   });
 
   test("hostile name renders as literal text", () => {
     mountThemesSection(document, [custom("<img src=x onerror=alert(1)>")], none, handlers);
     expect(document.querySelector("img[onerror]")).toBeNull();
-    const card = document.querySelector('[data-gha-theme="mine"]')!;
-    expect(card.querySelector(".f5")!.firstChild!.textContent).toBe("<img src=x onerror=alert(1)>");
-    expect(card.querySelector(".Label")?.textContent).toBe("Custom");
+    const row = document.querySelector('[data-gha-theme="mine"]')!;
+    expect(row.querySelector(".gha-theme-name")!.textContent).toBe("<img src=x onerror=alert(1)>");
+    expect(row.querySelector(".Label")?.textContent).toBe("Custom");
   });
 
   test("radios are detached from GitHub's form and have unique ids", () => {
@@ -270,12 +269,11 @@ describe("themes.css", () => {
     }
   });
 
-  test("the active card label only changes its border color", () => {
-    const label = rules.find(({ selectors }) => selectors.includes("[data-gha-theme][data-gha-active] > label"));
-    expect(label).toBeDefined();
-    expect(label!.selectors).toContain("[data-gha-theme-default][data-gha-active] > label");
-    const declarations = label!.body.split(";").map((d) => d.trim()).filter(Boolean);
-    expect(declarations).toEqual(["border-color: var(--borderColor-accent-emphasis)"]);
+  test("the active row is marked with a background and an inset bar, nothing else", () => {
+    const row = rules.find(({ selectors }) => selectors.includes(".gha-theme-row[data-gha-active]"));
+    expect(row).toBeDefined();
+    const properties = row!.body.split(";").map((d) => d.trim().split(":")[0]).filter(Boolean);
+    expect(properties).toEqual(["background", "box-shadow"]);
   });
 
   test("uses no color literals", () => {

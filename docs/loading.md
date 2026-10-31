@@ -31,3 +31,5 @@ Trade-off: entering Actions or a pull request from another kind of page (or from
 ## Future option
 
 A tiny loader could be the only bundle registered broadly. On each route change it would dynamically `import()` the feature modules needed for the new route. This needs ES-module bundles and the feature files listed in `web_accessible_resources`. Not built.
+
+The built-in theme files (`dist/themes/*.json`) is a web-accessible resource for `https://github.com/*`; the themes bundle fetches the index only on the Appearance page and a single theme file when it is the Active theme.

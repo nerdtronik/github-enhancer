@@ -85,22 +85,43 @@ export interface ThemeControllerDeps {
   loadCustom(): Promise<Theme[]>;
   watchCustom(listener: () => void): void;
   onIdsChange(listener: () => void): void;
+  /** Fetches a catalog theme by id; resolves undefined for ids that are not catalog themes. */
+  loadCatalogTheme?(id: string): Promise<Theme | undefined>;
 }
 
 /**
- * Renders in two stages: first the built-in themes as soon as settings are ready, then again once
- * custom themes are read from storage. Built-ins therefore paint without waiting for storage.
+ * Renders in two stages: first the Active built-in themes (their files are fetched as soon as
+ * settings are ready), then again once custom themes are read from storage. Built-ins therefore
+ * paint without waiting for the custom themes.
  */
 export function createThemeController(deps: ThemeControllerDeps) {
   const injector = createInjector(deps.doc);
   let custom: Theme[] = [];
   let sequence = 0;
   const listeners = new Set<() => void>();
+  // Catalog themes are fetched only while they are an Active theme; failed ids are not retried.
+  const catalog = new Map<string, Theme>();
+  const failed = new Set<string>();
 
   const render = () => {
     const { light, dark } = deps.readIds();
-    injector.apply(resolveActive(light, dark, custom));
+    injector.apply(resolveActive(light, dark, [...catalog.values(), ...custom]));
+    void fetchMissing([light, dark]);
   };
+
+  async function fetchMissing(ids: (string | null)[]): Promise<void> {
+    if (!deps.loadCatalogTheme) return;
+    for (const id of ids) {
+      if (!id || failed.has(id) || findTheme(id, [...catalog.values(), ...custom])) continue;
+      const theme = await deps.loadCatalogTheme(id);
+      if (!theme) {
+        failed.add(id);
+        continue;
+      }
+      catalog.set(id, theme);
+      render();
+    }
+  }
 
   const reloadCustom = async () => {
     // Each reload takes a ticket; if a newer reload started while this one awaited storage, this
@@ -140,6 +161,8 @@ export function createThemeController(deps: ThemeControllerDeps) {
     render,
     reload: reloadCustom,
     getCustom: (): Theme[] => custom,
+    /** Catalog themes loaded so far because they were selected. */
+    getCatalogThemes: (): Theme[] => [...catalog.values()],
     onCustomChange(listener: () => void): void {
       listeners.add(listener);
     },

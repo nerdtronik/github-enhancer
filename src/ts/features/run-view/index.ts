@@ -30,6 +30,10 @@ const {
 } = state;
 
 const enhanced = () => settings.get("actionRun_enhancedViewEnabled");
+const collapsible = () => settings.get("actionRun_collapsibleSectionsEnabled");
+// The enhanced jobs view and the collapsible sections are independent switches; the page-level
+// bookkeeping (run reset, #hash sync, click handling) is needed when either one is on.
+const active = () => enhanced() || collapsible();
 
 // Drops state for graphs that Turbo navigation or a re-render replaced: a detached graph, or a
 // graph whose canvas/stages elements were swapped out under the same `action-graph`, would leave
@@ -121,16 +125,17 @@ function update(): void {
     "gha-run-view-enabled",
     enhanced() && runPage,
   );
-  if (!enhanced()) return;
-  pruneStale();
+  if (!active()) return;
+  if (enhanced()) pruneStale();
   if (!runPage) return;
   resetForNewRun();
   const linkedSummary = syncSectionHash();
-  if (settings.get("actionRun_collapsibleSectionsEnabled")) {
+  if (collapsible()) {
     groupSummaries();
     collapseRunSections();
     linkedSummary?.scrollIntoView({ block: "start" });
   }
+  if (!enhanced()) return;
   for (const graph of document.querySelectorAll("action-graph")) {
     adaptGraph(graph as HTMLElement);
     labelDeploymentLinks(graph as HTMLElement);
@@ -141,12 +146,13 @@ function update(): void {
 // so direct listeners would be lost. Same-page #links reset sectionHash so the hash sync reruns
 // and opens the linked summary.
 function onClick(event: MouseEvent): void {
-  if (!enhanced()) return;
+  if (!active()) return;
   const target = event.target as HTMLElement;
   const stageHeading = target.closest?.(
     "button.gha-run-status-heading",
   ) as HTMLElement | null;
   if (
+    enhanced() &&
     settings.get("actionRun_statusGroupingEnabled") &&
     stageHeading?.closest("action-graph.gha-run-list")
   ) {
@@ -171,6 +177,7 @@ function onClick(event: MouseEvent): void {
 function onSettingChange(key: string): void {
   switch (key) {
     case "actionRun_enhancedViewEnabled":
+    case "actionRun_collapsibleSectionsEnabled":
       return scheduleUpdate();
     case "actionRun_jobsViewHeight": {
       const height = settings.get("actionRun_jobsViewHeight");
@@ -207,7 +214,7 @@ async function init(): Promise<void> {
       workflowInfos.size > 0 ||
       document.documentElement.classList.contains("gha-run-view-enabled"),
     relevant: () =>
-      enhanced() && (isRunPage() || scrollbars.size > 0 || workflowInfos.size > 0),
+      active() && (isRunPage() || scrollbars.size > 0 || workflowInfos.size > 0),
     observe: {
       target: document,
       childList: true,

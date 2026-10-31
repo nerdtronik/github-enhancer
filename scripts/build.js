@@ -34,6 +34,9 @@ await esbuild.build({
 fs.cpSync("assets/icons", `${OUTPUT}/icons`, {
   recursive: true,
 });
+fs.cpSync("assets/themes", `${OUTPUT}/themes`, {
+  recursive: true,
+});
 fs.cpSync("src/css", `${OUTPUT}/css`, {
   recursive: true,
 });

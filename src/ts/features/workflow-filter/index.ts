@@ -6,6 +6,7 @@ import { createPageScheduler } from "../../core/scheduler";
 import { store } from "../../core/settings";
 import { actionsRepository, route, workflowRoute } from "../../core/routes";
 import * as categories from "../workflow-categories/view";
+import { nameOf } from "../workflow-categories/name";
 import { installTooltips } from "../../core/tooltip";
 
 installTooltips();
@@ -650,7 +651,7 @@ function update(): void {
           .closest<HTMLElement>(NATIVE_ROW)
           ?.toggleAttribute(
             "data-gha-workflow-hidden",
-            !link.textContent!.toLowerCase().includes(query.trim().toLowerCase()),
+            !nameOf(link).toLowerCase().includes(query.trim().toLowerCase()),
           );
     } else if (!state!.fetching)
       categories.sync(

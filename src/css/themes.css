@@ -1,15 +1,91 @@
-[data-gha-theme] .Label {
+/* The picker is a list: one row per theme, a chip showing its colors, its name and its actions. */
+.gha-theme-search {
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: var(--base-size-8);
+}
+
+.gha-theme-list {
+  max-height: 420px;
+  overflow-y: auto;
+  border: var(--borderWidth-thin) solid var(--borderColor-default);
+  border-radius: var(--borderRadius-medium);
+}
+
+.gha-theme-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--base-size-8);
+  padding: var(--base-size-4) var(--base-size-8);
+  /* Long lists: rows outside the viewport are not rendered until scrolled near. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 40px;
+}
+
+.gha-theme-row[hidden] {
+  display: none;
+}
+
+.gha-theme-row + .gha-theme-row {
+  border-top: var(--borderWidth-thin) solid var(--borderColor-muted);
+}
+
+.gha-theme-row:hover {
+  background: var(--control-transparent-bgColor-hover);
+}
+
+.gha-theme-row[data-gha-active] {
+  background: var(--control-transparent-bgColor-selected);
+  box-shadow: inset 3px 0 0 var(--borderColor-accent-emphasis);
+}
+
+.gha-theme-label {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0;
+  padding: var(--base-size-4) 0;
+  cursor: pointer;
+}
+
+.gha-theme-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gha-theme-chip {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--base-size-4);
+  margin-right: var(--base-size-8);
+  padding: var(--base-size-4) var(--base-size-8);
+  border: var(--borderWidth-thin) solid var(--borderColor-default);
+  border-radius: 999px;
+}
+
+.gha-theme-chip-empty {
+  width: 74px;
+  height: 20px;
+  background: repeating-linear-gradient(135deg, var(--bgColor-muted) 0 6px, var(--bgColor-default) 6px 12px);
+}
+
+.gha-theme-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--fgColor-default) 18%, transparent);
+}
+
+.gha-theme-row .Label {
   vertical-align: middle;
 }
 
 [data-gha-themes-toolbar],
 [data-gha-theme-actions] {
   gap: var(--base-size-8);
-}
-
-[data-gha-theme][data-gha-active] > label,
-[data-gha-theme-default][data-gha-active] > label {
-  border-color: var(--borderColor-accent-emphasis);
 }
 
 /* A <dialog> gets browser default colors, not the page's, so the variables are applied here. */

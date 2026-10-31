@@ -1,7 +1,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { beforeEach, describe, expect, test } from "@rstest/core";
-import { BUILTIN_THEMES, isBuiltin } from "../src/ts/features/themes/builtins";
+import { isBuiltin } from "../src/ts/features/themes/builtins";
+import { BUILTIN_THEMES } from "./shipped-themes";
 import { mix } from "../src/ts/features/themes/color";
 import { contrastWarnings, copyOf, openEditor, startFromCopy } from "../src/ts/features/themes/editorDialog";
 import { generateVariables } from "../src/ts/features/themes/generate";
@@ -42,26 +43,29 @@ describe("contrastWarnings", () => {
   });
 });
 
+const darkTemplate = BUILTIN_THEMES.find((t) => t.mode === "dark")!;
+const lightTemplate = BUILTIN_THEMES.find((t) => t.mode === "light")!;
+
 describe("startFromCopy", () => {
   test("copies the first dark built-in with a fresh id", () => {
-    const copy = startFromCopy("dark", undefined);
+    const copy = startFromCopy("dark", undefined, darkTemplate);
     expect(copy.mode).toBe("dark");
     expect(() => validateTheme(copy)).not.toThrow();
     expect(isBuiltin(copy.id)).toBe(false);
     expect(copy.name.endsWith(" copy")).toBe(true);
-    expect(copy.palette).toEqual(BUILTIN_THEMES.find((t) => t.mode === "dark")!.palette);
+    expect(copy.palette).toEqual(darkTemplate.palette);
   });
 
   test("uses the active theme of the same mode, else the first built-in", () => {
     const active = mine("custom-a", "Mine");
-    expect(startFromCopy("dark", active).name).toBe("Mine copy");
-    const light = startFromCopy("light", active);
+    expect(startFromCopy("dark", active, darkTemplate).name).toBe("Mine copy");
+    const light = startFromCopy("light", active, lightTemplate);
     expect(light.mode).toBe("light");
-    expect(light.name).toBe(`${BUILTIN_THEMES.find((t) => t.mode === "light")!.name} copy`);
+    expect(light.name).toBe(`${lightTemplate.name} copy`);
   });
 
   test("long names are truncated to 60 characters", () => {
-    const copy = startFromCopy("dark", mine("custom-a", "x".repeat(60)));
+    const copy = startFromCopy("dark", mine("custom-a", "x".repeat(60)), darkTemplate);
     expect(copy.name.length).toBeLessThanOrEqual(60);
     expect(copy.name.endsWith(" copy")).toBe(true);
   });
@@ -265,6 +269,7 @@ function harness(initial: Theme[] = [], active: ActiveIds = { light: null, dark:
       state.custom = themes;
     },
     getActive: () => state.active,
+    loadCatalogTheme: async (id) => BUILTIN_THEMES.find((theme) => theme.id === id),
     setActive: (mode, id) => {
       log.push(`setActive:${mode}:${id}`);
       state.active = { ...state.active, [mode]: id };
@@ -289,7 +294,7 @@ function harness(initial: Theme[] = [], active: ActiveIds = { light: null, dark:
 describe("theme actions", () => {
   test("create opens a new copy and saving appends it", async () => {
     const h = harness([mine("custom-a")]);
-    h.actions.create("light");
+    await h.actions.create("light");
     const options = h.editor()!;
     expect(options.isNew).toBe(true);
     expect(options.theme.mode).toBe("light");
@@ -297,9 +302,9 @@ describe("theme actions", () => {
     expect(h.state.custom.map((t) => t.id)).toEqual(["custom-a", options.theme.id]);
   });
 
-  test("create starts from the active theme of that mode", () => {
+  test("create starts from the active theme of that mode", async () => {
     const h = harness([mine("custom-a", "Mine")], { light: null, dark: "custom-a" });
-    h.actions.create("dark");
+    await h.actions.create("dark");
     expect(h.editor()!.theme.name).toBe("Mine copy");
   });
 
@@ -412,6 +417,7 @@ describe("theme actions", () => {
         state.custom = themes;
       },
       getActive: () => ({ light: null, dark: null }),
+      loadCatalogTheme: async (id) => BUILTIN_THEMES.find((theme) => theme.id === id),
       setActive: () => {},
       confirm: () => true,
       openEditor: () => () => {},
@@ -430,6 +436,7 @@ describe("theme actions", () => {
       ...{
         getCustom: () => h.state.custom,
         getActive: () => h.state.active,
+        loadCatalogTheme: async (id: string) => BUILTIN_THEMES.find((theme) => theme.id === id),
         setActive: () => void h.log.push("setActive"),
         confirm: () => true,
         openEditor: () => () => {},
@@ -511,7 +518,7 @@ describe("card actions and toolbar", () => {
   test("hostile name is literal text in the card", () => {
     mountThemesSection(document, themes, none, handlers);
     expect(document.querySelector("img[onerror]")).toBeNull();
-    expect(document.querySelector('[data-gha-theme="custom-a"] .f5')!.firstChild!.textContent).toBe(hostile);
+    expect(document.querySelector('[data-gha-theme="custom-a"] .gha-theme-name')!.textContent).toBe(hostile);
   });
 
   test("clicking an action calls it once without touching the radio or the document", () => {
@@ -528,16 +535,15 @@ describe("card actions and toolbar", () => {
     expect(seen).toEqual([]);
   });
 
-  test("action buttons sit inside the card label, as its last row", () => {
+  test("action buttons are the last element of the row, after the label", () => {
     mountThemesSection(document, themes, none, handlers);
     for (const id of ["dracula", "custom-a"]) {
-      const card = document.querySelector(`[data-gha-theme="${id}"]`)!;
-      const label = card.querySelector(":scope > label.radio-label")!;
-      const row = label.lastElementChild as HTMLElement;
-      expect(row.hasAttribute("data-gha-theme-actions")).toBe(true);
-      expect(row.style.marginLeft).toBe("30px");
-      expect(card.lastElementChild).toBe(label);
-      expect(label.querySelectorAll("[data-gha-action]")).toHaveLength(buttons(id).length);
+      const row = document.querySelector(`[data-gha-theme="${id}"]`)!;
+      const bar = row.lastElementChild as HTMLElement;
+      expect(bar.hasAttribute("data-gha-theme-actions")).toBe(true);
+      expect(bar.previousElementSibling).toBe(row.querySelector(":scope > .Label"));
+      expect(row.querySelector(":scope > label.gha-theme-label .Label")).toBeNull();
+      expect(bar.querySelectorAll("[data-gha-action]")).toHaveLength(buttons(id).length);
     }
   });
 
@@ -548,7 +554,7 @@ describe("card actions and toolbar", () => {
     const dark = document.querySelector('[data-gha-themes-mode="dark"] [role="radiogroup"]')!;
     const ids = [...dark.querySelectorAll<HTMLElement>("[data-gha-theme]")].map((c) => c.dataset.ghaTheme);
     expect(ids.slice(-2)).toEqual(["custom-a", "custom-b"]);
-    expect(document.querySelector('[data-gha-theme="custom-a"] .f5')!.firstChild!.textContent).toBe("Renamed");
+    expect(document.querySelector('[data-gha-theme="custom-a"] .gha-theme-name')!.textContent).toBe("Renamed");
   });
 
   test("toolbar sits once in the section before the sub-sections and dispose removes it", () => {

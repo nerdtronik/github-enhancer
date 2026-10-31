@@ -1,537 +1,222 @@
-# Octicons
+# Third-party notices
 
-The inline filter and status icons in `src/ts/features/run-view/` and arrow-up icon in `src/ts/features/go-to-top/index.ts` come from [GitHub Octicons](https://github.com/primer/octicons/tree/main/icons).
+This project includes the third-party material listed below. For each item the license is given by name (SPDX identifier); the full text is published by each project at the URL shown.
 
-MIT License
+## Icons
 
-Copyright (c) 2026 GitHub Inc.
+| Item | Copyright | License | Source |
+| --- | --- | --- | --- |
+| GitHub Octicons (the icons in `assets/icons` that come from Octicons) | Copyright (c) 2026 GitHub Inc. | MIT | https://github.com/primer/octicons/tree/main/icons |
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## Hand-tuned built-in themes
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-# Theme palettes
-
-The built-in themes in `src/ts/features/themes/builtins.ts` use color values from the palettes below. Only color values are used; no theme code is copied. Each section reproduces the license file published by the source project, with its copyright line as published.
+The 14 hand-tuned themes in `assets/themes` use color values from the palettes below. Only color values are used; no theme code is copied.
 
 **To palette owners:** we like these themes and want to respect their authors. If you own one of these palettes and would rather it not be bundled here, or you want the attribution changed, please [open an issue](https://github.com/nerdtronik/github-enhancer/issues) or reach out and we will remove or fix it promptly. We do not want to conflict with the owners of these projects.
 
-## Contents
-
-| Source | License | Themes |
-|---|---|---|
-| Dracula and Alucard | MIT | Dracula, Alucard |
-| One Dark (onedark.vim) | MIT | One Dark |
-| Monokai (classic), via Visual Studio Code | MIT | Monokai |
-| Catppuccin palette (Mocha and Latte) | MIT | Catppuccin Mocha, Catppuccin Latte |
-| Nord | MIT | Nord |
-| Tokyo Night palette (folke/tokyonight.nvim) | Apache-2.0 | Tokyo Night (see Appendix A) |
-| Tokyo Night (VS Code theme, original) | MIT | Listed for reference; the palette values used come from tokyonight.nvim below |
-| Solarized | MIT | Solarized Dark, Solarized Light |
-| Gruvbox | License file not found; README says MIT/X11 (unverified) | Gruvbox Dark, Gruvbox Light |
-| Ayu colors | MIT | Ayu Dark |
-| Rose Pine palette | MIT | Rosé Pine |
-| Apache License 2.0 text | Apache-2.0 | Appendix A |
-
-## Dracula and Alucard
-
-- URL: https://github.com/dracula/dracula-theme
-- Themes: Dracula, Alucard
-- License: MIT, file `LICENSE` in the project repository
-
-```text
-The MIT License (MIT)
-
-Copyright (c) 2023 Dracula Theme
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
-## One Dark (onedark.vim)
-
-- URL: https://github.com/joshdick/onedark.vim
-- Themes: One Dark
-- License: MIT, file `LICENSE` in the project repository
-
-```text
-The MIT License (MIT)
-
-Copyright (c) 2015 Joshua Dick
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-```
-
-## Monokai (classic), via Visual Studio Code
-
-- URL: https://github.com/microsoft/vscode (file extensions/theme-monokai/themes/monokai-color-theme.json)
-- Themes: Monokai
-- License: MIT, file `LICENSE.txt` in the project repository
-
-```text
-MIT License
-
-Copyright (c) 2015 - present Microsoft Corporation
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
-## Catppuccin palette (Mocha and Latte)
-
-- URL: https://github.com/catppuccin/palette
-- Themes: Catppuccin Mocha, Catppuccin Latte
-- License: MIT, file `LICENSE` in the project repository
-
-```text
-MIT License
-
-Copyright (c) 2021 Catppuccin
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
-## Nord
-
-- URL: https://github.com/nordtheme/nord
-- Themes: Nord
-- License: MIT, file `license` in the project repository
-
-```text
-MIT License (MIT)
-
-Copyright (c) 2016-present Sven Greb <development@svengreb.de> (https://www.svengreb.de)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
-## Tokyo Night (VS Code theme, original)
-
-- URL: https://github.com/enkia/tokyo-night-vscode-theme (now https://github.com/tokyo-night/tokyo-night-vscode-theme)
-- Themes: Listed for reference; the palette values used come from tokyonight.nvim below
-- License: MIT, file `LICENSE.txt` in the project repository
-
-```text
-The MIT License (MIT)
-
-Copyright (c) 2018-present Enkia
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-```
-
-## Tokyo Night palette (folke/tokyonight.nvim)
-
-- URL: https://github.com/folke/tokyonight.nvim (palette files `lua/tokyonight/colors/{night,storm}.lua`, `extras/lua/tokyonight_day.lua`)
-- Themes: Tokyo Night
-- License: Apache-2.0, file `LICENSE`. The repository has no NOTICE file. The `LICENSE` file is the unmodified Apache License 2.0 text and contains no project-specific copyright line (the appendix template placeholder `Copyright [yyyy] [name of copyright owner]` is unfilled), so no copyright holder is stated here. The full text is in Appendix A.
-
-## Gruvbox
-
-- URL: https://github.com/morhetz/gruvbox
-- Themes: Gruvbox Dark, Gruvbox Light
-- License: could not be verified. The repository has no LICENSE file (GitHub's license API returns none). Its README says only "License: MIT/X11" with a link to https://en.wikipedia.org/wiki/MIT_License and states no copyright holder or year. No copyright line is claimed here.
-
-## Solarized
-
-- URL: https://github.com/altercation/solarized
-- Themes: Solarized Dark, Solarized Light
-- License: MIT, file `LICENSE` in the project repository
-
-```text
-Copyright (c) 2011 Ethan Schoonover
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-```
-
-## Ayu colors
-
-- URL: https://github.com/ayu-theme/ayu-colors
-- Themes: Ayu Dark
-- License: MIT, file `license` in the project repository
-
-```text
-MIT License
-
-Copyright (c) Konstantin Pschera <me@kons.ch> (kons.ch)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
-## Rose Pine palette
-
-- URL: https://github.com/rose-pine/palette (now https://github.com/rose-pine/rose-pine-palette)
-- Themes: Rosé Pine
-- License: MIT, file `LICENSE` in the project repository
-
-```text
-MIT License
-
-Copyright (c) mvllow
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
-## Appendix A: Apache License 2.0
-
-Applies to the Tokyo Night palette section above. Text from `LICENSE` in https://github.com/folke/tokyonight.nvim.
-
-```text
-                                 Apache License
-                           Version 2.0, January 2004
-                        http://www.apache.org/licenses/
-
-   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
-
-   1. Definitions.
-
-      "License" shall mean the terms and conditions for use, reproduction,
-      and distribution as defined by Sections 1 through 9 of this document.
-
-      "Licensor" shall mean the copyright owner or entity authorized by
-      the copyright owner that is granting the License.
-
-      "Legal Entity" shall mean the union of the acting entity and all
-      other entities that control, are controlled by, or are under common
-      control with that entity. For the purposes of this definition,
-      "control" means (i) the power, direct or indirect, to cause the
-      direction or management of such entity, whether by contract or
-      otherwise, or (ii) ownership of fifty percent (50%) or more of the
-      outstanding shares, or (iii) beneficial ownership of such entity.
-
-      "You" (or "Your") shall mean an individual or Legal Entity
-      exercising permissions granted by this License.
-
-      "Source" form shall mean the preferred form for making modifications,
-      including but not limited to software source code, documentation
-      source, and configuration files.
-
-      "Object" form shall mean any form resulting from mechanical
-      transformation or translation of a Source form, including but
-      not limited to compiled object code, generated documentation,
-      and conversions to other media types.
-
-      "Work" shall mean the work of authorship, whether in Source or
-      Object form, made available under the License, as indicated by a
-      copyright notice that is included in or attached to the work
-      (an example is provided in the Appendix below).
-
-      "Derivative Works" shall mean any work, whether in Source or Object
-      form, that is based on (or derived from) the Work and for which the
-      editorial revisions, annotations, elaborations, or other modifications
-      represent, as a whole, an original work of authorship. For the purposes
-      of this License, Derivative Works shall not include works that remain
-      separable from, or merely link (or bind by name) to the interfaces of,
-      the Work and Derivative Works thereof.
-
-      "Contribution" shall mean any work of authorship, including
-      the original version of the Work and any modifications or additions
-      to that Work or Derivative Works thereof, that is intentionally
-      submitted to Licensor for inclusion in the Work by the copyright owner
-      or by an individual or Legal Entity authorized to submit on behalf of
-      the copyright owner. For the purposes of this definition, "submitted"
-      means any form of electronic, verbal, or written communication sent
-      to the Licensor or its representatives, including but not limited to
-      communication on electronic mailing lists, source code control systems,
-      and issue tracking systems that are managed by, or on behalf of, the
-      Licensor for the purpose of discussing and improving the Work, but
-      excluding communication that is conspicuously marked or otherwise
-      designated in writing by the copyright owner as "Not a Contribution."
-
-      "Contributor" shall mean Licensor and any individual or Legal Entity
-      on behalf of whom a Contribution has been received by Licensor and
-      subsequently incorporated within the Work.
-
-   2. Grant of Copyright License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      copyright license to reproduce, prepare Derivative Works of,
-      publicly display, publicly perform, sublicense, and distribute the
-      Work and such Derivative Works in Source or Object form.
-
-   3. Grant of Patent License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      (except as stated in this section) patent license to make, have made,
-      use, offer to sell, sell, import, and otherwise transfer the Work,
-      where such license applies only to those patent claims licensable
-      by such Contributor that are necessarily infringed by their
-      Contribution(s) alone or by combination of their Contribution(s)
-      with the Work to which such Contribution(s) was submitted. If You
-      institute patent litigation against any entity (including a
-      cross-claim or counterclaim in a lawsuit) alleging that the Work
-      or a Contribution incorporated within the Work constitutes direct
-      or contributory patent infringement, then any patent licenses
-      granted to You under this License for that Work shall terminate
-      as of the date such litigation is filed.
-
-   4. Redistribution. You may reproduce and distribute copies of the
-      Work or Derivative Works thereof in any medium, with or without
-      modifications, and in Source or Object form, provided that You
-      meet the following conditions:
-
-      (a) You must give any other recipients of the Work or
-          Derivative Works a copy of this License; and
-
-      (b) You must cause any modified files to carry prominent notices
-          stating that You changed the files; and
-
-      (c) You must retain, in the Source form of any Derivative Works
-          that You distribute, all copyright, patent, trademark, and
-          attribution notices from the Source form of the Work,
-          excluding those notices that do not pertain to any part of
-          the Derivative Works; and
-
-      (d) If the Work includes a "NOTICE" text file as part of its
-          distribution, then any Derivative Works that You distribute must
-          include a readable copy of the attribution notices contained
-          within such NOTICE file, excluding those notices that do not
-          pertain to any part of the Derivative Works, in at least one
-          of the following places: within a NOTICE text file distributed
-          as part of the Derivative Works; within the Source form or
-          documentation, if provided along with the Derivative Works; or,
-          within a display generated by the Derivative Works, if and
-          wherever such third-party notices normally appear. The contents
-          of the NOTICE file are for informational purposes only and
-          do not modify the License. You may add Your own attribution
-          notices within Derivative Works that You distribute, alongside
-          or as an addendum to the NOTICE text from the Work, provided
-          that such additional attribution notices cannot be construed
-          as modifying the License.
-
-      You may add Your own copyright statement to Your modifications and
-      may provide additional or different license terms and conditions
-      for use, reproduction, or distribution of Your modifications, or
-      for any such Derivative Works as a whole, provided Your use,
-      reproduction, and distribution of the Work otherwise complies with
-      the conditions stated in this License.
-
-   5. Submission of Contributions. Unless You explicitly state otherwise,
-      any Contribution intentionally submitted for inclusion in the Work
-      by You to the Licensor shall be under the terms and conditions of
-      this License, without any additional terms or conditions.
-      Notwithstanding the above, nothing herein shall supersede or modify
-      the terms of any separate license agreement you may have executed
-      with Licensor regarding such Contributions.
-
-   6. Trademarks. This License does not grant permission to use the trade
-      names, trademarks, service marks, or product names of the Licensor,
-      except as required for reasonable and customary use in describing the
-      origin of the Work and reproducing the content of the NOTICE file.
-
-   7. Disclaimer of Warranty. Unless required by applicable law or
-      agreed to in writing, Licensor provides the Work (and each
-      Contributor provides its Contributions) on an "AS IS" BASIS,
-      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-      implied, including, without limitation, any warranties or conditions
-      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
-      PARTICULAR PURPOSE. You are solely responsible for determining the
-      appropriateness of using or redistributing the Work and assume any
-      risks associated with Your exercise of permissions under this License.
-
-   8. Limitation of Liability. In no event and under no legal theory,
-      whether in tort (including negligence), contract, or otherwise,
-      unless required by applicable law (such as deliberate and grossly
-      negligent acts) or agreed to in writing, shall any Contributor be
-      liable to You for damages, including any direct, indirect, special,
-      incidental, or consequential damages of any character arising as a
-      result of this License or out of the use or inability to use the
-      Work (including but not limited to damages for loss of goodwill,
-      work stoppage, computer failure or malfunction, or any and all
-      other commercial damages or losses), even if such Contributor
-      has been advised of the possibility of such damages.
-
-   9. Accepting Warranty or Additional Liability. While redistributing
-      the Work or Derivative Works thereof, You may choose to offer,
-      and charge a fee for, acceptance of support, warranty, indemnity,
-      or other liability obligations and/or rights consistent with this
-      License. However, in accepting such obligations, You may act only
-      on Your own behalf and on Your sole responsibility, not on behalf
-      of any other Contributor, and only if You agree to indemnify,
-      defend, and hold each Contributor harmless for any liability
-      incurred by, or claims asserted against, such Contributor by reason
-      of your accepting any such warranty or additional liability.
-
-   END OF TERMS AND CONDITIONS
-
-   APPENDIX: How to apply the Apache License to your work.
-
-      To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "[]"
-      replaced with your own identifying information. (Don't include
-      the brackets!)  The text should be enclosed in the appropriate
-      comment syntax for the file format. We also recommend that a
-      file or class name and description of purpose be included on the
-      same "printed page" as the copyright notice for easier
-      identification within third-party archives.
-
-   Copyright [yyyy] [name of copyright owner]
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-```
+| Themes | Copyright | License | Source |
+| --- | --- | --- | --- |
+| Dracula, Alucard | Copyright (c) 2023 Dracula Theme | MIT | https://github.com/dracula/dracula-theme |
+| One Dark | Copyright (c) 2015 Joshua Dick | MIT | https://github.com/joshdick/onedark.vim |
+| Monokai (classic) | Copyright (c) 2015 - present Microsoft Corporation | MIT | https://github.com/microsoft/vscode (extensions/theme-monokai) |
+| Catppuccin Mocha, Catppuccin Latte | Copyright (c) 2021 Catppuccin | MIT | https://github.com/catppuccin/palette |
+| Nord | Copyright (c) 2016-present Sven Greb | MIT | https://github.com/nordtheme/nord |
+| Tokyo Night | No project-specific copyright line (the repository's LICENSE is the unmodified license text and it has no NOTICE file) | Apache-2.0 | https://github.com/folke/tokyonight.nvim (palette files) |
+| Gruvbox Dark, Gruvbox Light | None published; the repository has no LICENSE file and its README only says "MIT/X11" (unverified) | MIT/X11 (unverified) | https://github.com/morhetz/gruvbox |
+| Solarized Dark, Solarized Light | Copyright (c) 2011 Ethan Schoonover | MIT | https://github.com/altercation/solarized |
+| Ayu Dark | Copyright (c) Konstantin Pschera | MIT | https://github.com/ayu-theme/ayu-colors |
+| Rosé Pine | Copyright (c) mvllow | MIT | https://github.com/rose-pine/palette |
+
+<!-- builtin-theme-files:start -->
+
+## Additional built-in themes
+
+Colors of popular community themes, converted to our palette format from their published terminal color definitions. Only themes declaring a permissive license are included; each keeps its author and upstream source. If you own one of these themes and want it removed, please open an issue.
+
+| Theme | Author | License | Upstream |
+| --- | --- | --- | --- |
+| Adwaita dark | Emil Löfquist (https://github.com/ewal) | MIT | https://github.com/ewal/kitty-adwaita/blob/main/adwaita_dark.conf |
+| Adwaita darker | Emil Löfquist (https://github.com/ewal) | MIT | https://github.com/ewal/kitty-adwaita/blob/main/adwaita_darker.conf |
+| Adwaita light | Emil Löfquist (https://github.com/ewal) | MIT | https://github.com/ewal/kitty-adwaita/blob/main/adwaita_light.conf |
+| Alabaster | Nikita Prokopov | MIT | https://raw.githubusercontent.com/anmolmathias/kitty-alabaster/master/alabaster.conf |
+| Alabaster Dark | Nikita Prokopov | MIT | https://raw.githubusercontent.com/anmolmathias/kitty-alabaster/master/alabaster-dark.conf |
+| Aquarium Dark | Detective Pikachu | MIT | https://github.com/FrenzyExists/aquarium-vim/raw/develop/extras/kitty_aquarium_dark.conf |
+| Atelier Cave Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/AtelierSchemes-kitty/blob/main/themes/atelier-cave-dark.conf |
+| Atelier Dune Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/AtelierSchemes-kitty/blob/main/themes/atelier-dune-dark.conf |
+| Atelier Estuary Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/AtelierSchemes-kitty/blob/main/themes/atelier-estuary-dark.conf |
+| Atelier Forest Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/AtelierSchemes-kitty/blob/main/themes/atelier-forest-dark.conf |
+| Atelier Heath Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/AtelierSchemes-kitty/blob/main/themes/atelier-heath-dark.conf |
+| Atelier Lakeside Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/AtelierSchemes-kitty/blob/main/themes/atelier-lakeside-dark.conf |
+| Atelier Plateau Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/AtelierSchemes-kitty/blob/main/themes/atelier-plateau-dark.conf |
+| Atelier Savanna Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/AtelierSchemes-kitty/blob/main/themes/atelier-savanna-dark.conf |
+| Atelier Seaside Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/AtelierSchemes-kitty/blob/main/themes/atelier-seaside-dark.conf |
+| Atelier Sulphurpool Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/AtelierSchemes-kitty/blob/main/themes/atelier-sulphurpool-dark.conf |
+| Ayaka | Ruhannn | MIT | https://raw.githubusercontent.com/Ruhannn/kitty-themes/refs/heads/master/themes/Ayaka.conf |
+| Base2Tone Cave Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-cave-dark.conf |
+| Base2Tone Desert Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-desert-dark.conf |
+| Base2Tone Drawbridge Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-drawbridge-dark.conf |
+| Base2Tone Earth Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-earth-dark.conf |
+| Base2Tone Evening Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-evening-dark.conf |
+| Base2Tone Field Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-field-dark.conf |
+| Base2Tone Forest Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-forest-dark.conf |
+| Base2Tone Garden Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-garden-dark.conf |
+| Base2Tone Heath Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-heath-dark.conf |
+| Base2Tone Lake Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-lake-dark.conf |
+| Base2Tone Lavender Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-lavender-dark.conf |
+| Base2Tone Mall Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-mall-dark.conf |
+| Base2Tone Meadow Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-meadow-dark.conf |
+| Base2Tone Morning Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-morning-dark.conf |
+| Base2Tone Motel Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-motel-dark.conf |
+| Base2Tone Pool Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-pool-dark.conf |
+| Base2Tone Porch Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-porch-dark.conf |
+| Base2Tone Sea Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-sea-dark.conf |
+| Base2Tone Space Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-space-dark.conf |
+| Base2Tone Suburb Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base2Tone-kitty/blob/main/themes/base2tone-suburb-dark.conf |
+| Base4Tone_Classic_D Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base4Tone-kitty/blob/main/themes/base4tone-classic-d-dark.conf |
+| Base4Tone_Classic_I Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base4Tone-kitty/blob/main/themes/base4tone-classic-i-dark.conf |
+| Base4Tone_Classic_P Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base4Tone-kitty/blob/main/themes/base4tone-classic-p-dark.conf |
+| Base4Tone_Classic_S Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base4Tone-kitty/blob/main/themes/base4tone-classic-s-dark.conf |
+| Base4Tone_Classic_W Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base4Tone-kitty/blob/main/themes/base4tone-classic-w-dark.conf |
+| Base4Tone_Modern_N Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base4Tone-kitty/blob/main/themes/base4tone-modern-n-dark.conf |
+| Base4Tone_Modern_W Dark | Bram de Haan (https://github.com/atelierbram) | MIT | https://github.com/atelierbram/Base4Tone-kitty/blob/main/themes/base4tone-modern-w-dark.conf |
+| bl1nk | dhay3 | CC0-1.0 | https://github.com/dhay3/kitty-bl1nk/blob/main/bl1nk.conf |
+| Bliss | Joshua Jon, Eric Johnson | MIT | https://github.com/ejohnso49/bliss-kitty-theme/blob/main/bliss.conf |
+| Blueberry Mango | janbridley | MIT | https://github.com/janbridley/blueberry-mango/blob/main/kitty/blueberry-mango.conf |
+| Bogster (Dark) | lhs | MIT | https://github.com/vv9k/bogster |
+| Breath2 | b3yc0d3 <b3yc0d3@dnmx.org> | MIT | https://raw.githubusercontent.com/b3yc0d3/my-kitty-themes/main/themes/breath2.conf |
+| Carbonfox | EdenEast | MIT | https://github.com/EdenEast/nightfox.nvim/blob/main/extra/carbonfox/kitty.conf |
+| Catppuccin-Frappe | Pocco81 (https://github.com/Pocco81) | MIT | https://github.com/catppuccin/kitty/blob/main/themes/frappe.conf |
+| Catppuccin-Macchiato | Pocco81 (https://github.com/Pocco81) | MIT | https://github.com/catppuccin/kitty/blob/main/themes/macchiato.conf |
+| citylights | 食無魚 <liuyinz@gmail.com> | MIT | https://raw.githubusercontent.com/liuyinz/dotfile/master/common/kitty/citylights.conf |
+| Clockwork Gold | Sonja Leaf, Clockwork | MIT | https://raw.githubusercontent.com/ClockworkNet/clockwork-gold/main/kitty/Clockwork_Gold.conf |
+| Cobalt2 | Lalit Kumar(@laltimee) | MIT | https://github.com/lalitmee/kitty-cobalt2/blob/master/cobalt2.conf |
+| Cyberpunk | - | MIT | https://raw.githubusercontent.com/jandre953/kitty-cyberpunk/master/cyberpunk.conf |
+| Dainty Dark | Anshul Singh Chauhan (https://github.com/anshul-exe) | MIT | https://github.com/Anshul-exe/Dainty-Dark_kitty_theme/blob/main/daintyDark.conf |
+| Dawnfox | EdenEast | MIT | https://github.com/EdenEast/nightfox.nvim/blob/main/extra/dawnfox/kitty.conf |
+| Dayfox | EdenEast | MIT | https://github.com/EdenEast/nightfox.nvim/blob/main/extra/dayfox/kitty.conf |
+| Doom One | Henrik Lissner <https://github.com/hlissner> | MIT | - |
+| Doom One Light | Henrik Lissner <https://github.com/hlissner> | MIT | - |
+| Doom Vibrant | Henrik Lissner <https://github.com/hlissner> | MIT | - |
+| duckbones | Michael Chris Lopez | MIT | https://github.com/mcchrish/zenbones.nvim/raw/main/extras/kitty/duckbones.conf |
+| Duskfox | EdenEast | MIT | https://github.com/EdenEast/nightfox.nvim/blob/main/extra/duskfox/kitty.conf |
+| E-Ink | Algilbert Gomez (https://github.com/alexxGmZ) | MIT | https://github.com/alexxGmZ/e-ink.kitty/blob/main/E-Ink.conf |
+| E-Ink Dark | Algilbert Gomez (https://github.com/alexxGmZ) | MIT | https://github.com/alexxGmZ/e-ink.kitty/blob/main/E-Ink-Dark.conf |
+| Eldritch | jacobrreed | MIT | https://github.com/eldritch-theme/kitty |
+| Eldritch dark | jacobrreed | MIT | https://github.com/eldritch-theme/kitty |
+| Everforest Dark Hard | Sainnhe Park | MIT | https://github.com/ewal/kitty-everforest/blob/master/themes/everforest_dark_hard.conf |
+| Everforest Dark Medium | Sainnhe Park | MIT | https://github.com/ewal/kitty-everforest/blob/master/themes/everforest_dark_medium.conf |
+| Everforest Dark Soft | Sainnhe Park | MIT | https://github.com/ewal/kitty-everforest/blob/master/themes/everforest_dark_soft.conf |
+| Everforest Light Hard | Sainnhe Park | MIT | https://github.com/ewal/kitty-everforest/blob/master/themes/everforest_light_hard.conf |
+| Everforest Light Medium | Sainnhe Park | MIT | https://github.com/ewal/kitty-everforest/blob/master/themes/everforest_light_medium.conf |
+| fairyfloss | Snuggle · https://github.com/Snuggle | MIT | https://github.com/Snuggle/kitty-themes |
+| ferra | eureka-cpu · https://github.com/eureka-cpu | MIT | https://github.com/casperstorm/ferra |
+| Flexoki (Dark) | Kepano | MIT | https://raw.githubusercontent.com/kepano/flexoki/main/kitty/flexoki_dark.conf |
+| Flexoki (Light) | Kepano | MIT | https://raw.githubusercontent.com/kepano/flexoki/main/kitty/flexoki_light.conf |
+| Ghostty Default | Based on Ghostty's StyleDark theme | MIT | https://github.com/ghostty-org/ghostty |
+| GitHub Dark | GitHub | MIT | - |
+| GitHub Dark Colorblind | GitHub | MIT | - |
+| GitHub Dark Dimmed | GitHub | MIT | - |
+| GitHub Dark High Contrast | GitHub | MIT | - |
+| GitHub Light | GitHub | MIT | - |
+| GitHub Light Colorblind | GitHub | MIT | - |
+| GitHub Light High Contrast | GitHub | MIT | - |
+| Gnome Light | rbbl | MIT | - |
+| GrokDay | Bijan Rahnema | Apache-2.0 | - |
+| GrokNight | Bijan Rahnema | Apache-2.0 | - |
+| Gruvbox Material Dark Hard | Sainnhe Park | MIT | https://raw.githubusercontent.com/rsaihe/gruvbox-material-kitty/main/colors/gruvbox-material-dark-hard.conf |
+| Gruvbox Material Dark Medium | Sainnhe Park | MIT | https://raw.githubusercontent.com/rsaihe/gruvbox-material-kitty/main/colors/gruvbox-material-dark-medium.conf |
+| Gruvbox Material Dark Soft | Sainnhe Park | MIT | https://raw.githubusercontent.com/rsaihe/gruvbox-material-kitty/main/colors/gruvbox-material-dark-soft.conf |
+| Gruvbox Material Light Hard | Sainnhe Park | MIT | https://raw.githubusercontent.com/rsaihe/gruvbox-material-kitty/main/colors/gruvbox-material-light-hard.conf |
+| Gruvbox Material Light Medium | Sainnhe Park | MIT | https://raw.githubusercontent.com/rsaihe/gruvbox-material-kitty/main/colors/gruvbox-material-light-medium.conf |
+| Gruvbox Material Light Soft | Sainnhe Park | MIT | https://raw.githubusercontent.com/rsaihe/gruvbox-material-kitty/main/colors/gruvbox-material-light-soft.conf |
+| H-PUX | Jacob Chapman | CC0-1.0 | https://github.com/chapmanjacobd/computer/blob/main/.config/kitty/theme.conf |
+| HardHacker | Miro Paintola | MIT | https://github.com/miropls/hardhacker-kitty |
+| Kanagawa | Tommaso Laurenzi | MIT | https://github.com/rebelot/kanagawa.nvim/ |
+| Kanagawa_dragon | Tommaso Laurenzi | MIT | https://github.com/rebelot/kanagawa.nvim/ |
+| Kanagawa_light | Tommaso Laurenzi | MIT | https://github.com/rebelot/kanagawa.nvim/ |
+| kanagawabones | Michael Chris Lopez | MIT | https://github.com/mcchrish/zenbones.nvim/raw/main/extras/kitty/kanagawabones.conf |
+| Kokiri | Chuck | MIT | https://github.com/fremontcw/kokiri-theme/blob/main/kitty/Kokiri.conf |
+| Kurayami | Kevin M (github.com/kevinm6) | MIT | https://github.com/kevinm6/kitty-themes/blob/master/themes/kurayami.conf |
+| Linh | cungun (https://github.com/cungun) | MIT | https://raw.githubusercontent.com/cungun/kitty-themes/refs/heads/linh/themes/Linh.conf |
+| Love Ghost | Chuck | MIT | - |
+| Mayukai | Gulajava Ministudio | MIT | https://github.com/elianiva/mayukai-terminal-themes/blob/master/kitty.conf |
+| Mellow | - | MIT | https://raw.githubusercontent.com/mellow-theme/mellow.nvim/refs/heads/main/extras/kitty/mellow.conf |
+| Min Dark | pivattogui | MIT | https://raw.githubusercontent.com/pivattogui/min-dark-kitty/main/kitty.conf |
+| minimal-kiwi | ne1mnn | MIT | A URL pointing to the location of this file upstream for auto-updates |
+| Monoindustrial | - | MIT | - |
+| Moonfly | Dennis B | MIT | https://github.com/bluz71/vim-moonfly-colors/blob/master/extras/moonfly-kitty.conf |
+| moonlight | Ramon Saraiva | MIT | https://raw.githubusercontent.com/ramonsaraiva/kitty-moonlight/main/moonlight.conf |
+| neobones_dark | Michael Chris Lopez | MIT | https://github.com/mcchrish/zenbones.nvim/raw/main/extras/kitty/neobones_dark.conf |
+| neobones_light | Michael Chris Lopez | MIT | https://github.com/mcchrish/zenbones.nvim/raw/main/extras/kitty/neobones_light.conf |
+| Neowave | Everett Howard (neveretth) | MIT | - |
+| Night Owl | Luke Glazebrook <lukeglazebrook@hey.com> | MIT | https://github.com/Glazy/night-owl-kitty-theme/blob/main/night-owl.conf |
+| Nightfly | - | MIT | https://github.com/bluz71/vim-nightfly-guicolors/blob/master/terminal_themes/kitty-theme.conf |
+| Nightfox | EdenEast | MIT | https://github.com/EdenEast/nightfox.nvim/blob/main/extra/nightfox/nightfox_kitty.conf |
+| noirbuddy-oxide | Dimitar Dimitrov (https://github.com/n1ghtmare) | MIT | - |
+| Nordfox | EdenEast | MIT | https://github.com/EdenEast/nightfox.nvim/blob/main/extra/nordfox/kitty.conf |
+| One Half Dark | Son A. Pham | MIT | https://raw.githubusercontent.com/sonph/onehalf/master/kitty/onehalf-dark.conf |
+| One Half Light | Son A. Pham | MIT | https://raw.githubusercontent.com/sonph/onehalf/master/kitty/onehalf-light.conf |
+| OneDark-Pro | VictorPL (https://github.com/VictorPLopes) | MIT | https://github.com/VictorPLopes/OneDark-Pro-Kitty-Terminal/blob/main/kitty-themes/OneDark-Pro.conf |
+| Osaka Jade | Charles Kellogg | MIT | https://github.com/CharlesKellogg/kitty-themes/blob/master/themes/osaka-jade.conf |
+| PaperColor Dark | Nikyle Nguyen | MIT | - |
+| PaperColor Light | Nikyle Nguyen | MIT | - |
+| Paradiso Dark | BrokenSideViewMirror (https://github.com/BrokenSideViewMirror) | MIT | https://github.com/BrokenSideViewMirror/paradiso-theme-kitty/blob/main/themes/paradiso-dark.conf |
+| purpurite | Ehan Ahamed and contributors | UPL-1.0 | https://raw.githubusercontent.com/purpurite/kitty/main/purpurite.conf |
+| Retrowave Light | BrokenSideViewMirror (https://github.com/BrokenSideViewMirror) | MIT | https://github.com/BrokenSideViewMirror/themes-lair/blob/main/themes/Retrowave/retrowave-light.conf |
+| Rosé Pine Dawn | mvllow | MIT | https://github.com/rose-pine/kitty/blob/main/dist/rose-pine-dawn.conf |
+| Rosé Pine Moon | mvllow | MIT | https://github.com/rose-pine/kitty/blob/main/dist/rose-pine-moon.conf |
+| Sakura Night | PandaCatPlayz | MIT | https://pandacatplayz.github.io/kitty-themes/Sakura_Night.conf |
+| School Boy Colored Dark | BrokenSideViewMirror (https://github.com/BrokenSideViewMirror) | MIT | https://github.com/BrokenSideViewMirror/themes-lair/blob/main/themes/School-Boy/school-boy-colored.conf |
+| School Boy Mono Dark | BrokenSideViewMirror (https://github.com/BrokenSideViewMirror) | MIT | https://github.com/BrokenSideViewMirror/themes-lair/blob/main/themes/School-Boy/school-boy-mono.conf |
+| Selenized Black | Jan Warchol | MIT | https://github.com/jan-warchol/selenized/raw/master/terminals/kitty/kitty-selenized-black.conf |
+| Selenized Dark | Jan Warchol | MIT | https://github.com/jan-warchol/selenized/raw/master/terminals/kitty/kitty-selenized-dark.conf |
+| Selenized Light | Jan Warchol | MIT | https://github.com/jan-warchol/selenized/raw/master/terminals/kitty/kitty-selenized-light.conf |
+| Selenized White | Jan Warchol | MIT | https://github.com/jan-warchol/selenized/raw/master/terminals/kitty/kitty-selenized-white.conf |
+| seoulbones_dark | Michael Chris Lopez | MIT | https://github.com/mcchrish/zenbones.nvim/raw/main/extras/kitty/seoulbones_dark.conf |
+| seoulbones_light | Michael Chris Lopez | MIT | https://github.com/mcchrish/zenbones.nvim/raw/main/extras/kitty/seoulbones_light.conf |
+| Sequoia Monochrome Dark | Micheal Andreuzza | MIT | https://raw.githubusercontent.com/Sequoia-Theme/kitty/main/sequoia-monochrome-dark.conf |
+| Sequoia Monochrome Light | Micheal Andreuzza | MIT | https://raw.githubusercontent.com/Sequoia-Theme/kitty/main/sequoia-monochrome-light.conf |
+| Sequoia Moonlight Dark | Micheal Andreuzza | MIT | https://raw.githubusercontent.com/Sequoia-Theme/kitty/main/sequoia-moonlight-dark.conf |
+| Sequoia Moonlight Light | Micheal Andreuzza | MIT | https://raw.githubusercontent.com/Sequoia-Theme/kitty/main/sequoia-moonlight-light.conf |
+| Sequoia Retro Dark | Micheal Andreuzza | MIT | https://raw.githubusercontent.com/Sequoia-Theme/kitty/main/sequoia-retro-dark.conf |
+| Sequoia Retro Light | Micheal Andreuzza | MIT | https://raw.githubusercontent.com/Sequoia-Theme/kitty/main/sequoia-retro-light.conf |
+| Serendipity Midnight | Micheal Andreuzza | MIT | https://raw.githubusercontent.com/Serendipity-Theme/kitty/main/serendipity-midnight.conf |
+| Serendipity Morning | Micheal Andreuzza | MIT | https://raw.githubusercontent.com/Serendipity-Theme/kitty/main/serendipity-morning.conf |
+| Serendipity Sunset | Micheal Andreuzza | MIT | https://raw.githubusercontent.com/Serendipity-Theme/kitty/main/serendipity-sunset.conf |
+| Solarized Osaka | Folke Lemaitre | MIT | https://github.com/craftzdog/solarized-osaka.nvim/raw/main/extras/kitty/solarized_osaka_dark.conf |
+| Solarized Osaka Light | Folke Lemaitre | MIT | https://github.com/craftzdog/solarized-osaka.nvim/raw/main/extras/kitty/solarized_osaka_light.conf |
+| Sonokai Sushia | Dustin Miao | MIT | https://github.com/selenebun/sonokai-kitty |
+| spaceduck | Guillermo Rodriguez | MIT | https://github.com/foofrog/kitty-themes/blob/master/themes/spaceduck.conf |
+| srcery | Daniel Berg | MIT | https://github.com/srcery-colors/srcery-terminal/blob/master/kitty/srcery_kitty.conf |
+| SynthWave 84 python | Dio Lin (Dionysus326) | MIT | - |
+| Tender | CompEng0001 | MIT | https://github.com/CompEng0001/tender-kitty/raw/main/theme.conf |
+| Terafox | EdenEast | MIT | https://github.com/EdenEast/nightfox.nvim/blob/main/extra/terafox/kitty.conf |
+| Tokyo Night Day | Folke Lemaitre | MIT | https://github.com/folke/tokyonight.nvim/raw/main/extras/kitty/tokyonight_day.conf |
+| Tokyo Night Moon | Folke Lemaitre | MIT | https://github.com/folke/tokyonight.nvim/raw/main/extras/kitty/tokyonight_moon.conf |
+| Tokyo Night Storm | Folke Lemaitre | MIT | https://github.com/folke/tokyonight.nvim/raw/main/extras/kitty/tokyonight_storm.conf |
+| Tropical Neon | Anoduck | MIT | https://github.com/anoduck/Tropical-Neon/Tropical-Neon_kitty.conf |
+| Vague | skewb1k | MIT | https://github.com/vague-theme/vague-kitty/blob/main/vague.conf |
+| vimbones | Michael Chris Lopez | MIT | https://github.com/mcchrish/zenbones.nvim/raw/main/extras/kitty/vimbones.conf |
+| VividPunk | CarleScript | MIT | - |
+| VSCode_Dark | ported from Microsoft VSCode by huabeiyou | MIT | - |
+| Wizzy Bright | erin | MIT | https://github.com/erincerys/kitty-themes/blob/master/themes/wizzy-bright.conf |
+| Wizzy Muted | erin | MIT | https://github.com/erincerys/kitty-themes/blob/master/themes/wizzy-muted.conf |
+| Yotei | Zenky | MIT | - |
+| Yotei Dawn | Zenky | MIT | - |
+| Yotei Midnight | Zenky | MIT | - |
+| YsDark | Ya-suke | MIT | - |
+| Zacess Cream | Zacess | MIT | - |
+| Zacess Dark | Zacess | MIT | - |
+| Zacess Deep Contrast Dark | Zacess | MIT | - |
+| Zacess Deep Contrast Light | Zacess | MIT | - |
+| Zacess High Contrast Dark | Zacess | MIT | - |
+| Zacess High Contrast Light | Zacess | MIT | - |
+| Zacess Light | Zacess | MIT | - |
+| Zacess Yellow on Black | Zacess | MIT | - |
+| zenbones_dark | Michael Chris Lopez | MIT | https://github.com/mcchrish/zenbones.nvim/raw/main/extras/kitty/zenbones_dark.conf |
+| zenbones_light | Michael Chris Lopez | MIT | https://github.com/mcchrish/zenbones.nvim/raw/main/extras/kitty/zenbones_light.conf |
+| zenburned | Michael Chris Lopez | MIT | https://github.com/mcchrish/zenbones.nvim/raw/main/extras/kitty/zenburned.conf |
+| zenwritten_dark | Michael Chris Lopez | MIT | https://github.com/mcchrish/zenbones.nvim/raw/main/extras/kitty/zenwritten_dark.conf |
+| zenwritten_light | Michael Chris Lopez | MIT | https://github.com/mcchrish/zenbones.nvim/raw/main/extras/kitty/zenwritten_light.conf |
+
+<!-- builtin-theme-files:end -->

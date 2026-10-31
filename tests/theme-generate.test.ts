@@ -1,6 +1,6 @@
 import { expect, test } from "@rstest/core";
 import { contrast, mix, parseColor } from "../src/ts/features/themes/color";
-import { BUILTIN_THEMES } from "../src/ts/features/themes/builtins";
+import { BUILTIN_THEMES } from "./shipped-themes";
 import {
   generateStylesheet,
   generateVariables,

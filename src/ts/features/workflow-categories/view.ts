@@ -4,6 +4,7 @@
  */
 import { createIcon } from "../../core/settings";
 import { ui } from "../../core/ui";
+import { nameOf } from "./name";
 import * as categoryStore from "./categoryStore";
 import {
   cloneCategories,
@@ -121,7 +122,7 @@ const assigned = (id: string): string[] =>
     .filter((category) => category.workflows.includes(id))
     .map((category) => category.name);
 const matching = (link: HTMLAnchorElement): boolean =>
-  link.textContent.toLowerCase().includes(state.query.trim().toLowerCase());
+  nameOf(link).toLowerCase().includes(state.query.trim().toLowerCase());
 // GitHub renders native rows as <li> or, in the newer Sidebar component, as Sidebar.Item divs.
 const NATIVE_ROW = 'li, [data-component="Sidebar.Item"]';
 const pinButton = (row: Element | null): HTMLElement | null =>
@@ -426,7 +427,7 @@ function categoryPicker(link: HTMLAnchorElement, native = false): HTMLElement {
   const summary = document.createElement("summary");
   summary.setAttribute(
     "aria-label",
-    `Add ${link.textContent.trim()} to categories`,
+    `Add ${nameOf(link)} to categories`,
   );
   summary.setAttribute("data-gha-tooltip", "Add to category");
   summary.textContent = "+";
@@ -481,7 +482,7 @@ function syncNativePickers(): void {
     if (!row) continue;
     const pin = pinButton(row);
     const key = JSON.stringify([
-      link.textContent,
+      nameOf(link),
       assigned(workflowId(link)),
       !!pin,
     ]);
@@ -526,10 +527,15 @@ function syncNativePickerPositions(): void {
   const positions = [...state.nativePickerPositions].map(([row, pin]) => {
     const rowRect = row.getBoundingClientRect();
     const pinRect = pin.getBoundingClientRect();
+    // Other extensions can add buttons next to the pin in the same trailing container; sit left of all.
+    const trailing = pin
+      .closest('[data-component="Sidebar.Action"], [data-component="ActionList.TrailingAction"]')
+      ?.getBoundingClientRect();
+    const left = Math.min(pinRect.left, trailing?.width ? trailing.left : pinRect.left);
     return [
       row,
       rowRect.width && pinRect.width
-        ? `${Math.ceil(rowRect.right - pinRect.left)}px`
+        ? `${Math.ceil(rowRect.right - left)}px`
         : "",
     ];
   });
@@ -553,7 +559,7 @@ function categoryLink(link: HTMLAnchorElement): HTMLElement {
   row.style.fontSize = getComputedStyle(link).fontSize;
   const anchor = document.createElement("a");
   anchor.href = link.href;
-  anchor.textContent = link.textContent.trim();
+  anchor.textContent = nameOf(link);
   if (link.hasAttribute("data-gha-workflow-disabled")) {
     anchor.setAttribute("data-gha-workflow-disabled", "");
     anchor.setAttribute(
@@ -614,7 +620,7 @@ function moveButton(name: string, link: HTMLAnchorElement, step: -1 | 1): HTMLBu
   );
   button.dataset.step = String(step);
   button.replaceChildren(createIcon(step < 0 ? "chevron-up" : "chevron-down"));
-  button.setAttribute("aria-label", `${step < 0 ? "Move up" : "Move down"} ${link.textContent.trim()}`);
+  button.setAttribute("aria-label", `${step < 0 ? "Move up" : "Move down"} ${nameOf(link)}`);
   button.disabled = step < 0 ? index <= 0 : index >= order.length - 1;
   return button;
 }
@@ -767,7 +773,7 @@ function categorySection(name: string): HTMLElement {
         if (checkbox.checked) state.editingRemoved.delete(id);
         else state.editingRemoved.add(id);
       });
-      label.append(checkbox, document.createTextNode(link.textContent.trim()));
+      label.append(checkbox, document.createTextNode(nameOf(link)));
       const row = document.createElement("div");
       row.className = "gha-workflow-category-editor-row";
       row.append(label, moveButton(name, link, -1), moveButton(name, link, 1));
@@ -805,7 +811,7 @@ function render(): void {
     allLink?.getAttribute("aria-current"),
     state.workflows.map((link, index) => [
       workflowId(link),
-      link.textContent,
+      nameOf(link),
       pinLabel(pins[index]),
       link.hasAttribute("aria-current") ||
         link.closest<HTMLElement>(NATIVE_ROW)?.hasAttribute("aria-current"),

@@ -1,9 +1,6 @@
 import { expect, test } from "@rstest/core";
-import {
-  BUILTIN_THEMES,
-  findTheme,
-  isBuiltin,
-} from "../src/ts/features/themes/builtins";
+import { findTheme, isBuiltin } from "../src/ts/features/themes/builtins";
+import { BUILTIN_THEMES } from "./shipped-themes";
 import { contrast } from "../src/ts/features/themes/color";
 import { generateStylesheet } from "../src/ts/features/themes/generate";
 import { validateTheme, type Theme } from "../src/ts/features/themes/theme";
@@ -39,7 +36,7 @@ const FIXTURES: Record<string, { palette: unknown }> = {
 };
 
 const byId = (id: string): Theme => {
-  const theme = findTheme(id, []);
+  const theme = findTheme(id, BUILTIN_THEMES);
   if (!theme) throw new Error(id);
   return theme;
 };
@@ -68,18 +65,18 @@ test("contrast floors hold for every built-in", () => {
 });
 
 test("findTheme resolves built-ins, custom, and unknowns", () => {
-  expect(findTheme("dracula", [])?.name).toBe("Dracula");
-  expect(findTheme("nope", [])).toBeUndefined();
-  expect(findTheme(null, [])).toBeUndefined();
+  expect(findTheme("dracula", BUILTIN_THEMES)?.name).toBe("Dracula");
+  expect(findTheme("nope", BUILTIN_THEMES)).toBeUndefined();
+  expect(findTheme(null, BUILTIN_THEMES)).toBeUndefined();
   const mine = { ...byId("nord"), id: "mine", name: "Mine" };
   expect(findTheme("mine", [mine])).toBe(mine);
   expect(isBuiltin("nord")).toBe(true);
   expect(isBuiltin("mine")).toBe(false);
 });
 
-test("a custom theme never shadows a built-in id", () => {
+test("the first theme in the list wins, so shipped themes listed before custom ones are not shadowed", () => {
   const fake = { ...byId("nord"), name: "Fake" };
-  expect(findTheme("nord", [fake])?.name).toBe("Nord");
+  expect(findTheme("nord", [...BUILTIN_THEMES, fake])?.name).toBe("Nord");
 });
 
 test("fixture palettes match the built-ins", () => {

@@ -25,7 +25,8 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "dist/icons/*.svg"
+        "dist/icons/*.svg",
+        "dist/themes/*.json"
       ],
       "matches": [
         "https://github.com/*"

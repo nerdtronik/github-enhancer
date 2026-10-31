@@ -2,7 +2,10 @@
  * User actions on custom themes (create, edit, duplicate, delete, import, export), with storage and
  * UI injected.
  */
-import { BUILTIN_THEMES, findTheme } from "./builtins";
+import { builtinIds, findTheme } from "./builtins";
+
+// New themes start from these when no theme is active for the Mode.
+const TEMPLATES = { dark: "dracula", light: "alucard" } as const;
 import { copyOf, errorText, startFromCopy, type openEditor } from "./editorDialog";
 import type { ActiveIds } from "./themesSection";
 import { exportThemes, importThemes, type Theme, type ThemeMode } from "./theme";
@@ -12,6 +15,8 @@ export interface ThemeActionDeps {
   getCustom(): Theme[];
   save(themes: Theme[]): Promise<void>;
   getActive(): ActiveIds;
+  /** Fetches a catalog theme so it can be duplicated into a custom one. */
+  loadCatalogTheme?(id: string): Promise<Theme | undefined>;
   setActive(mode: ThemeMode, id: string | null): void;
   confirm(message: string): boolean;
   openEditor: typeof openEditor;
@@ -56,10 +61,14 @@ export function createThemeActions(deps: ThemeActionDeps) {
   };
 
   return {
-    create(mode: ThemeMode) {
-      const active = findTheme(deps.getActive()[mode], deps.getCustom());
-      edit(startFromCopy(mode, active), true, (theme) => [...deps.getCustom(), theme]);
-    },
+    create: (mode: ThemeMode) =>
+      attempt(async () => {
+        const activeId = deps.getActive()[mode];
+        const active = findTheme(activeId, deps.getCustom()) ?? (activeId ? await deps.loadCatalogTheme?.(activeId) : undefined);
+        const fallback = await deps.loadCatalogTheme?.(TEMPLATES[mode]);
+        if (active?.mode !== mode && !fallback) throw new Error("Could not load a theme to start from");
+        edit(startFromCopy(mode, active, fallback!), true, (theme) => [...deps.getCustom(), theme]);
+      }),
     edit(id: string) {
       const theme = findCustom(id);
       if (!theme) return;
@@ -67,7 +76,7 @@ export function createThemeActions(deps: ThemeActionDeps) {
     },
     duplicate: (id: string) =>
       attempt(() => serial(async () => {
-        const source = findTheme(id, deps.getCustom());
+        const source = findTheme(id, deps.getCustom()) ?? (await deps.loadCatalogTheme?.(id));
         if (!source) return;
         const copy = copyOf(source);
         await deps.save([...deps.getCustom(), copy]);
@@ -93,7 +102,7 @@ export function createThemeActions(deps: ThemeActionDeps) {
         const text = await deps.readFile();
         if (text === undefined) return;
         await serial(async () => {
-          const result = importThemes(text, deps.getCustom(), BUILTIN_THEMES.map((theme) => theme.id));
+          const result = importThemes(text, deps.getCustom(), builtinIds());
           await deps.save(result.themes);
           deps.notify(`Imported ${result.added}, replaced ${result.replaced}`, "info");
         });
