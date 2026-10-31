@@ -12,7 +12,7 @@ This extension focuses in bringing new features and customizations to the GitHub
 
 ## Install
 [chrome-extension]: https://chromewebstore.google.com/detail/github-enhancer/mgokfjhlgfobbhmnldjanblnjjjhlajo 'Chrome Extension'
-[<img src="assets/chrome.png" align="left" style="display: block; max-height: 48px" alt="Chrome Web Store icon" width="48" valign="middle">][chrome-extension] [<img src="https://img.shields.io/chrome-web-store/v/mgokfjhlgfobbhmnldjanblnjjjhlajo?style=for-the-badge&labelColor=%23dfdf&color=%23000" style="margin-left: 10px; max-height: 24px" alt="Chrome Extension Version" valign="middle">][chrome-extension]
+[<img src="assets/chrome.png" align="left" style="display: block; max-height: 48px" alt="Chrome Web Store icon" width="32" valign="middle">][chrome-extension] [<img src="https://img.shields.io/chrome-web-store/v/mgokfjhlgfobbhmnldjanblnjjjhlajo?style=for-the-badge&labelColor=%23dfdf&color=%23000" style="margin-left: 10px; max-height: 24px" alt="Chrome Extension Version" valign="middle">][chrome-extension]
 
 ## Features
 
