@@ -8,7 +8,7 @@ Adds a **Categories** section to the workflows sidebar so you can group the work
 
 - **Create:** use the **+** (New category) button in the **Categories** heading, type a name and click **Save**. Names must be unique (ignoring case), at most 40 characters, with no leading or trailing spaces.
 - **Add a workflow:** every workflow row has a **+** button (Add to category). It lists your categories, plus **Create new category**, which creates one and adds that workflow to it.
-- **Edit workflows:** the **...** menu of a category has **Edit workflows**, which shows a checkbox per workflow in that category; confirm with **Save**.
+- **Edit workflows:** the **...** menu of a category has **Edit workflows**, which shows a checkbox per workflow in that category and up/down arrows to change their order; confirm with **Save**. Workflows are listed in the order you set, not in the sidebar's order.
 - **Rename and delete:** also in the **...** menu of a category (**Rename**, **Delete**; delete asks for confirmation).
 - **Collapse:** click a category name to collapse or expand it. A button in the heading collapses or expands all categories at once. The collapsed state is saved.
 - **Pinned workflows:** workflows you pin with GitHub's own pin button are shown in a **Pinned workflows** section above the categories. The pin button next to them is GitHub's own pin, so there is no separate pin for categories.
@@ -45,9 +45,14 @@ The width is saved in the extension storage (one value for the Actions list, sha
 An optional panel above the list of runs on **All workflows** that lists the runs of the current list (what is loaded on the page) that need a person to look at them:
 
 - Runs with status **Failed**, **Timed out** or **Action required**.
+- Runs **Waiting for approval** (for example a manual approval of an environment).
 - Running runs marked **Slower than usual**: a run is listed when it has been running for more than twice, and more than 5 minutes over, the usual duration. The usual duration is the median of the last 5 successful runs with the same workflow file and title; if fewer than 5 are found (it looks at the run list and up to 2 more pages), the run is not checked. These durations are cached for 10 minutes per repository in the extension storage.
 
-Each item shows the status, the run title (a link), the branch and, for slow runs, the elapsed and usual time. With nothing to report, the panel says "No runs need attention in the current list."
+Each item shows a status pill (the same colors as the run cards), the run title (a link), the branch, the workflow file name, how long ago the run was created and, for slow runs, the elapsed and usual time. Items are ordered by severity (failed and timed out, then action required, then waiting for approval, then slow runs) and, within the same severity, newest first.
+
+By default only the newest run of each workflow is considered, so a failure that a later run replaced is not listed (turn off **Only latest run per workflow** in the run list settings to see older ones). Each item has a **×** button that dismisses it; dismissed items are remembered per repository (up to 200) and **Restore dismissed (N)** brings them back. While runs are active, the panel re-checks "Slower than usual" every 30 seconds.
+
+The heading shows how many runs need attention. The first 5 are shown; **Show N more** expands the rest. Click the heading to collapse the panel; that choice is remembered. With nothing to report, the panel says "No runs need attention in the current list."
 
 Setting: the gear button (**Run list settings**) in the run list filters has a **Show Needs attention** switch. It is on by default and only shown on **All workflows**.
 
@@ -70,7 +75,7 @@ Setting: the same gear button (**Run list settings**) has an **Enhanced view** s
 
 ## Where settings are stored
 
-The switches above are saved in the browser extension storage as `runList_enabled` (Show Needs attention) and `runList_enhancedViewEnabled` (Enhanced view), and apply to every repository. Categories, widths, the workflow list cache and the run duration cache live in the same storage (local to your browser). Nothing is sent anywhere.
+The switches above are saved in the browser extension storage as `runList_enabled` (Show Needs attention) and `runList_enhancedViewEnabled` (Enhanced view); whether the panel is collapsed is saved as `runList_attentionCollapsed` and the latest-run switch as `runList_attentionLatestOnly`, and apply to every repository. Categories, widths, the workflow list cache and the run duration cache live in the same storage (local to your browser). Nothing is sent anywhere.
 
 ## Limits
 

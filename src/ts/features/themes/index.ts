@@ -4,9 +4,10 @@
  */
 import { createPageScheduler } from "../../core/scheduler";
 import { settings, store } from "../../core/settings";
-import { BUILTIN_THEMES } from "./builtins";
 import { createAppearanceMount, isAppearancePage, shouldRemount, startAndMount } from "./appearancePage";
 import { openEditor } from "./editorDialog";
+import { loadCatalogIndex, loadCatalogTheme, type CatalogEntry } from "./catalog";
+import { registerBuiltinIds } from "./builtins";
 import { createThemeController } from "./injector";
 import { createThemeActions, downloadText, readJsonFile } from "./themeActions";
 import { loadCustomThemes, saveCustomThemes } from "./themeStore";
@@ -26,6 +27,8 @@ const controller = createThemeController({
   readIds,
   loadCustom: () => loadCustomThemes(),
   watchCustom: (listener) => void store.watch("themes", undefined, listener),
+  // Generated custom ids start with "custom-"; any other id not found yet may be a shipped theme file.
+  loadCatalogTheme: (id) => (id.startsWith("custom-") ? Promise.resolve(undefined) : loadCatalogTheme(id)),
   onIdsChange: (listener) =>
     void settings.onChange((key) => {
       if (key === "appearance_lightTheme" || key === "appearance_darkTheme") listener();
@@ -47,6 +50,7 @@ const actions = createThemeActions({
   },
   getActive: readIds,
   setActive,
+  loadCatalogTheme: (id) => loadCatalogTheme(id),
   confirm: (message) => window.confirm(message),
   openEditor,
   download: downloadText,
@@ -54,8 +58,24 @@ const actions = createThemeActions({
   notify: showNotice,
 });
 
+// The catalog index is only needed on the Appearance page, so it is requested on the first mount.
+let catalogEntries: CatalogEntry[] = [];
+let catalogRequested = false;
+const getCatalog = (): CatalogEntry[] => {
+  if (!catalogRequested) {
+    catalogRequested = true;
+    void loadCatalogIndex().then((entries) => {
+      registerBuiltinIds(entries.map((entry) => entry.id));
+      catalogEntries = entries;
+      scheduler.schedule();
+    });
+  }
+  return catalogEntries;
+};
+
 const appearance = createAppearanceMount({
-  getThemes: () => [...BUILTIN_THEMES, ...controller.getCustom()],
+  getThemes: () => controller.getCustom(),
+  getCatalog,
   getActive: readIds,
   handlers: {
     select: setActive,

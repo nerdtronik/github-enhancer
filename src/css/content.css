@@ -108,7 +108,8 @@
   display: none !important;
 }
 
-nav[aria-label="Workflows"] li:has(> .gha-workflow-show-more-hidden) {
+nav[aria-label="Workflows"] li:has(> .gha-workflow-show-more-hidden),
+nav[aria-label="Workflows"] .list-style-none:has(> .gha-workflow-show-more-hidden) {
   display: none;
 }
 
@@ -126,12 +127,8 @@ nav[aria-label="Workflows"] li:has(> .gha-workflow-show-more-hidden) {
   list-style: none;
 }
 
-nav[aria-label="Workflows"] + .gha-workflow-api-list {
-  padding: 0 16px 8px;
-}
-
-nav[aria-label="Workflows"] li:not(:hover):not(:focus-within)
-  [data-component="ActionList.TrailingAction"] {
+nav[aria-label="Workflows"] :is(li, [data-component="Sidebar.Item"]):not(:hover):not(:focus-within)
+  :is([data-component="ActionList.TrailingAction"], [data-component="Sidebar.Action"]) {
   opacity: 0;
 }
 
@@ -165,9 +162,12 @@ nav[aria-label="Workflows"] li:not(:hover):not(:focus-within)
 }
 
 .gha-workflow-api-row > a:hover,
-.gha-workflow-api-row:hover > a,
+.gha-workflow-api-row:hover > a {
+  background: var(--control-transparent-bgColor-hover);
+}
+
 .gha-workflow-api-row > a[aria-current="page"] {
-  background: var(--bgColor-neutral-muted);
+  background: var(--control-transparent-bgColor-selected);
 }
 
 .gha-workflow-api-pin {
@@ -208,9 +208,12 @@ nav[aria-label="Workflows"] li:not(:hover):not(:focus-within)
   text-decoration: none;
 }
 
-.gha-workflow-all-link:hover,
+.gha-workflow-all-link:hover {
+  background: var(--control-transparent-bgColor-hover);
+}
+
 .gha-workflow-all-link[aria-current="page"] {
-  background: var(--bgColor-neutral-muted);
+  background: var(--control-transparent-bgColor-selected);
 }
 
 .gha-workflow-all-link[aria-current="page"] {
@@ -234,14 +237,24 @@ nav[aria-label="Workflows"] li:not(:hover):not(:focus-within)
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin: 12px 0 4px;
+  margin: 8px 0 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--borderColor-muted);
 }
 
 .gha-workflow-category-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin: 0 8px;
-  color: var(--fgColor-muted);
-  font-size: 12px;
+  color: var(--fgColor-default);
+  font-size: 14px;
   font-weight: 600;
+}
+
+.gha-workflow-category-title svg {
+  flex: none;
+  color: var(--fgColor-muted);
 }
 
 .gha-workflow-category-heading-actions {
@@ -274,7 +287,7 @@ nav[aria-label="Workflows"] li:not(:hover):not(:focus-within)
 
 .gha-workflow-categories button:hover,
 .gha-workflow-category-row:hover {
-  background: var(--bgColor-neutral-muted);
+  background: var(--control-transparent-bgColor-hover);
 }
 
 .gha-workflow-categories .gha-workflow-category-new:hover {
@@ -600,13 +613,13 @@ nav[aria-label="Workflows"] li:not(:hover):not(:focus-within)
   height: 30px;
 }
 
-li > .gha-workflow-category-picker[data-gha-workflow-add-native] > summary {
+:is(li, [data-component="Sidebar.Item"]) > .gha-workflow-category-picker[data-gha-workflow-add-native] > summary {
   width: 32px;
   height: 100%;
   border-radius: 0;
 }
 
-li > .gha-workflow-category-picker[data-gha-workflow-add-native]:not([data-gha-has-pin]) > summary {
+:is(li, [data-component="Sidebar.Item"]) > .gha-workflow-category-picker[data-gha-workflow-add-native]:not([data-gha-has-pin]) > summary {
   border-radius: 0 6px 6px 0;
 }
 
@@ -652,30 +665,26 @@ li > .gha-workflow-category-picker[data-gha-workflow-add-native]:not([data-gha-h
   background: var(--bgColor-neutral-muted);
 }
 
-li:has(> .gha-workflow-category-picker[data-gha-workflow-add-native]) {
+:is(li, [data-component="Sidebar.Item"]):has(> .gha-workflow-category-picker[data-gha-workflow-add-native]) {
   position: relative;
 }
 
-li:has(> .gha-workflow-category-picker[data-gha-workflow-add-native]:hover) a[href*="/actions/workflows/"] {
-  background: var(--bgColor-neutral-muted);
-}
-
-li:has(> .gha-workflow-category-picker[data-gha-workflow-add-native]) a[href*="/actions/workflows/"] {
+:is(li, [data-component="Sidebar.Item"]):has(> .gha-workflow-category-picker[data-gha-workflow-add-native]) a[href*="/actions/workflows/"] {
   padding-right: 32px;
 }
 
-li:has(> .gha-workflow-category-picker[data-gha-has-pin]) a[href*="/actions/workflows/"] {
+:is(li, [data-component="Sidebar.Item"]):has(> .gha-workflow-category-picker[data-gha-has-pin]) a[href*="/actions/workflows/"] {
   padding-right: calc(var(--gha-native-picker-inset, 48px) + 32px);
 }
 
-li > .gha-workflow-category-picker[data-gha-workflow-add-native] {
+:is(li, [data-component="Sidebar.Item"]) > .gha-workflow-category-picker[data-gha-workflow-add-native] {
   position: absolute;
   top: 0;
   bottom: 0;
   right: 0;
 }
 
-li > .gha-workflow-category-picker[data-gha-has-pin] {
+:is(li, [data-component="Sidebar.Item"]) > .gha-workflow-category-picker[data-gha-has-pin] {
   right: var(--gha-native-picker-inset, 48px);
 }
 
@@ -711,7 +720,7 @@ li > .gha-workflow-category-picker[data-gha-has-pin] {
 
 .gha-workflow-category-row[data-gha-active] {
   position: relative;
-  background: var(--bgColor-neutral-muted);
+  background: var(--control-transparent-bgColor-selected);
   font-weight: 600;
 }
 
@@ -749,9 +758,9 @@ li > .gha-workflow-category-picker[data-gha-has-pin] {
   border-radius: 6px;
 }
 
-li:has(> .gha-workflow-category-picker[data-gha-workflow-add-native]):not(:hover):not(:focus-within)
+:is(li, [data-component="Sidebar.Item"]):has(> .gha-workflow-category-picker[data-gha-workflow-add-native]):not(:hover):not(:focus-within)
   > .gha-workflow-category-picker:not([open]),
-li:has(> .gha-workflow-category-picker[data-gha-has-pin]):not(:hover):not(:focus-within)
+:is(li, [data-component="Sidebar.Item"]):has(> .gha-workflow-category-picker[data-gha-has-pin]):not(:hover):not(:focus-within)
   [data-component="ActionList.TrailingAction"],
 .gha-workflow-category-row:not(:hover):not(:focus-within) > .gha-workflow-category-picker:not([open]),
 .gha-workflow-category-row:not(:hover):not(:focus-within) > .gha-workflow-category-pin {
@@ -764,10 +773,64 @@ li:has(> .gha-workflow-category-picker[data-gha-has-pin]):not(:hover):not(:focus
   padding: 4px 8px 4px 20px;
 }
 
+.gha-workflow-category-editor-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
 .gha-workflow-category-editor label {
   display: flex;
+  flex: 1;
+  min-width: 0;
   align-items: center;
   gap: 6px;
   padding: 3px 0;
   cursor: pointer;
+}
+
+.gha-workflow-category-move {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  color: var(--fgColor-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.gha-workflow-category-move:hover:not(:disabled) {
+  color: var(--fgColor-default);
+  background: var(--control-transparent-bgColor-hover);
+}
+
+.gha-workflow-category-move:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* Primer-style tooltip element managed by core/tooltip.ts (top layer, so nothing clips it). */
+.gha-tooltip {
+  position: fixed;
+  inset: auto;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: 250px;
+  margin: 0;
+  padding: 4px 8px;
+  color: var(--fgColor-onEmphasis);
+  background: var(--bgColor-emphasis);
+  border: 0;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  pointer-events: none;
+}
+
+.gha-tooltip[hidden] {
+  display: none;
 }

@@ -5,7 +5,7 @@
 | global | `https://github.com/*` | 1 | MAIN | `document_start` | `collector-suppress.js` | none |
 | global | `https://github.com/*` | 2 | isolated | `document_start` | `settings.js`, `navigation-guard.js`, `themes.js` | `themes.css` |
 | global | `https://github.com/*` | 3 | isolated | `document_idle` | `go-to-top.js`, `enterprise-header.js` | `go-to-top.css`, `enterprise-header.css` |
-| actions | `https://github.com/*/*/actions*` | 4 | isolated | `document_idle` | `workflow-filter.js`, `run-list.js`, `sidebar-resize.js` | `content.css`, `run-list.css`, `sidebar-resize.css` |
+| actions | `https://github.com/*/*/actions*` | 4 | isolated | `document_idle` | `workflow-filter.js`, `run-list.js`, `sidebar-resize.js`, `refresh-now.js` | `content.css`, `run-list.css`, `sidebar-resize.css`, `refresh-now.css` |
 | actions | `https://github.com/*/*/actions*` | 5 | MAIN | `document_idle` | `run-view.js` | `run-view/{sections,graph,toolbar}.css` |
 | pull | `https://github.com/*/*/pull/*` | 6 | isolated | `document_idle` | `pr-conversation.js`, `sidebar-resize.js` | `pr-conversation.css`, `sidebar-resize.css` |
 
@@ -31,3 +31,5 @@ Trade-off: entering Actions or a pull request from another kind of page (or from
 ## Future option
 
 A tiny loader could be the only bundle registered broadly. On each route change it would dynamically `import()` the feature modules needed for the new route. This needs ES-module bundles and the feature files listed in `web_accessible_resources`. Not built.
+
+The built-in theme files (`dist/themes/*.json`) is a web-accessible resource for `https://github.com/*`; the themes bundle fetches the index only on the Appearance page and a single theme file when it is the Active theme.

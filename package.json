@@ -1,8 +1,28 @@
 {
-  "name": "github-enhancer",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@nerdtronik/github-enhancer",
+  "version": "0.2.0",
+  "description": "Enhanced GitHub experience for developers (browser extension).",
+  "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nerdtronik/github-enhancer.git"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "dist",
+    "manifest.json",
+    "README.md",
+    "LICENSE.md",
+    "PRIVACY.md",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
+  },
   "scripts": {
     "build": "node scripts/build.js",
     "typecheck": "tsc --noEmit",

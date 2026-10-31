@@ -3,10 +3,12 @@
  * again.
  */
 import { GITHUB_RADIO, mountThemesSection, SECTION, type ActiveIds, type SectionHandlers } from "./themesSection";
+import type { CatalogEntry } from "./catalog";
 import type { Theme } from "./theme";
 
 export interface AppearancePageDeps {
   getThemes: () => readonly Theme[];
+  getCatalog?: () => readonly CatalogEntry[];
   getActive: () => ActiveIds;
   handlers: SectionHandlers;
 }
@@ -35,10 +37,10 @@ export function startAndMount(scheduler: { start(): void; schedule(): void }): v
   scheduler.schedule();
 }
 
-export function createAppearanceMount({ getThemes, getActive, handlers }: AppearancePageDeps) {
+export function createAppearanceMount({ getThemes, getCatalog, getActive, handlers }: AppearancePageDeps) {
   return {
     mount() {
-      mountThemesSection(document, getThemes(), getActive(), handlers);
+      mountThemesSection(document, getThemes(), getActive(), handlers, getCatalog?.() ?? []);
     },
   };
 }

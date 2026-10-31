@@ -1,5 +1,4 @@
 /** Modal editor for one custom theme: color pickers, live preview and contrast warnings. */
-import { BUILTIN_THEMES } from "./builtins";
 import { contrast, formatColor, parseColor } from "./color";
 import { previewDataUrl } from "./previewSvg";
 import {
@@ -78,9 +77,9 @@ export function copyOf(source: Theme): Theme {
   return validateTheme({ ...source, id: createThemeId(), name: `${base} copy` });
 }
 
-export function startFromCopy(mode: ThemeMode, active: Theme | undefined): Theme {
-  const source = active?.mode === mode ? active : BUILTIN_THEMES.find((theme) => theme.mode === mode)!;
-  return copyOf(source);
+/** A new theme starts as a copy of the Active theme of its Mode, or of `fallback` when there is none. */
+export function startFromCopy(mode: ThemeMode, active: Theme | undefined, fallback: Theme): Theme {
+  return copyOf(active?.mode === mode ? active : fallback);
 }
 
 export interface EditorOptions {

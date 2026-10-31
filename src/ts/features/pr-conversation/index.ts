@@ -47,6 +47,8 @@ let controls: HTMLElement | null = null;
 let placeholder: HTMLDivElement | undefined = undefined;
 let observedStickyHeader: HTMLElement | null | undefined = undefined;
 let stickyHeaderObserver: MutationObserver | null = null;
+// Other extensions add buttons to the moved actions later; their width changes must re-measure.
+let actionsResizeObserver: ResizeObserver | null = null;
 let stickyActions: HTMLElement | null = null;
 let stickyActionsHome: Node | null = null;
 let stickyActionsNext: Node | null = null;
@@ -103,6 +105,12 @@ function resetFixedPosition(): void {
 // a placeholder keeps the page from jumping when the panel becomes fixed.
 function syncFixedPosition(): void {
   if (!controls?.isConnected || !path) return;
+  // Another extension may already make the sidebar sticky; two sticky mechanisms would fight.
+  const host = controls.closest("#partial-discussion-sidebar");
+  if (host && getComputedStyle(host).position === "sticky") {
+    resetFixedPosition();
+    return;
+  }
   const headerBottom = observedStickyHeader?.className.includes("is-stuck")
     ? observedStickyHeader.getBoundingClientRect().bottom
     : 0;
@@ -112,7 +120,9 @@ function syncFixedPosition(): void {
     resetFixedPosition();
     return;
   }
-  if (rect.top >= fixedTop) {
+  // Hysteresis: once fixed, release only after a few pixels of slack so the placeholder's own
+  // height change cannot flip the state back and forth near the threshold.
+  if (rect.top >= fixedTop + (placeholder ? 4 : 0)) {
     resetFixedPosition();
     return;
   }
@@ -129,6 +139,7 @@ function syncFixedPosition(): void {
 }
 
 function clearStickyActions(): void {
+  actionsResizeObserver?.disconnect();
   if (stickyActionsHome?.isConnected && stickyActions)
     stickyActionsHome.insertBefore(
       stickyActions,
@@ -176,6 +187,9 @@ function syncStickyActions(): void {
     stickyActionsNext = actions.nextSibling;
     stickyTitle = title;
     sticky.append(actions);
+    actionsResizeObserver?.disconnect();
+    actionsResizeObserver = new ResizeObserver(() => syncStickyActions());
+    actionsResizeObserver.observe(actions);
     title.style.setProperty(
       "--gha-pr-title-padding",
       getComputedStyle(title).paddingRight,

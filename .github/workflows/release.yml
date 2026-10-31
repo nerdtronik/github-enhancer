@@ -1,0 +1,150 @@
+# Publishes a version to GitHub Releases, the Chrome Web Store, Firefox Add-ons and GitHub Packages.
+# Start it by pushing a tag like v1.2.3, or run it by hand for an existing tag (docs/releasing.md).
+name: Publish release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing tag to publish, for example v1.2.3'
+        required: true
+
+concurrency:
+  group: publish-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+env:
+  RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+  EXT_SLUG: github-enhancer
+
+permissions:
+  contents: read
+
+jobs:
+  package-extension:
+    name: Package the extension
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.prepare.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: package.json
+          cache: npm
+      - id: prepare
+        name: Apply the tag's version
+        run: scripts/release/prepare-version.sh >> "$GITHUB_OUTPUT"
+      - run: npm ci
+      - run: npm run build
+      - run: npm run check
+      - name: Zip the extension
+        run: npm run bundle
+      - name: Zip the source
+        run: scripts/release/make-source-zip.sh
+        env:
+          EXT_VERSION: ${{ steps.prepare.outputs.version }}
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: zips
+          path: release/*.zip
+          if-no-files-found: error
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: npm-package
+          path: |
+            dist
+            manifest.json
+            package.json
+            README.md
+            LICENSE.md
+            PRIVACY.md
+            THIRD_PARTY_NOTICES.md
+          if-no-files-found: error
+
+  github-release:
+    name: GitHub release
+    needs: package-extension
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: zips
+          path: release
+      - run: scripts/release/publish-github-release.sh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+
+  publish-chrome-store:
+    name: Chrome Web Store
+    needs: package-extension
+    runs-on: ubuntu-latest
+    environment: chrome-web-store
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: zips
+          path: release
+      - run: scripts/release/publish-chrome-store.sh
+        env:
+          EXT_ZIP: release/${{ env.EXT_SLUG }}-${{ needs.package-extension.outputs.version }}.zip
+          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+
+  publish-firefox-amo:
+    name: Firefox Add-ons
+    needs: package-extension
+    runs-on: ubuntu-latest
+    environment: firefox-addons
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: zips
+          path: release
+      - run: scripts/release/publish-firefox-amo.sh
+        env:
+          EXT_ZIP: release/${{ env.EXT_SLUG }}-${{ needs.package-extension.outputs.version }}.zip
+          SOURCE_ZIP: release/${{ env.EXT_SLUG }}-${{ needs.package-extension.outputs.version }}-source.zip
+          RELEASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ env.RELEASE_TAG }}
+          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+
+  publish-github-packages:
+    name: GitHub Packages
+    needs: package-extension
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: npm-package
+          path: npm-package
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          registry-url: https://npm.pkg.github.com
+      - run: npm publish
+        working-directory: npm-package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

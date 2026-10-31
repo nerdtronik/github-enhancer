@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "GitHub Enhancer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Enhanced GitHub Experience for developers.",
   "icons": {
     "16": "dist/icons/icon-16.png",
@@ -9,13 +9,25 @@
     "48": "dist/icons/icon-48.png",
     "128": "dist/icons/icon-128.png"
   },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "github-enhancer@nerdtronik",
+      "strict_min_version": "128.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  },
   "permissions": [
     "storage"
   ],
   "web_accessible_resources": [
     {
       "resources": [
-        "dist/icons/*.svg"
+        "dist/icons/*.svg",
+        "dist/themes/*.json"
       ],
       "matches": [
         "https://github.com/*"
@@ -68,12 +80,14 @@
       "js": [
         "dist/workflow-filter.js",
         "dist/run-list.js",
-        "dist/sidebar-resize.js"
+        "dist/sidebar-resize.js",
+        "dist/refresh-now.js"
       ],
       "css": [
         "dist/css/content.css",
         "dist/css/run-list.css",
-        "dist/css/sidebar-resize.css"
+        "dist/css/sidebar-resize.css",
+        "dist/css/refresh-now.css"
       ],
       "run_at": "document_idle"
     },

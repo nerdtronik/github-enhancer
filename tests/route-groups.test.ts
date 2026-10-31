@@ -9,7 +9,7 @@ const manifest = JSON.parse(readFileSync(join(__dirname, "..", "manifest.json"),
 const entries: Entry[] = manifest.content_scripts;
 
 const GROUP_BUNDLES: Record<RouteGroup, string[]> = {
-  actions: ["workflow-filter", "run-list", "sidebar-resize", "run-view"],
+  actions: ["workflow-filter", "run-list", "sidebar-resize", "run-view", "refresh-now"],
   pull: ["pr-conversation", "sidebar-resize"],
 };
 const EVERYWHERE = ["collector-suppress", "settings", "navigation-guard", "themes", "go-to-top", "enterprise-header"];

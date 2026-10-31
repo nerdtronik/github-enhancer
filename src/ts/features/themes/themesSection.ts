@@ -1,14 +1,14 @@
 /**
- * Builds and mounts the Custom themes section: radio cards per Mode, kept out of GitHub's own
- * appearance form.
+ * Builds and mounts the Custom themes section: a searchable list of themes per Mode (a chip with
+ * the theme's main colors, its name and actions), kept out of GitHub's own appearance form.
  */
 import { isBuiltin } from "./builtins";
-import { previewDataUrl } from "./previewSvg";
+import { swatches, type CatalogEntry } from "./catalog";
 import type { Theme, ThemeMode } from "./theme";
 import { DETACHED_FORM, mountToolbar, type ToolbarActions } from "./toolbar";
 
 export type ActiveIds = { light: string | null; dark: string | null };
-interface CardActions {
+interface RowActions {
   duplicate(id: string): void;
   edit(id: string): void;
   remove(id: string): void;
@@ -16,14 +16,14 @@ interface CardActions {
 export interface SectionHandlers {
   select(mode: ThemeMode, id: string): void;
   clear(mode: ThemeMode): void;
-  actions?: CardActions;
+  actions?: RowActions;
   toolbar?: ToolbarActions;
 }
 
 type ActionName = "duplicate" | "edit" | "delete";
 
 interface SectionState {
-  update(themes: readonly Theme[], active: ActiveIds, handlers: SectionHandlers): void;
+  update(themes: readonly Theme[], active: ActiveIds, handlers: SectionHandlers, catalog: readonly CatalogEntry[]): void;
   dispose(): void;
 }
 
@@ -35,11 +35,18 @@ const COPY = {
   dark: { title: "Dark themes", example: "Dark default" },
   light: { title: "Light themes", example: "Light default" },
 };
-// Margin percentages use the cell width, so 52.63% equals the preview height (aspect 190:100): the
-// radio sits just under the preview, beside the card text.
-const radioStyle = "position: absolute; z-index: 5; margin-top: calc(52.6315789474% + 4px); left: 18px;";
 const states = new WeakMap<Element, SectionState>();
 const rendered = new WeakMap<Element, string>();
+
+type Kind = "builtin" | "custom";
+interface Row {
+  id: string;
+  name: string;
+  mode: ThemeMode;
+  colors: string[];
+  kind: Kind;
+}
+const KIND_LABEL: Record<Kind, string> = { builtin: "Built-in", custom: "Custom" };
 
 function el<K extends keyof HTMLElementTagNameMap>(tag: K, className: string, text?: string) {
   const node = document.createElement(tag);
@@ -57,19 +64,36 @@ function actionButton(action: ActionName, text: string) {
   return button;
 }
 
-function createActions(theme: Theme) {
-  const bar = el("div", "d-flex flex-wrap flex-items-center mt-2 mr-2");
+function createActions(row: Row) {
+  const bar = el("div", "d-flex flex-items-center flex-shrink-0");
   bar.dataset.ghaThemeActions = "";
-  bar.style.marginLeft = "30px";
-  if (!isBuiltin(theme.id)) bar.append(actionButton("edit", "Edit"));
+  if (row.kind === "custom") bar.append(actionButton("edit", "Edit"));
   bar.append(actionButton("duplicate", "Duplicate"));
-  if (!isBuiltin(theme.id)) bar.append(actionButton("delete", "Delete"));
+  if (row.kind === "custom") bar.append(actionButton("delete", "Delete"));
   return bar;
 }
 
-function createCell(mode: ThemeMode, key: string, value: string, preview: HTMLElement, title: string, text: string) {
-  const cell = el("div", "position-relative tmp-mb-3 flex-shrink-0 col-6 col-lg-4");
-  const radio = el("input", "position-absolute");
+// The chip is the theme's background with its main colors as circles. Colors come from validated
+// palettes (hex only) and are set through the style object, never as markup.
+function createChip(colors: string[]) {
+  const chip = el("span", "gha-theme-chip");
+  chip.setAttribute("aria-hidden", "true");
+  if (!colors.length) {
+    chip.classList.add("gha-theme-chip-empty");
+    return chip;
+  }
+  chip.style.backgroundColor = colors[0];
+  for (const color of colors.slice(1)) {
+    const dot = el("span", "gha-theme-dot");
+    dot.style.backgroundColor = color;
+    chip.append(dot);
+  }
+  return chip;
+}
+
+function createRow(mode: ThemeMode, key: string, value: string, chip: HTMLElement, title: string) {
+  const row = el("div", "gha-theme-row");
+  const radio = el("input", "gha-theme-radio");
   radio.type = "radio";
   radio.name = `gha_theme_${mode}`;
   radio.id = `gha-theme-${key}-${mode}`;
@@ -78,44 +102,31 @@ function createCell(mode: ThemeMode, key: string, value: string, preview: HTMLEl
   // Detached from GitHub's appearance form so a form that may submit on change never sees our
   // radios. Selection is saved by our own handler.
   radio.setAttribute("form", DETACHED_FORM);
-  radio.setAttribute("style", radioStyle);
-  const label = el("label", "radio-label pl-0 pr-0 pt-0 pb-2 overflow-hidden color-theme-toggle-label width-full height-full");
+  const label = el("label", "gha-theme-label");
   label.htmlFor = radio.id;
-  const body = el("div", "d-flex flex-items-start mt-2 mr-2");
-  body.style.marginLeft = "30px";
-  const content = el("div", "");
-  const name = el("div", "f5", title);
-  const description = el("p", "text-small color-fg-muted mt-1 mb-0", text);
-  content.append(name, description);
-  body.append(content);
-  label.append(preview, body);
-  cell.append(radio, label);
-  return cell;
+  // The title may come from an imported file: textContent only, never markup.
+  label.append(chip, el("span", "gha-theme-name", title));
+  row.dataset.ghaName = title.toLowerCase();
+  row.append(radio, label);
+  return row;
 }
 
-function createDefaultCard(mode: ThemeMode) {
-  const preview = el("div", "d-block border-bottom width-full");
-  preview.setAttribute("style", "aspect-ratio: 190 / 100;");
+function createDefaultRow(mode: ThemeMode) {
   // The empty value stands for GitHub default; the handlers turn it into null (clear).
-  const cell = createCell(mode, "default", "", preview, "GitHub default", "Use GitHub's own colors in this mode.");
-  cell.dataset.ghaThemeDefault = "";
-  return cell;
+  const row = createRow(mode, "default", "", createChip([]), "GitHub default");
+  row.dataset.ghaThemeDefault = "";
+  row.querySelector("label")!.append(el("span", "text-small color-fg-muted ml-2", "Use GitHub's own colors in this mode."));
+  return row;
 }
 
-function createCard(theme: Theme, withActions: boolean) {
-  const preview = el("div", "position-relative");
-  const img = el("img", "d-block border-bottom width-full");
-  img.alt = "";
-  img.src = previewDataUrl(theme);
-  preview.append(img);
-  const description = theme.mode === "dark" ? "Dark theme" : "Light theme";
-  // theme.name is untrusted: createCell writes it with textContent, never as markup. The preview is
-  // a data: URL of hex colors.
-  const cell = createCell(theme.mode, theme.id, theme.id, preview, theme.name, description);
-  cell.dataset.ghaTheme = theme.id;
-  cell.querySelector(".f5")!.append(el("span", "Label Label--accent ml-2", isBuiltin(theme.id) ? "Built-in" : "Custom"));
-  if (withActions) cell.querySelector("label")!.append(createActions(theme));
-  return cell;
+function createThemeRow(item: Row, withActions: boolean) {
+  const row = createRow(item.mode, item.id, item.id, createChip(item.colors), item.name);
+  row.dataset.ghaTheme = item.id;
+  row.dataset.ghaKind = item.kind;
+  // The badge sits next to the actions, away from the name, so long names stay readable.
+  row.append(el("span", "Label Label--accent flex-shrink-0 mr-2", KIND_LABEL[item.kind]));
+  if (withActions) row.append(createActions(item));
+  return row;
 }
 
 function createSubsection(mode: ThemeMode) {
@@ -128,10 +139,18 @@ function createSubsection(mode: ThemeMode) {
     "color-fg-muted text-small mb-3",
     `Applies when GitHub is in a ${mode} mode. To use one of these, first select one of GitHub's ${mode} themes above (for example "${example}"), then choose a theme here. With "Sync with system", this theme is used for ${mode} mode.`,
   );
-  const grid = el("div", "d-flex gutter-condensed flex-wrap");
+  const search = el("input", "form-control input-sm gha-theme-search");
+  search.type = "search";
+  search.placeholder = "Search themes";
+  search.setAttribute("aria-label", `Search ${mode} themes`);
+  search.setAttribute("autocomplete", "off");
+  search.setAttribute("form", DETACHED_FORM);
+  const grid = el("div", "gha-theme-list");
   grid.setAttribute("role", "radiogroup");
   grid.setAttribute("aria-label", `Custom ${mode} themes`);
-  sub.append(heading, description, grid);
+  const empty = el("p", "color-fg-muted text-small mt-2 mb-0", "No themes match your search.");
+  empty.hidden = true;
+  sub.append(heading, description, search, grid, empty);
   return sub;
 }
 
@@ -147,9 +166,21 @@ function createSection() {
 const gridOf = (section: Element, mode: ThemeMode) =>
   section.querySelector(`[data-gha-themes-mode="${mode}"] [role="radiogroup"]`)!;
 
-function renderGrid(grid: Element, mode: ThemeMode, themes: readonly Theme[], withActions: boolean) {
-  // Cells are reused by key (theme content plus whether actions show), so unchanged cards keep
-  // their DOM and focus and the grid is rewritten only when the set or order changed.
+const rowsOf = (themes: readonly Theme[], catalog: readonly CatalogEntry[], mode: ThemeMode): Row[] => {
+  const ofMode = themes.filter((theme) => theme.mode === mode);
+  // Built-ins first (the hand-tuned ones, then the shipped theme files), then custom themes in
+  // stored order; a shipped theme that is already listed is not repeated.
+  const ordered = [...ofMode.filter((t) => isBuiltin(t.id)), ...ofMode.filter((t) => !isBuiltin(t.id))];
+  const seen = new Set(ordered.map((theme) => theme.id));
+  const builtin = ordered.filter((theme) => isBuiltin(theme.id)).map((theme): Row => ({ id: theme.id, name: theme.name, mode, colors: swatches(theme), kind: "builtin" }));
+  const shipped = catalog.filter((entry) => entry.mode === mode && !seen.has(entry.id)).map((entry): Row => ({ ...entry, kind: "builtin" }));
+  const own = ordered.filter((theme) => !isBuiltin(theme.id)).map((theme): Row => ({ id: theme.id, name: theme.name, mode, colors: swatches(theme), kind: "custom" }));
+  return [...builtin, ...shipped, ...own];
+};
+
+function renderGrid(grid: Element, mode: ThemeMode, rows: Row[], withActions: boolean) {
+  // Rows are reused by key (content plus whether actions show), so unchanged rows keep their DOM
+  // and focus and the list is rewritten only when the set or order changed.
   const old = new Map<string, Element>();
   for (const cell of grid.children) old.set(rendered.get(cell) ?? "", cell);
   const take = (key: string, create: () => HTMLElement) => {
@@ -157,15 +188,24 @@ function renderGrid(grid: Element, mode: ThemeMode, themes: readonly Theme[], wi
     rendered.set(cell, key);
     return cell;
   };
-  const ofMode = themes.filter((theme) => theme.mode === mode);
-  // Built-ins first, then custom themes, each in stored order.
-  const ordered = [...ofMode.filter((t) => isBuiltin(t.id)), ...ofMode.filter((t) => !isBuiltin(t.id))];
   const cells = [
-    take("default", () => createDefaultCard(mode)),
-    ...ordered.map((theme) => take(JSON.stringify([theme, withActions]), () => createCard(theme, withActions))),
+    take("default", () => createDefaultRow(mode)),
+    ...rows.map((row) => take(JSON.stringify([row, withActions]), () => createThemeRow(row, withActions))),
   ];
   const same = cells.length === grid.children.length && cells.every((cell, i) => grid.children[i] === cell);
   if (!same) grid.replaceChildren(...cells);
+}
+
+// Hides rows that do not contain the search text; GitHub default always stays visible.
+function applySearch(sub: Element) {
+  const query = sub.querySelector<HTMLInputElement>(".gha-theme-search")!.value.trim().toLowerCase();
+  let shown = 0;
+  for (const row of sub.querySelectorAll<HTMLElement>(".gha-theme-list > .gha-theme-row")) {
+    const match = row.hasAttribute("data-gha-theme-default") || !query || (row.dataset.ghaName ?? "").includes(query);
+    row.hidden = !match;
+    if (match && !row.hasAttribute("data-gha-theme-default")) shown++;
+  }
+  sub.querySelector<HTMLElement>("p.mb-0")!.hidden = !query || shown > 0;
 }
 
 function mountSection(section: HTMLElement): SectionState {
@@ -216,19 +256,30 @@ function mountSection(section: HTMLElement): SectionState {
 
   // Capture phase, so these run before the radios' own listeners and before bubbling handlers
   // GitHub attaches to ancestors of the section.
+  const onSearch = (event: Event) => {
+    const input = event.target;
+    if (!(input instanceof HTMLInputElement) || !input.classList.contains("gha-theme-search")) return;
+    event.stopPropagation();
+    applySearch(input.closest("[data-gha-themes-mode]")!);
+  };
+  section.addEventListener("input", onSearch, true);
   section.addEventListener("click", onActionClick, true);
   section.addEventListener("click", onRadioEvent, true);
   section.addEventListener("change", onRadioEvent, true);
 
   return {
-    update(themes, nextActive, nextHandlers) {
+    update(themes, nextActive, nextHandlers, catalog) {
       handlers = nextHandlers;
       active = { ...nextActive };
-      for (const mode of MODES) renderGrid(gridOf(section, mode), mode, themes, !!handlers.actions);
+      for (const mode of MODES) {
+        renderGrid(gridOf(section, mode), mode, rowsOf(themes, catalog, mode), !!handlers.actions);
+        applySearch(section.querySelector(`[data-gha-themes-mode="${mode}"]`)!);
+      }
       mountToolbar(section.querySelector("[data-gha-themes-mode]")!, handlers.toolbar);
       sync();
     },
     dispose() {
+      section.removeEventListener("input", onSearch, true);
       section.removeEventListener("click", onActionClick, true);
       section.removeEventListener("click", onRadioEvent, true);
       section.removeEventListener("change", onRadioEvent, true);
@@ -265,6 +316,7 @@ export function mountThemesSection(
   themes: readonly Theme[],
   active: ActiveIds,
   handlers: SectionHandlers,
+  catalog: readonly CatalogEntry[] = [],
 ): () => void {
   const [existing, ...extra] = [...document.querySelectorAll<HTMLElement>(SECTION)];
   extra.forEach(removeSection);
@@ -280,6 +332,6 @@ export function mountThemesSection(
   const state = states.get(section) ?? mountSection(section);
   states.set(section, state);
   if (anchor.nextElementSibling !== section) anchor.after(section);
-  state.update(themes, active, handlers);
+  state.update(themes, active, handlers, catalog);
   return () => state.dispose();
 }

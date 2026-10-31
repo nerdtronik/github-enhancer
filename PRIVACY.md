@@ -26,7 +26,7 @@ You can remove this data at any time by uninstalling the extension or by clearin
 
 ## Network requests
 
-The extension runs only on `https://github.com/*`. To provide some features it requests pages and data from github.com itself, using your existing session, for example to load a repository's full workflow list or run details. It makes no requests to other servers. Extension icons are loaded from the extension package.
+The extension runs only on `https://github.com/*`. To provide some features it requests pages and data from github.com itself, using your existing session, for example to load a repository's full workflow list or run details. It makes no requests to other servers. Extension icons and the bundled theme files are loaded from the extension package.
 
 ## Telemetry blocking
 

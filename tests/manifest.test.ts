@@ -61,7 +61,7 @@ describe("manifest content scripts", () => {
     const pull = ["https://github.com/*/*/pull/*"];
     const bundles = (entry?: Entry) => entry?.js.map((path) => path.replace(/^dist\/|\.js$/g, ""));
     expect(entryFor("workflow-filter")?.matches).toEqual(actions);
-    expect(bundles(entryFor("workflow-filter"))).toEqual(["workflow-filter", "run-list", "sidebar-resize"]);
+    expect(bundles(entryFor("workflow-filter"))).toEqual(["workflow-filter", "run-list", "sidebar-resize", "refresh-now"]);
     expect(entryFor("run-view")?.matches).toEqual(actions);
     expect(entryFor("run-view")?.js).toEqual(["dist/run-view.js"]);
     expect(entryFor("pr-conversation")?.matches).toEqual(pull);

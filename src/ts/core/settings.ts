@@ -58,6 +58,8 @@ const VALID: { [K in keyof Preferences]?: (value: unknown) => boolean } = {
   actionRun_arrowPlacement: (v) => v === "left" || v === "right" || v === "both",
   runList_enabled: (v) => typeof v === "boolean",
   runList_enhancedViewEnabled: (v) => typeof v === "boolean",
+  runList_attentionCollapsed: (v) => typeof v === "boolean",
+  runList_attentionLatestOnly: (v) => typeof v === "boolean",
   appearance_lightTheme: isThemeId,
   appearance_darkTheme: isThemeId,
 };
@@ -367,6 +369,14 @@ const svgCache = new Map<string, Promise<SVGElement | null>>();
 // Waits for `ready` because baseUrl (the extension URL) is only known after the bridge replies in
 // the MAIN world. The files are listed in web_accessible_resources so the page origin may fetch
 // them.
+/** Reads a JSON file packaged with the extension (a web_accessible_resource), e.g. dist/themes/index.json. */
+export async function fetchExtensionJson(path: string): Promise<unknown> {
+  await settings.ready;
+  const response = await fetch(`${settings.baseUrl}${path}`);
+  if (!response.ok) throw new Error(`Could not load ${path}: ${response.status}`);
+  return response.json();
+}
+
 function fetchIcon(name: string): Promise<SVGElement | null> {
   let icon = svgCache.get(name);
   if (!icon) {

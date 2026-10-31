@@ -10,7 +10,7 @@ The width is saved in the extension storage (one value for run pages, shared by 
 
 ## Collapsible information
 
-Setting: the **Collapsible sections** switch, added to GitHub's own "more" menu of the run page (right after "Create status badge"). On by default. Changing it reloads the page. It only has effect while **Enhanced view** (see below) is on.
+Setting: the **Collapsible sections** switch, added to GitHub's own "more" menu of the run page (right after "Create status badge"). On by default. Changing it reloads the page. It is independent of **Enhanced view**: either one can be on without the other.
 
 When on, the run-level sections are collapsed by default and open with a click on their title:
 
@@ -23,7 +23,7 @@ The workflow information that GitHub shows with the graph is also moved up to th
 
 ## Enhanced Jobs view
 
-Setting: the **Enhanced view** switch, added to GitHub's own "more" menu of the run page (right after "Create status badge"). On by default. Changing it reloads the page. When off, the run page is left as GitHub renders it, including the Collapsible sections feature.
+Setting: the **Enhanced view** switch, added to GitHub's own "more" menu of the run page (right after "Create status badge"). On by default. Changing it reloads the page. When off, the jobs view is left as GitHub renders it; the **Collapsible sections** switch still applies on its own.
 
 GitHub draws the jobs as absolutely positioned cards joined by connector lines. This feature shows them instead as a scrollable list of stages, which works better for big workflows. It adds:
 

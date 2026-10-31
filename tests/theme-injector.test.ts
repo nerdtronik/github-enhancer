@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@rstest/core";
-import { BUILTIN_THEMES } from "../src/ts/features/themes/builtins";
+import { BUILTIN_THEMES } from "./shipped-themes";
 import { generateStylesheet } from "../src/ts/features/themes/generate";
 import { createInjector, createThemeController, resolveActive } from "../src/ts/features/themes/injector";
 import { validateTheme, type Theme } from "../src/ts/features/themes/theme";
@@ -11,13 +11,13 @@ const light = BUILTIN_THEMES.find((t) => t.mode === "light")!;
 
 describe("resolveActive", () => {
   test("dark theme in dark slot only", () => {
-    const active = resolveActive(null, "dracula", []);
+    const active = resolveActive(null, "dracula", BUILTIN_THEMES);
     expect(active.light).toBeUndefined();
     expect(active.dark?.id).toBe("dracula");
   });
 
   test("mode mismatch is ignored", () => {
-    const active = resolveActive("alucard", "alucard", []);
+    const active = resolveActive("alucard", "alucard", BUILTIN_THEMES);
     expect(active.dark).toBeUndefined();
     expect(active.light?.id).toBe("alucard");
   });
@@ -35,7 +35,7 @@ describe("resolveActive", () => {
 
   test("custom theme cannot shadow a built-in id", () => {
     const shadow = make(dark.id, "Shadow");
-    expect(resolveActive(null, dark.id, [shadow]).dark?.name).toBe(dark.name);
+    expect(resolveActive(null, dark.id, [dark, shadow]).dark?.name).toBe(dark.name);
   });
 });
 
@@ -117,6 +117,7 @@ describe("createThemeController", () => {
       ready: Promise.resolve(),
       readIds: () => ids,
       loadCustom: () => queue.shift() ?? Promise.resolve([]),
+      loadCatalogTheme: async (id) => BUILTIN_THEMES.find((theme) => theme.id === id),
       watchCustom: (listener) => (handlers.custom = listener),
       onIdsChange: (listener) => (handlers.ids = listener),
     });

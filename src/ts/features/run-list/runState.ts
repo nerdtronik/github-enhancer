@@ -49,7 +49,7 @@ export function runState(
   return {
     label,
     active: label === "Running",
-    attention: ["Failed", "Timed out", "Action required"].includes(label)
+    attention: ["Failed", "Timed out", "Action required", "Waiting for approval"].includes(label)
       ? label
       : "",
   };
@@ -61,7 +61,7 @@ export function statusTone(label: string): string {
   if (label === "Failed" || label === "Timed out") return "danger";
   if (label === "Action required") return "severe";
   if (label === "Running") return "accent";
-  if (label === "Waiting for approval") return "attention";
+  if (label === "Waiting for approval" || label === "Slower than usual") return "attention";
   return "neutral";
 }
 

@@ -6,6 +6,10 @@ import { createPageScheduler } from "../../core/scheduler";
 import { store } from "../../core/settings";
 import { actionsRepository, route, workflowRoute } from "../../core/routes";
 import * as categories from "../workflow-categories/view";
+import { nameOf } from "../workflow-categories/name";
+import { installTooltips } from "../../core/tooltip";
+
+installTooltips();
 
 interface WorkflowItem {
   id: number | string;
@@ -47,7 +51,9 @@ const PIN_LOADING_TIMEOUT_MS = 15000;
 // A cached index is reused this many times before refetching, so new/removed workflows show up.
 const CACHED_WORKFLOW_RELOADS = 3;
 const PIN_SELECTOR =
-  '[data-component="ActionList.TrailingAction"][class*="pinButton"] button, button[aria-label*="pin" i]';
+  '[data-component="ActionList.TrailingAction"][class*="pinButton"] button, [data-component="Sidebar.Action"] button, button[aria-label*="pin" i]';
+// GitHub renders native rows as <li> or, in the newer Sidebar component, as Sidebar.Item divs.
+const NATIVE_ROW = 'li, [data-component="Sidebar.Item"]';
 const WORKFLOW_LINKS = 'a[href*="/actions/workflows/"]';
 
 // GitHub navigates in place (Turbo): `repository` tracks which repository the injected UI belongs
@@ -251,7 +257,7 @@ function syncFetchedRows(
       pin.type = "button";
       pin.className = "gha-workflow-api-pin";
       pin.setAttribute("aria-label", `Pin ${item.name}`);
-      pin.title = `Pin ${item.name}`;
+      pin.setAttribute("data-gha-tooltip", `Pin ${item.name}`);
       pin.append(nativeIcon?.cloneNode(true) ?? document.createTextNode("Pin"));
       // Pinning is GitHub state owned by the native row: load native rows via "Show more" until
       // the real pin exists, then click it. Wait for any running expansion first (single loop).
@@ -344,7 +350,7 @@ function nativePin(sidebar: Element, id: string): HTMLElement | null {
     ...sidebar.querySelectorAll<HTMLAnchorElement>(WORKFLOW_LINKS),
   ].find((item) => item.pathname === path);
   return (
-    link?.closest("li")?.querySelector<HTMLElement>(PIN_SELECTOR) ?? null
+    link?.closest<HTMLElement>(NATIVE_ROW)?.querySelector<HTMLElement>(PIN_SELECTOR) ?? null
   );
 }
 
@@ -499,7 +505,7 @@ function createControls(sidebar: HTMLElement, host: Element) {
   clear.className = "gha-workflow-filter-clear";
   clear.textContent = "×";
   clear.setAttribute("aria-label", "Clear workflow filter");
-  clear.title = "Clear workflow filter";
+  clear.setAttribute("data-gha-tooltip", "Clear workflow filter");
   clear.hidden = true;
   clear.addEventListener("click", () => {
     input.value = "";
@@ -555,9 +561,9 @@ function createControls(sidebar: HTMLElement, host: Element) {
 
 // Flyout mode has no categories view; only the pin state is mirrored onto the row.
 function readPinned(link: HTMLAnchorElement): void {
-  const row = link.closest("li");
+  const row = link.closest<HTMLElement>(NATIVE_ROW);
   const pin = row?.querySelector(
-    '[data-component="ActionList.TrailingAction"] button',
+    '[data-component="ActionList.TrailingAction"] button, [data-component="Sidebar.Action"] button',
   );
   const label = pin ? buttonLabel(pin) : "";
   row?.toggleAttribute("data-gha-pinned", /^(?:Unpin|Remove pin)\b/i.test(label));
@@ -642,10 +648,10 @@ function update(): void {
       nativeWorkflows.forEach(readPinned);
       for (const link of workflows)
         link
-          .closest("li")
+          .closest<HTMLElement>(NATIVE_ROW)
           ?.toggleAttribute(
             "data-gha-workflow-hidden",
-            !link.textContent!.toLowerCase().includes(query.trim().toLowerCase()),
+            !nameOf(link).toLowerCase().includes(query.trim().toLowerCase()),
           );
     } else if (!state!.fetching)
       categories.sync(

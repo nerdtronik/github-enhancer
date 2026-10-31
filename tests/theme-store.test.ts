@@ -3,6 +3,7 @@ import { isValidPreference } from "../src/ts/core/settings";
 import { validateTheme, type Theme } from "../src/ts/features/themes/theme";
 import { loadCustomThemes, saveCustomThemes } from "../src/ts/features/themes/themeStore";
 import dracula from "./fixtures/themes/dracula.json";
+import "./shipped-themes";
 
 const clone = <T>(value: T): T => JSON.parse(JSON.stringify(value));
 const themed = (id: string): Theme => validateTheme({ ...clone(dracula), id, name: id });
