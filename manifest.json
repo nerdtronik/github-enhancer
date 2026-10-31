@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "GitHub Enhancer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Enhanced GitHub Experience for developers.",
   "icons": {
     "16": "dist/icons/icon-16.png",
@@ -11,7 +11,8 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "@github-enhancer",
+      "id": "github-enhancer@nerdtronik",
+      "strict_min_version": "128.0",
       "data_collection_permissions": {
         "required": [
           "none"

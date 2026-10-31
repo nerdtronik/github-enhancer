@@ -76,6 +76,7 @@ With Node.js 20+ and dependencies installed (`npm install`), run `npm test` in t
 
 ## References
 
+- [Releasing](./docs/releasing.md)
 - [Chrome content scripts](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts)
 - [Firefox temporary installation](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/).
 
