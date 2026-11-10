@@ -113,12 +113,12 @@ jobs:
       - name: Download bundled artifact
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          name: zips
+          name: crx
           path: release
       - name: Publish extension to Chrome Web Store
         run: scripts/release/publish-chrome-store.sh
         env:
-          EXT_ZIP: release/${{ env.EXT_SLUG }}_${{ needs.package-extension.outputs.version }}.zip
+          EXT_CRX: release/chrome-release.crx
           EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
           CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}

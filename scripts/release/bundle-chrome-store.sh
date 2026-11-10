@@ -17,4 +17,6 @@ done
 google-chrome --version
 google-chrome --pack-extension=${OUTPUT_DIR} --pack-extension-key=private.pem --no-message-box
 
+rm -rf "${OUTPUT_DIR}" || true
+
 find . -name "*.crx"
