@@ -46,7 +46,7 @@ jobs:
         uses: nerdtronik/auto-versioning@v2
         id: versioning
         with:
-          is-rc: true # Publish as a release candidate version
+          is-alpha: true # Publish as a release candidate version
           is-draft: true # Publich as draft version
           create-tag: true # Don't create tag, only returns at output
           debug: true # Show debug messages
