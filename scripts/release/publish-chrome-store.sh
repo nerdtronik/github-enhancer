@@ -9,6 +9,9 @@ CLIENT_ID="${CLIENT_ID:?CLIENT_ID is required}"
 CLIENT_SECRET="${CLIENT_SECRET:?CLIENT_SECRET is required}"
 REFRESH_TOKEN="${REFRESH_TOKEN:?REFRESH_TOKEN is required}"
 
+find . -name '*.crx'
+echo "${crx}"
+
 npm i -g chrome-webstore-upload-cli@3
 
 npx chrome-webstore-upload-cli@3 upload --source "${crx}" --extension-id "${EXTENSION_ID}"
