@@ -3,3 +3,6 @@ node_modules
 .claude
 
 distrelease
+dist
+release
+.vscode

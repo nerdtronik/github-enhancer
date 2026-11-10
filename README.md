@@ -11,8 +11,12 @@ This extension focuses in bringing new features and customizations to the GitHub
 ---
 
 ## Install
-[chrome-extension]: https://chromewebstore.google.com/detail/github-enhancer/mgokfjhlgfobbhmnldjanblnjjjhlajo 'Chrome Extension'
-[<img src="assets/chrome.png" align="left" style="max-height: 24px" alt="Chrome Web Store icon" width="32" valign="middle">][chrome-extension] [<img src="https://img.shields.io/chrome-web-store/v/mgokfjhlgfobbhmnldjanblnjjjhlajo?style=for-the-badge&labelColor=%23dfdf&color=%23000" style="max-height: 24px" alt="Chrome Extension Version" valign="middle">][chrome-extension]
+
+[<img src="assets/chrome.png" align="left" style="display: block; margin-left: auto; margin-right: auto; max-height: 24px" alt="Chrome Web store logo">
+<img src="https://img.shields.io/chrome-web-store/v/mgokfjhlgfobbhmnldjanblnjjjhlajo?style=for-the-badge&labelColor=%23dfdf&color=%23000" style="margin-left: 10px; max-height: 24px" alt="Workflows categories">](https://chromewebstore.google.com/detail/github-enhancer/mgokfjhlgfobbhmnldjanblnjjjhlajo?utm_source=github-repo)
+
+[<img src="assets/firefox.png" align="left" style="display: block; margin-left: auto; margin-right: auto; max-height: 24px" alt="Firefox Add-ons logo">
+<img src="https://img.shields.io/amo/v/github-enhancer-plus?style=for-the-badge&label=Firefox%20Add-ons&labelColor=%23faa662&color=%23000" style="margin-left: 10px; max-height: 24px" alt="Workflows categories">](https://addons.mozilla.org/en-US/firefox/addon/github-enhancer-plus/)
 
 ## Features
 

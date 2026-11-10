@@ -8,4 +8,4 @@ slug="${EXT_SLUG:?EXT_SLUG is required}"
 version="${EXT_VERSION:?EXT_VERSION is required}"
 
 mkdir -p release
-git archive --format=zip --prefix="$slug-$version/" -o "release/$slug-$version-source.zip" "$tag"
+git archive --format=zip --prefix="${slug}_${version}/" -o "release/${slug}_${version}_source.zip" "$tag"
