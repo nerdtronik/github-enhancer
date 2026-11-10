@@ -4,8 +4,8 @@ import * as fs from "node:fs";
 const OUTPUT_DIR = "release";
 const FILES = ["manifest.json", "LICENSE.md", "PRIVACY.md", "THIRD_PARTY_NOTICES.md", "dist"];
 
-const { version } = JSON.parse(fs.readFileSync("package.json", "utf8"));
-const archive = `${OUTPUT_DIR}/github-enhancer-${version}.zip`;
+const { version } = JSON.parse(fs.readFileSync("manifest.json", "utf8"));
+const archive = `${OUTPUT_DIR}/github-enhancer_v${version}.zip`;
 
 fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 fs.rmSync(archive, { force: true });

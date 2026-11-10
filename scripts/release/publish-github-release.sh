@@ -5,4 +5,4 @@ set -euo pipefail
 
 tag="${RELEASE_TAG:?RELEASE_TAG is required}"
 
-gh release create "$tag" release/*.zip --verify-tag --title "$tag" --generate-notes
+gh release create "$tag" release/* --title "$tag" --generate-notes --latest
