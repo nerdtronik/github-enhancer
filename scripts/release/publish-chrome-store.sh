@@ -12,7 +12,7 @@ REFRESH_TOKEN="${REFRESH_TOKEN:?REFRESH_TOKEN is required}"
 find . -name '*.crx'
 echo "${crx}"
 
-npm i -g chrome-webstore-upload-cli@3
+npm i -g chrome-webstore-upload-cli@4
 
-npx chrome-webstore-upload-cli@3 upload --source "${crx}" --extension-id "${EXTENSION_ID}"
-npx chrome-webstore-upload-cli@3 publish --extension-id "${EXTENSION_ID}"
+npx chrome-webstore-upload-cli@4 upload --source "${crx}" --extension-id "${EXTENSION_ID}"
+npx chrome-webstore-upload-cli@4 publish --extension-id "${EXTENSION_ID}"
