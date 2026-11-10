@@ -10,6 +10,8 @@ if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   exit 1
 fi
 
+google-chrome --version || true
+
 version="${tag#v}"
 # Both stores need a plain numeric manifest version; package.json names the zip and the npm package.
 npm pkg set version="$version"

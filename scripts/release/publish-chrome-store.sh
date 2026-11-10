@@ -12,7 +12,5 @@ REFRESH_TOKEN="${REFRESH_TOKEN:?REFRESH_TOKEN is required}"
 
 npm i -g chrome-webstore-upload-cli@3
 
-google-chrome --version || true
-
 npx chrome-webstore-upload-cli@3 upload --source "$zip" --extension-id "${EXTENSION_ID}"
-npx chrome-webstore-upload@3 publish --extension-id "${EXTENSION_ID}"
+npx chrome-webstore-upload-cli@3 publish --extension-id "${EXTENSION_ID}"
