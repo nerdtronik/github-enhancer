@@ -42,7 +42,7 @@ jobs:
           node-version-file: package.json
           cache: npm
       - name: Calculate Next Version
-        if: ${{ inputs.tag != null }}
+        if: ${{ github.event_name != 'workflow_dispatch' }}
         uses: nerdtronik/auto-versioning@v2
         id: versioning
         with:
