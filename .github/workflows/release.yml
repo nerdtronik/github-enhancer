@@ -6,9 +6,10 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+  # Only enable during testing
+  # pull_request:
+  #   branches:
+  #     - main
   workflow_dispatch:
     inputs:
       tag:
@@ -27,7 +28,7 @@ permissions:
 
 jobs:
   package-extension:
-    name: Package extension
+    name: 📦 Package extension
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.versioning.outputs.version || inputs.tag }}
@@ -82,7 +83,7 @@ jobs:
           if-no-files-found: error
 
   github-release:
-    name: GitHub release
+    name: 😺 GitHub Release
     needs: package-extension
     runs-on: ubuntu-slim
     permissions:
@@ -95,6 +96,11 @@ jobs:
         with:
           name: zips
           path: release
+      - name: Download signed crx
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: crx
+          path: release
       - name: Publish GH release
         run: scripts/release/publish-github-release.sh
         env:
@@ -103,14 +109,14 @@ jobs:
           GH_REPO: ${{ github.repository }}
 
   publish-chrome-store:
-    name: Chrome Web Store
+    name: 📤 Chrome Web Store
     needs: package-extension
     runs-on: ubuntu-slim
     environment: chrome-web-store
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Download bundled artifact
+      - name: Download signed crx
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: crx
@@ -126,7 +132,7 @@ jobs:
           PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
 
   publish-firefox-amo:
-    name: Firefox Add-ons
+    name: 📤 Firefox Add-ons
     needs: package-extension
     runs-on: ubuntu-slim
     environment: firefox-addons
