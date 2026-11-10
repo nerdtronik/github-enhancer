@@ -12,11 +12,11 @@ This extension focuses in bringing new features and customizations to the GitHub
 
 ## Install
 
-[<img src="assets/chrome.png" align="left" style="display: block; margin-left: auto; margin-right: auto; max-height: 24px" alt="Chrome Web store logo">
-<img src="https://img.shields.io/chrome-web-store/v/mgokfjhlgfobbhmnldjanblnjjjhlajo?style=for-the-badge&labelColor=%23dfdf&color=%23000" style="margin-left: 10px; max-height: 24px" alt="Workflows categories">](https://chromewebstore.google.com/detail/github-enhancer/mgokfjhlgfobbhmnldjanblnjjjhlajo?utm_source=github-repo)
+[chrome-extension]: https://chromewebstore.google.com/detail/github-enhancer/mgokfjhlgfobbhmnldjanblnjjjhlajo?utm_source=github-repo 'Chrome Extension'
+[<img src="assets/chrome.png" align="left" style="max-height: 24px; margin-right: 4px;" alt="Chrome Web Store icon" width="24" valign="middle">][chrome-extension] [<img src="https://img.shields.io/chrome-web-store/v/mgokfjhlgfobbhmnldjanblnjjjhlajo?style=for-the-badge&labelColor=%23dfdf&color=%23000" style="max-height: 24px" alt="Chrome Extension Version" valign="middle">][chrome-extension]
 
-[<img src="assets/firefox.png" align="left" style="display: block; margin-left: auto; margin-right: auto; max-height: 24px" alt="Firefox Add-ons logo">
-<img src="https://img.shields.io/amo/v/github-enhancer-plus?style=for-the-badge&label=Firefox%20Add-ons&labelColor=%23faa662&color=%23000" style="margin-left: 10px; max-height: 24px" alt="Workflows categories">](https://addons.mozilla.org/en-US/firefox/addon/github-enhancer-plus/)
+[firefox-addon]: https://addons.mozilla.org/en-US/firefox/addon/github-enhancer-plus/ 'Firefox Add-On'
+[<img src="assets/firefox.png" align="left" style="max-height: 24px; margin-right: 4px;" alt="Chrome Web Store icon" width="24" valign="middle">][firefox-addon] [<img src="https://img.shields.io/amo/v/github-enhancer-plus?style=for-the-badge&label=Firefox%20Add-ons&labelColor=%23faa662&color=%23000" style="max-height: 24px" alt="Chrome Extension Version" valign="middle">][firefox-addon]
 
 ## Features
 
@@ -33,11 +33,14 @@ This extension focuses in bringing new features and customizations to the GitHub
 
 ### Pull Requests
 
+<details><summary>Disabled due to GH new PR view rollout</summary>
 | Feature                                                                                              | Description                                                                                                                                                                                    | Preview                                                                                                                                                                                                                                                                                                                                                                                    |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | [**Conversation filters**](./docs/features/pull-requests.md#conversation-filters)                    | This allows you to filter all PR comments and events, making the process to read/review PRs more easy 🗃️                                                                                       | <details><summary>Click to expand image</summary> <img src="assets/screenshots/pull-requests/PR_1.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="Conversation filter"> </details>                                                                                                                                                              |
 | [**Collapsible comments**](./docs/features/pull-requests.md#collapsible-comments)                    | As the name says, you can collapse comments (threads already support this) 📪                                                                                                                  | <details><summary>Click to expand image</summary> <img src="assets/screenshots/pull-requests/PR_3.1.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="GitHub Enhancer"> <img src="assets/screenshots/pull-requests/PR_3.2.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="GitHub Enhancer"> </details> |
 | [**Merge & Code buttons in navbar**](./docs/features/pull-requests.md#merge--code-buttons-in-navbar) | When tou scroll, the top navbar collapses and these two buttons dissapear, forcing you to go to the top/bottom of the page to see its content, this carries those buttons during all scroll 🧭 | <details><summary>Click to expand image</summary> <img src="assets/screenshots/pull-requests/PR_2.png" style="display: block; margin-left: auto; margin-right: auto; max-height: 250px" alt="GitHub Enhancer"> </details>                                                                                                                                                                  |
+</details> 
+
 
 ### Action Run
 
