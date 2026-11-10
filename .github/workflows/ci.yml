@@ -13,6 +13,8 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  EXT_SLUG: github-enhancer
 jobs:
   verify:
     name: ✅ Validate build
