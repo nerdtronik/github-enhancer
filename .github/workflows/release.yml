@@ -57,6 +57,10 @@ jobs:
         run: npm run build
       - name: Run checks
         run: npm run check
+      - name: Package signed CRX
+        run: scripts/release/bundle-chrome-store.sh
+        env:
+          PRIVATE_KEY: ${{ secrets.CHROME_CRX_PRIVATE_KEY }}
       - name: Package extension
         run: npm run bundle
       - name: Bundle source
@@ -69,6 +73,12 @@ jobs:
         with:
           name: zips
           path: release/*.zip
+          if-no-files-found: error
+      - name: Upload signed CRX
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: crx
+          path: '*.crx'
           if-no-files-found: error
 
   github-release:
