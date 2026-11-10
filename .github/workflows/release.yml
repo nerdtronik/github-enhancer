@@ -57,12 +57,13 @@ jobs:
         run: npm run build
       - name: Run checks
         run: npm run check
-      - name: Package the extension
+      - name: Package extension
         run: npm run bundle
-      - name: Bundle the source
+      - name: Bundle source
         run: scripts/release/make-source-zip.sh
         env:
           RELEASE_TAG: ${{ steps.versioning.outputs.version || inputs.tag }}
+          TARGET_REF: ${{ github.ref_name }}
       - name: Upload extension artifacts
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

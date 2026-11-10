@@ -5,6 +5,7 @@ set -euo pipefail
 
 version="${RELEASE_TAG:?RELEASE_TAG is required}"
 slug="${EXT_SLUG:?EXT_SLUG is required}"
+target=${TARGET_REF:?TARGET_REF is required}
 
 mkdir -p release
-git archive --format=zip --prefix="${slug}_${version}/" -o "release/${slug}_${version}_source.zip" "${version}"
+git archive --format=zip --prefix="${slug}_${version}/" -o "release/${slug}_${version}_source.zip" "${target}"
