@@ -26,7 +26,6 @@ jobs:
         uses: nerdtronik/auto-versioning@v2
         id: versioning
         with:
-          is-draft: true # Publich as draft version
           create-tag: false # Don't create tag, only returns at output
           debug: true # Show debug messages
       - name: Setup Node.js

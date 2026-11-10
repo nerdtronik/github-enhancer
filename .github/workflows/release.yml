@@ -40,6 +40,8 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' }}
         uses: nerdtronik/auto-versioning@v2
         id: versioning
+        with:
+          create-tag: false
       - name: Prepare Version
         env:
           RELEASE_TAG: ${{ steps.versioning.outputs.version || inputs.tag }}
